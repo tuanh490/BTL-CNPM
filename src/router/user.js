@@ -4,4 +4,4 @@ const router = express.Router()
 
 router.route('/login')
 
-export default person
+export default router
