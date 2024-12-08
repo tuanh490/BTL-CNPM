@@ -12,7 +12,7 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>Inance</title>
+  <title>Service</title>
 
   <!-- slider stylesheet -->
   <link rel="stylesheet" type="text/css"
@@ -30,47 +30,61 @@
 </head>
 
 <body>
-  <%- include('./partials/header') %>
+  <%- include('../partials/header') %>
+  <!-- service section -->
 
-  <!-- about section -->
+  <section class="service-section">
 
-  <section class="about_section layout_padding">
-    <div class="heading_container">
-      <h2>Quy Định Ban Quản Lý Chung Cư</h2>
-    </div>
-    <div id="about_content">
-      <strong>1.Phí Quản Lý Và Dịch Vụ:</strong>
-      <ul>
-        <li>
-          <p>Phí Quản Lý Chung: Gồm Chi Phí Bảo Vệ, Vệ Sinh, Bảo Trì Khu Vực Chung (Thang Máy, Hành Lang, Khu Sinh
-            Hoạt).</p>
-        </li>
-        <li>
-          <p>Phí Dịch Vụ: Thu Để Bảo Trì Hệ Thống Điện, Nước, Và Các Thiết Bị Chung.</p>
-        </li>
-        <li>
-          <p>Hạn Nộp Phí: Thanh Toán Trước Ngày 10 Hàng Tháng; Trễ Hạn Bị Phạt Theo Quy Định.</p>
-        </li>
-      </ul>
-      <strong>2.Thông Tin Cư Dân:</strong>
-      <ul>
-        <li>
-          <p>Cập Nhật Thông Tin: Cung Cấp Tên Chủ Hộ, Số Căn Hộ, Số Liên Lạc, Và Email (Nếu Có).</p>
-        </li>
-        <li>
-          <p>Danh Sách Cư Dân: Đăng Ký Đầy Đủ Thành Viên Ở Thường Xuyên Để Hỗ Trợ Quản Lý.</p>
-        </li>
-        <li>
-          <p>Trách Nhiệm Chung: Đảm Bảo Trật Tự, Vệ Sinh, Và Tuân Thủ Quy Định An Toàn.</p>
-        </li>
-      </ul>
-      <strong>Quy Định Nhằm Đảm Bảo Môi Trường Sống An Toàn, Sạch Đẹp Và Văn Minh.</strong>
-    </div>
+    <div class="row">
+      <div class="col-sm-6 col-md-3 mx-auto">
+        <form class="sort-form">
+          <p>Thông tin khoản thu phí căn hộ:</p>
+        </form>
+      </div>
+      <div class="col-sm-6 col-md-9 mx-auto">
+
+        <div class="service-section-table">
+          <h2>
+            Danh sách căn hộ:
+          </h2>
+          <div class="service_table">
+            <table>
+              <tr class="table_info">
+                <th class="first-cell">STT</th>
+                <th>Mã căn hộ</th>
+                <th>Họ tên chủ hộ</th>
+                <th>Diện tích</th>
+                <th>Phí quản lý</th>
+                <th>Phí dịch vụ</th>
+                <th>Đã đóng</th>
+                <th>Còn nợ</th>
+                <th class="last-cell">Ngày đóng</th>
+              </tr>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
   </section>
 
-  <!-- end about section -->
+  <!-- end service section -->
 
-  <%-include('./partials/footer_infosection') %>
+  <%-include('../partials/footer_infosection') %>
+
   <script src="javascripts/jquery-3.4.1.min.js"></script>
   <script src="javascripts/bootstrap.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">

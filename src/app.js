@@ -20,16 +20,22 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/', userRoute)
-app.use('/room', roomRoute)
+app.use('/quy_dinh', (req, res) => {
+    res.render('quy_dinh')
+})
+
+app.use('/tra_cuu', (req, res) => {
+    res.render('tra_cuu')
+})
+
+app.use('/bills', billRoute)
+app.use('/rooms', roomRoute)
 app.use('/person', personRoute)
-app.use('/bill', billRoute)
+
+app.use('/', userRoute)
 
 app.use('/', (req, res) => {
-    res.render('login');
-})
-app.use('/login', (req, res) => {
-    res.render('login');
+    res.render('index');
 })
 
 app.listen(3000, () => {

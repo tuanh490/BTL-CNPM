@@ -1,5 +1,7 @@
 import express from 'express'
 
+import { renderLogin } from '../controllers/users.js'
+
 const router = express.Router()
 
 router.route('/register')
@@ -7,7 +9,7 @@ router.route('/register')
     .post()
 
 router.route('/login')
-    .get()
+    .get(renderLogin)
     .post()
 
 router.get('/logout')

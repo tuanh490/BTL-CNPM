@@ -1,9 +1,11 @@
 import express from 'express'
 
+import { renderAllBills } from '../controllers/bills.js'
+
 const router = express.Router()
 
 router.route('/')
-    .get()
+    .get(renderAllBills)
     .post()
 
 router.route('/:id')

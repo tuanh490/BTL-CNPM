@@ -15,28 +15,29 @@
   <title>Inance</title>
 
   <!-- slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
   <!-- font awesome style -->
-  <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
 
   <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="stylesheets/style.css" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+  <link href="stylesheets/responsive.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body>
-  <%-include('header') %>
-    <!-- slider section -->
-    <section class="slider_section ">
-      <div class="container ">
-        <img src="images/home_img.png" id="home_img">
-      </div>
-    </section>
-    <!-- end slider section -->
+  <%- include('./partials/header') %>
+  <!-- slider section -->
+  <section class="slider_section ">
+    <div class="container ">
+      <img src="images/home_img.png" id="home_img">
+    </div>
+  </section>
+  <!-- end slider section -->
   </div>
 
 
@@ -111,13 +112,13 @@
 
 
 
-  <%-include('footer_infosection') %>
+  <%-include('./partials/footer_infosection') %>
 
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <script src="js/bootstrap.js"></script>
+  <script src="javascripts/jquery-3.4.1.min.js"></script>
+  <script src="javascripts/bootstrap.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>
-  <script src="js/custom.js"></script>
+  <script src="javascripts/custom.js"></script>
 
 
 
