@@ -1,5 +1,4 @@
 import express from "express"
-import cors from "cors"
 import path from "path"
 import { fileURLToPath } from "url";
 import ejsMate from 'ejs-mate'
@@ -27,7 +26,10 @@ app.use('/person', personRoute)
 app.use('/bill', billRoute)
 
 app.use('/', (req, res) => {
-    res.render('helloworld', { name: 'John Doe' })
+    res.render('login');
+})
+app.use('/login', (req, res) => {
+    res.render('login');
 })
 
 app.listen(3000, () => {
