@@ -1,5 +1,4 @@
 import express from "express"
-import cors from "cors"
 import path from "path"
 import { fileURLToPath } from "url";
 import ejsMate from 'ejs-mate'
@@ -17,6 +16,8 @@ app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
+app.use(express.static('src'));
+
 app.use('/', userRoute)
 app.use('/room', roomRoute)
 app.use('/household', householdRoute)
@@ -24,7 +25,10 @@ app.use('/person', personRoute)
 app.use('/bill', billRoute)
 
 app.use('/', (req, res) => {
-    res.render('helloworld', { name: 'John Doe' })
+    res.render('login');
+})
+app.use('/login', (req, res) => {
+    res.render('login');
 })
 
 app.listen(3000, () => {
