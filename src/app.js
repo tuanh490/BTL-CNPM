@@ -4,11 +4,13 @@ import path from "path"
 import { fileURLToPath } from "url";
 import ejsMate from 'ejs-mate'
 import methodOverride from 'method-override'
+import session from 'express-session';
 
 import roomRoute from './router/rooms.js'
-import personRoute from './router/person.js'
+import residentRoute from './router/residents.js'
 import billRoute from './router/bills.js'
 import userRoute from './router/users.js'
+import donationRoute from './router/donations.js'
 
 import ExpressError from './utils/ExpressError.js'
 import { getItem } from './database.js';
@@ -24,6 +26,18 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: false,           // Set to true if using https (recommended in production)
+            httpOnly: true,          // Helps prevent XSS attacks
+            maxAge: 24 * 60 * 60 * 1000, // 1 day expiration time for the session cookie
+        },
+    })
+);
 
 // Test mysql 
 app.use('/getItem', async (req, res) => {
@@ -40,9 +54,10 @@ app.use('/tra_cuu', (req, res) => {
     res.render('tra_cuu')
 })
 
+app.use('/donations', donationRoute)
 app.use('/bills', billRoute)
 app.use('/rooms', roomRoute)
-app.use('/person', personRoute)
+app.use('/residents', residentRoute)
 
 app.use('/', userRoute)
 

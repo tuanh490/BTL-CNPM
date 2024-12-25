@@ -1,7 +1,19 @@
-import express from 'express'
+export async function renderRooms(req, res) {
+    res.render('rooms/index')
+}
 
-const router = express.Router()
+export async function createRoom(req, res) {
+    res.redirect('/rooms/:id')
+}
 
-router.get('/')
+export async function showRoom(req, res) {
+    res.render('rooms/show')
+}
 
-export { router } 
+export async function updateRoom(req, res) {
+    res.redirect('/rooms/:id')
+}
+
+export async function deleteRoom(req, res) {
+    res.redirect('/rooms')
+}

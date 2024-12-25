@@ -1,17 +1,18 @@
 import express from 'express'
 
-import { renderLogin } from '../controllers/users.js'
+import * as users from '../controllers/users.js'
+import CatchAsync from '../utils/CatchAsync.js'
 
 const router = express.Router()
 
 router.route('/register')
-    .get()
-    .post()
+    .get(users.renderRegister)
+    .post(CatchAsync(users.register))
 
 router.route('/login')
-    .get(renderLogin)
-    .post()
+    .get(users.renderLogin)
+    .post(users.login)
 
-router.get('/logout')
+router.post('/logout')
 
 export default router
