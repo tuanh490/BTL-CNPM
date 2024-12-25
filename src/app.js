@@ -13,7 +13,6 @@ import userRoute from './router/users.js'
 import donationRoute from './router/donations.js'
 
 import ExpressError from './utils/ExpressError.js'
-import { getItem } from './database.js';
 
 const app = express()
 
@@ -38,13 +37,6 @@ app.use(
         },
     })
 );
-
-// Test mysql 
-app.use('/getItem', async (req, res) => {
-    const age = req.body.age;
-    const item = await getItem(age);
-    res.send(item)
-})
 
 app.use('/quy_dinh', (req, res) => {
     res.render('quy_dinh')

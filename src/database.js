@@ -14,18 +14,4 @@ const pool = mysql.createPool({
     keepAliveInitialDelay: 0,
 })
 
-async function getItem(age) {
-    try {
-        const [rows] = await pool.query(`
-            SELECT *
-            FROM test_table
-            WHERE age = ?
-            `, [age])
-
-        return rows;
-    } catch (err) {
-        console.log(err)
-    }
-}
-
-export { getItem }
+export default pool;
