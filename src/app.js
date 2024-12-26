@@ -13,6 +13,7 @@ import userRoute from './router/users.js'
 import donationRoute from './router/donations.js'
 
 import ExpressError from './utils/ExpressError.js'
+import passport from './passport.js';
 
 const app = express()
 
@@ -37,6 +38,8 @@ app.use(
         },
     })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/quy_dinh', (req, res) => {
     res.render('quy_dinh')
