@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import ejsMate from 'ejs-mate'
 import methodOverride from 'method-override'
 import session from 'express-session';
+import flash from 'connect-flash'
 
 import roomRoute from './router/rooms.js'
 import residentRoute from './router/residents.js'
@@ -38,6 +39,7 @@ app.use(
         },
     })
 );
+app.use(flash())
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -67,19 +69,17 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = 'Something went wrong' } = err;
     if (!err.message) err.message = 'Oh No, Something went wrong!';
-    const preErrorUrl = req._parsedOriginalUrl?.pathname || 'Unknown URL';
+    const preErrorUrl = req._parsedOriginalUrl?.pathname || '/';
 
-    if (req.accepts('json')) {
-        res.status(statusCode).json({
-            error: {
-                message: err.message,
-                status: statusCode,
-                path: preErrorUrl
-            }
-        });
-    } else {
-        res.status(statusCode).send({ err, preErrorUrl });
-    }
+    res.status(statusCode).json({
+        error: {
+            message: err.message,
+            status: statusCode,
+            path: preErrorUrl
+        }
+    });
+
+    // res.redirect('/')
 });
 
 
