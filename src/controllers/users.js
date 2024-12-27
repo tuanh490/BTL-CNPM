@@ -102,7 +102,6 @@ export async function changePassword(req, res) {
         return res.status(404).json({ message: 'User not found' })
 
     res.redirect(303, '/')
-
 }
 
 export async function getProfile(req, res) {

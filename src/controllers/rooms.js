@@ -1,4 +1,5 @@
 import pool from '../database.js'
+import ExpressError from '../utils/ExpressError.js'
 
 export async function renderRooms(req, res) {
     const [rows] = await pool.query(`
@@ -10,21 +11,21 @@ export async function renderRooms(req, res) {
 }
 
 export async function createRoom(req, res) {
-    let { ma_phong, ma_chu_ho, trang_thai, dien_tich } = req.body.room
+    let { ma_phong, can_cuoc_cong_dan, trang_thai, dien_tich } = req.body.room
 
-    if (ma_chu_ho.toUpperCase() == 'NULL')
-        ma_chu_ho = null;
+    if (can_cuoc_cong_dan.toUpperCase() == 'NULL')
+        can_cuoc_cong_dan = null;
 
-    const [rows] = await pool.query(`CALL Them_phong(?, ?, ?, ?);`,
-        [ma_phong, ma_chu_ho, trang_thai, dien_tich])
+    const [result] = await pool.query(`CALL Them_phong(?, ?, ?, ?);`,
+        [ma_phong, trang_thai, dien_tich, can_cuoc_cong_dan])
 
     res.redirect(303, `/rooms/${ma_phong}`)
 }
 
-export async function showRoom(req, res) {
+export async function showRoom(req, res, next) {
     const { id } = req.params
     const [rows] = await pool.query(`
-        SELECT ma_phong, ma_chu_ho, trang_thai, dien_tich
+        SELECT *
         FROM phong
         WHERE ma_phong = ?
         `, [id])
@@ -34,20 +35,20 @@ export async function showRoom(req, res) {
 
 export async function updateRoom(req, res) {
     const { id } = req.params
-    let { ma_phong, ma_chu_ho, trang_thai, dien_tich } = req.body.room
+    let { ma_phong, trang_thai, dien_tich, can_cuoc_cong_dan } = req.body.room
 
-    if (ma_chu_ho.toUpperCase() == 'NULL')
-        ma_chu_ho = null;
+    if (can_cuoc_cong_dan.toUpperCase() == 'NULL')
+        can_cuoc_cong_dan = null;
 
-    const [rows] = await pool.query(`
+    const result = await pool.query(`
         UPDATE phong
         SET
         ma_phong = ?,
-        ma_chu_ho = ?,
         trang_thai = ?,
-        dien_tich = ?
+        dien_tich = ?,
+        can_cuoc_cong_dan = ?
         WHERE ma_phong = ?;
-        `, [ma_phong, ma_chu_ho, trang_thai, dien_tich, ma_phong])
+        `, [ma_phong, trang_thai, dien_tich, ma_phong, can_cuoc_cong_dan])
 
     res.redirect(303, `/rooms/${ma_phong}`)
 }

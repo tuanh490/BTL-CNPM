@@ -8,7 +8,7 @@ const router = express.Router()
 
 router.route('/register')
     .get(isAuthenticated, users.renderRegister)
-    .post(CatchAsync(users.register))
+    .post(isAuthenticated, CatchAsync(users.register))
 
 router.route('/login')
     .get(users.renderLogin)
