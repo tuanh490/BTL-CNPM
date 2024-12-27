@@ -852,3 +852,7 @@ th, td {
 .center{
   text-align: center;
 }
+#arrow_nav{
+  position: relative;
+  top: 2%;
+}
