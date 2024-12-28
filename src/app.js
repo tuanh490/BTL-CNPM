@@ -99,7 +99,11 @@ app.use('/vehicles', (req, res) => {
     res.render('vehicle/index')
 })
 app.get('/', (req, res) => {
-    res.render('index_copy');
+    res.render('index');
+})
+
+app.get('/monthly_bills', (req, res) => {
+    res.render('bills/monthly_bills/index');
 })
 
 app.all('*', (req, res, next) => {

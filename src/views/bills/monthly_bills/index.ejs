@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Payment List</title>
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
     <link href="stylesheets/style.css" rel="stylesheet" />
@@ -167,138 +168,139 @@
 
 <body>
 
-    <%-include('../partials/header') %>
+    <%-include('../../partials/header') %>
 
-    <div class="container">
-        <h2>Danh sách thanh toán</h2>
-        <div>
-            <button class="btn btn-danger btn-reset" onclick="resetFilters()">Đặt lại bộ lọc</button>
+        <div class="container">
+            <h2>Danh sách thanh toán</h2>
+            <div>
+                <button class="btn btn-danger btn-reset" onclick="resetFilters()">Đặt lại bộ lọc</button>
+            </div>
+            <div class="filter">
+                <label for="filter-thoi-gian-thu-thang">Tháng:</label>
+                <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12">
+
+                <label for="filter-thoi-gian-thu-nam">Năm:</label>
+                <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030">
+
+                <label for="filter-status">Trạng thái:</label>
+                <select id="filter-status">
+                    <option value="">Chọn trạng thái</option>
+                    <option value="Đã thanh toán">Đã thanh toán</option>
+                    <option value="Chưa thanh toán">Chưa thanh toán</option>
+                </select>
+
+                <label for="filter-room">Mã phòng:</label>
+                <input type="text" id="filter-room" placeholder="Nhập mã phòng">
+
+                <button class="btn" onclick="filterData()">Tìm kiếm</button>
+            </div>
+            <div>
+                <button class="btn btn-success btn-add" type="button" onclick="openAddPopup()">Thêm khoản thu
+                    mới</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã căn hộ</th>
+                        <th>Tổng tiền</th>
+                        <th>Thời gian thu</th>
+                        <th>Thời gian đóng</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="paymentTableBody">
+                    <!-- Data will be dynamically loaded here -->
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button onclick="previousPage()">Previous</button>
+                <span class="page-numbers" id="pageNumbers"></span>
+                <button onclick="nextPage()">Next</button>
+            </div>
         </div>
-        <div class="filter">
-            <label for="filter-thoi-gian-thu-thang">Tháng:</label>
-            <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12">
+        <div class="form-popup" id="addPopup">
+            <h2>Thêm khoản thu mới</h2>
+            <form>
+                <div class="form-group">
+                    <label for="add-ma-can-ho">Mã căn hộ:</label>
+                    <input type="text" id="add-ma-can-ho">
+                </div>
 
-            <label for="filter-thoi-gian-thu-nam">Năm:</label>
-            <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030">
+                <div class="form-group">
+                    <label for="add-tong-tien">Tổng tiền:</label>
+                    <input type="text" id="add-tong-tien">
+                </div>
 
-            <label for="filter-status">Trạng thái:</label>
-            <select id="filter-status">
-                <option value="">Chọn trạng thái</option>
-                <option value="Đã thanh toán">Đã thanh toán</option>
-                <option value="Chưa thanh toán">Chưa thanh toán</option>
-            </select>
+                <div class="form-group">
+                    <label for="add-thoi-gian-thu">Thời gian thu:</label>
+                    <input type="date" id="add-thoi-gian-thu">
+                </div>
 
-            <label for="filter-room">Mã phòng:</label>
-            <input type="text" id="filter-room" placeholder="Nhập mã phòng">
+                <div class="form-group">
+                    <label for="add-thoi-gian-dong">Thời gian đóng:</label>
+                    <input type="date" id="add-thoi-gian-dong">
+                </div>
 
-            <button class="btn" onclick="filterData()">Tìm kiếm</button>
+                <button class="btn btn-success" type="button" onclick="saveNewPayment()">Thêm</button>
+                <button class="btn btn-delete" type="button" onclick="closeAddPopup()">Đóng</button>
+            </form>
         </div>
-        <div>
-            <button class="btn btn-success btn-add" type="button" onclick="openAddPopup()">Thêm khoản thu mới</button>
+
+        <div class="form-popup" id="editPopup">
+            <h2>Sửa thông tin khoản thu</h2>
+            <form>
+                <div class="form-group">
+                    <label for="edit-ma-can-ho">Mã căn hộ:</label>
+                    <input type="text" id="edit-ma-can-ho" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-tong-tien">Tổng tiền:</label>
+                    <input type="text" id="edit-tong-tien">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-thoi-gian-thu">Thời gian thu:</label>
+                    <input type="date" id="edit-thoi-gian-thu" disable>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
+                    <input type="date" id="edit-thoi-gian-dong">
+                </div>
+
+                <button class="btn btn-success" type="button" onclick="saveEdit()">Lưu</button>
+                <button class="btn btn-delete" type="button" onclick="closeEditPopup()">Đóng</button>
+            </form>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Mã căn hộ</th>
-                    <th>Tổng tiền</th>
-                    <th>Thời gian thu</th>
-                    <th>Thời gian đóng</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody id="paymentTableBody">
-                <!-- Data will be dynamically loaded here -->
-            </tbody>
-        </table>
+        <div class="overlay" id="overlay"></div>
+        <script>
+            let payments = [
+                { maCanHo: 'A101', tongTien: '5,000,000 VND', thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán' },
+                { maCanHo: 'B202', tongTien: '3,000,000 VND', thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán' },
+                // Add more dummy data
+            ];
 
-        <div class="pagination">
-            <button onclick="previousPage()">Previous</button>
-            <span class="page-numbers" id="pageNumbers"></span>
-            <button onclick="nextPage()">Next</button>
-        </div>
-    </div>
-    <div class="form-popup" id="addPopup">
-        <h2>Thêm khoản thu mới</h2>
-        <form>
-            <div class="form-group">
-                <label for="add-ma-can-ho">Mã căn hộ:</label>
-                <input type="text" id="add-ma-can-ho">
-            </div>
+            let currentPage = 1;
+            const pageSize = 5;
 
-            <div class="form-group">
-                <label for="add-tong-tien">Tổng tiền:</label>
-                <input type="text" id="add-tong-tien">
-            </div>
+            function renderTable() {
+                const tableBody = document.getElementById('paymentTableBody');
+                tableBody.innerHTML = '';
 
-            <div class="form-group">
-                <label for="add-thoi-gian-thu">Thời gian thu:</label>
-                <input type="date" id="add-thoi-gian-thu">
-            </div>
+                const startIndex = (currentPage - 1) * pageSize;
+                const endIndex = startIndex + pageSize;
 
-            <div class="form-group">
-                <label for="add-thoi-gian-dong">Thời gian đóng:</label>
-                <input type="date" id="add-thoi-gian-dong">
-            </div>
+                const currentPageData = payments.slice(startIndex, endIndex);
 
-            <button class="btn btn-success" type="button" onclick="saveNewPayment()">Thêm</button>
-            <button class="btn btn-delete" type="button" onclick="closeAddPopup()">Đóng</button>
-        </form>
-    </div>
+                currentPageData.forEach(payment => {
+                    const row = document.createElement('tr');
 
-    <div class="form-popup" id="editPopup">
-        <h2>Sửa thông tin khoản thu</h2>
-        <form>
-            <div class="form-group">
-                <label for="edit-ma-can-ho">Mã căn hộ:</label>
-                <input type="text" id="edit-ma-can-ho" disabled>
-            </div>
-
-            <div class="form-group">
-                <label for="edit-tong-tien">Tổng tiền:</label>
-                <input type="text" id="edit-tong-tien">
-            </div>
-
-            <div class="form-group">
-                <label for="edit-thoi-gian-thu">Thời gian thu:</label>
-                <input type="date" id="edit-thoi-gian-thu" disable>
-            </div>
-
-            <div class="form-group">
-                <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
-                <input type="date" id="edit-thoi-gian-dong">
-            </div>
-
-            <button class="btn btn-success" type="button" onclick="saveEdit()">Lưu</button>
-            <button class="btn btn-delete" type="button" onclick="closeEditPopup()">Đóng</button>
-        </form>
-    </div>
-
-    <div class="overlay" id="overlay"></div>
-    <script>
-        let payments = [
-            { maCanHo: 'A101', tongTien: '5,000,000 VND', thoiGianThu:'2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán' },
-            { maCanHo: 'B202', tongTien: '3,000,000 VND', thoiGianThu:'2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán' },
-            // Add more dummy data
-        ];
-
-        let currentPage = 1;
-        const pageSize = 5;
-
-        function renderTable() {
-            const tableBody = document.getElementById('paymentTableBody');
-            tableBody.innerHTML = '';
-
-            const startIndex = (currentPage - 1) * pageSize;
-            const endIndex = startIndex + pageSize;
-
-            const currentPageData = payments.slice(startIndex, endIndex);
-
-            currentPageData.forEach(payment => {
-                const row = document.createElement('tr');
-
-                row.innerHTML = `
+                    row.innerHTML = `
                     <td>${payment.maCanHo}</td>
                     <td>${payment.tongTien}</td>
                     <td>${payment.thoiGianThu}</td>
@@ -313,158 +315,158 @@
                     </td>
                 `;
 
-                tableBody.appendChild(row);
-            });
-            renderPagination();
-        }
+                    tableBody.appendChild(row);
+                });
+                renderPagination();
+            }
 
-        function renderPagination() {
-            const pageNumbers = document.getElementById('pageNumbers');
-            pageNumbers.innerHTML = '';
+            function renderPagination() {
+                const pageNumbers = document.getElementById('pageNumbers');
+                pageNumbers.innerHTML = '';
 
-            const totalPages = Math.ceil(payments.length / pageSize);
+                const totalPages = Math.ceil(payments.length / pageSize);
 
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement('button');
-                button.textContent = i;
-                button.className = i === currentPage ? 'current-page' : '';
-                button.onclick = () => {
-                    currentPage = i;
+                for (let i = 1; i <= totalPages; i++) {
+                    const button = document.createElement('button');
+                    button.textContent = i;
+                    button.className = i === currentPage ? 'current-page' : '';
+                    button.onclick = () => {
+                        currentPage = i;
+                        renderTable();
+                    };
+
+                    pageNumbers.appendChild(button);
+                }
+            }
+
+            function previousPage() {
+                if (currentPage > 1) {
+                    currentPage--;
                     renderTable();
+                }
+            }
+
+            function nextPage() {
+                const totalPages = Math.ceil(payments.length / pageSize);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            }
+
+            function openEditPopup(maCanHo, tongTien, thoiGianThu, thoiGianDong) {
+                document.getElementById('edit-ma-can-ho').value = maCanHo;
+                document.getElementById('edit-tong-tien').value = tongTien || '';
+                document.getElementById('edit-thoi-gian-thu').value = thoiGianThu;
+                document.getElementById('edit-thoi-gian-dong').value = thoiGianDong || '';
+
+                document.getElementById('editPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            function closeEditPopup() {
+                document.getElementById('editPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            function saveEdit() {
+                const maCanHo = document.getElementById('edit-ma-can-ho').value;
+                const tongTien = document.getElementById('edit-tong-tien').value.trim();
+                const thoiGianThu = document.getElementById('edit-thoi-gian-thu').value.trim();
+                const thoiGianDong = document.getElementById('edit-thoi-gian-dong').value.trim();
+
+                const payment = payments.find(payment => payment.maCanHo === maCanHo);
+                if (payment) {
+                    payment.tongTien = tongTien || null;
+                    payment.thoiGianThu = thoiGianThu;
+                    payment.thoiGianDong = thoiGianDong || null;
+                    payment.trangThai = thoiGianDong ? 'Đã thanh toán' : 'Chưa thanh toán';
+                }
+
+                alert('Thông tin khoản thu đã được cập nhật!');
+                closeEditPopup();
+                renderTable();
+            }
+
+            function openAddPopup() {
+                document.getElementById('addPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            function closeAddPopup() {
+                document.getElementById('addPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            function saveNewPayment() {
+                const maCanHo = document.getElementById('add-ma-can-ho').value;
+                const tongTien = document.getElementById('add-tong-tien').value.trim();
+                const thoiGianThu = document.getElementById('add-thoi-gian-thu').value.trim();
+                const thoiGianDong = document.getElementById('add-thoi-gian-dong').value.trim();
+
+                if (!maCanHo || !thoiGianThu) {
+                    alert('Mã căn hộ và thoi gian thu là bắt buộc!');
+                    return;
+                }
+
+                const newPayment = {
+                    maCanHo: maCanHo,
+                    tongTien: tongTien, // Default or dynamic value
+                    thoiGianThu: thoiGianThu,
+                    thoiGianDong: thoiGianDong || null,
+                    trangThai: thoiGianDong ? 'Đã thanh toán' : 'Chưa thanh toán'
                 };
 
-                pageNumbers.appendChild(button);
-            }
-        }
+                payments.push(newPayment);
 
-        function previousPage() {
-            if (currentPage > 1) {
-                currentPage--;
+                alert('Khoản thu mới đã được thêm!');
+                closeAddPopup();
                 renderTable();
             }
-        }
 
-        function nextPage() {
-            const totalPages = Math.ceil(payments.length / pageSize);
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderTable();
-            }
-        }
 
-        function openEditPopup(maCanHo, tongTien, thoiGianThu, thoiGianDong) {
-            document.getElementById('edit-ma-can-ho').value = maCanHo;
-            document.getElementById('edit-tong-tien').value = tongTien || '';
-            document.getElementById('edit-thoi-gian-thu').value = thoiGianThu;
-            document.getElementById('edit-thoi-gian-dong').value = thoiGianDong || '';
-    
-            document.getElementById('editPopup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-    
-        function closeEditPopup() {
-            document.getElementById('editPopup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-    
-        function saveEdit() {
-            const maCanHo = document.getElementById('edit-ma-can-ho').value;
-            const tongTien = document.getElementById('edit-tong-tien').value.trim();
-            const thoiGianThu = document.getElementById('edit-thoi-gian-thu').value.trim();
-            const thoiGianDong = document.getElementById('edit-thoi-gian-dong').value.trim();
-    
-            const payment = payments.find(payment => payment.maCanHo === maCanHo);
-            if (payment) {
-                payment.tongTien = tongTien || null;
-                payment.thoiGianThu = thoiGianThu ;
-                payment.thoiGianDong = thoiGianDong || null;
-                payment.trangThai = thoiGianDong ? 'Đã thanh toán' : 'Chưa thanh toán';
+            let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
+
+            function filterData() {
+                const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
+                const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
+                const status = document.getElementById('filter-status').value;
+                const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
+
+                // Áp dụng bộ lọc
+                const filteredPayments = originalPayments.filter(payment => {
+                    const thuDate = new Date(payment.thoiGianThu);
+                    const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
+                    const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
+                    const matchesStatus = status ? payment.trangThai === status : true;
+                    const matchesRoomCode = roomCode ? payment.maCanHo.toLowerCase().includes(roomCode) : true;
+
+                    return matchesYear && matchesMonth && matchesStatus && matchesRoomCode;
+                });
+
+                payments = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
+                currentPage = 1; // Đặt lại trang hiện tại
+                renderTable(); // Hiển thị lại bảng
             }
-    
-            alert('Thông tin khoản thu đã được cập nhật!');
-            closeEditPopup();
+
+            function resetFilters() {
+                // Khôi phục lại mảng dữ liệu ban đầu
+                payments = [...originalPayments];
+                currentPage = 1; // Đặt lại trang hiện tại
+
+                // Xóa nội dung của các bộ lọc
+                document.getElementById('filter-thoi-gian-thu-thang').value = '';
+                document.getElementById('filter-thoi-gian-thu-nam').value = '';
+                document.getElementById('filter-status').value = '';
+                document.getElementById('filter-room').value = '';
+
+                renderTable(); // Hiển thị lại bảng với dữ liệu gốc
+            }
+
             renderTable();
-        }
+        </script>
 
-        function openAddPopup() {
-        document.getElementById('addPopup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    }
-    
-        function closeAddPopup() {
-        document.getElementById('addPopup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-    }
-    
-        function saveNewPayment() {
-            const maCanHo = document.getElementById('add-ma-can-ho').value;
-            const tongTien = document.getElementById('add-tong-tien').value.trim();
-            const thoiGianThu = document.getElementById('add-thoi-gian-thu').value.trim();
-            const thoiGianDong = document.getElementById('add-thoi-gian-dong').value.trim();
-    
-        if (!maCanHo || !thoiGianThu) {
-            alert('Mã căn hộ và thoi gian thu là bắt buộc!');
-            return;
-        }
-    
-        const newPayment = {
-            maCanHo: maCanHo,
-            tongTien: tongTien, // Default or dynamic value
-            thoiGianThu: thoiGianThu ,
-            thoiGianDong: thoiGianDong || null,
-            trangThai : thoiGianDong ? 'Đã thanh toán' : 'Chưa thanh toán'
-        };
-    
-        payments.push(newPayment);
-    
-        alert('Khoản thu mới đã được thêm!');
-        closeAddPopup();
-        renderTable();
-    }
-
-
-    let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
-
-function filterData() {
-    const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
-    const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
-    const status = document.getElementById('filter-status').value;
-    const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
-
-    // Áp dụng bộ lọc
-    const filteredPayments = originalPayments.filter(payment => {
-        const thuDate = new Date(payment.thoiGianThu);
-        const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
-        const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
-        const matchesStatus = status ? payment.trangThai === status : true;
-        const matchesRoomCode = roomCode ? payment.maCanHo.toLowerCase().includes(roomCode) : true;
-
-        return matchesYear && matchesMonth && matchesStatus && matchesRoomCode;
-    });
-
-    payments = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
-    currentPage = 1; // Đặt lại trang hiện tại
-    renderTable(); // Hiển thị lại bảng
-}
-
-function resetFilters() {
-    // Khôi phục lại mảng dữ liệu ban đầu
-    payments = [...originalPayments];
-    currentPage = 1; // Đặt lại trang hiện tại
-
-    // Xóa nội dung của các bộ lọc
-    document.getElementById('filter-thoi-gian-thu-thang').value = '';
-    document.getElementById('filter-thoi-gian-thu-nam').value = '';
-    document.getElementById('filter-status').value = '';
-    document.getElementById('filter-room').value = '';
-
-    renderTable(); // Hiển thị lại bảng với dữ liệu gốc
-}
-
-        renderTable();
-    </script>
-
-    <%-include('../partials/footer_infosection') %>
+        <%-include('../../partials/footer_infosection') %>
 </body>
 
 </html>
