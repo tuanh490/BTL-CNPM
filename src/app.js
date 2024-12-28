@@ -98,6 +98,9 @@ app.use('/user-info', (req, res) => {
 app.use('/vehicles', (req, res) => {
     res.render('vehicle/index')
 })
+app.use('/history_vehicle', (req, res) => {
+    res.render('vehicle/history_vehicle')
+})
 app.get('/', (req, res) => {
     res.render('index');
 })

@@ -20,17 +20,8 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-        }
-
-
-        header .profile-icon {
-            width: 40px;
-            height: 40px;
-            background-color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #f8f9fa;
+            /* Màu nền sáng hơn */
         }
 
         .container {
@@ -43,56 +34,73 @@
 
         .filter input {
             margin-right: 10px;
-            padding: 5px;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #ffffff;
         }
 
         .filter button {
-            padding: 5px 10px;
+            padding: 10px 15px;
             background-color: #007bff;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter button:hover {
+            background-color: #0056b3;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: white;
+            background-color: #ffffff;
         }
 
         table,
         th,
         td {
-            border: 1px solid #ccc;
+            border: 1px solid #e1e1e1;
         }
 
         th,
         td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
         }
 
-        .btn {
+        th {
+            background-color: #007bff;
             color: white;
-            padding: 5px 10px;
+        }
+
+        .btn {
+            padding: 8px 12px;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
         }
 
         .btn-edit {
-            background-color: #007bff;
+            background-color: #28a745;
+            color: white;
         }
 
         .btn-edit:hover {
-            background-color: #0056b3;
+            background-color: #218838;
         }
 
         .btn-delete {
             background-color: #dc3545;
+            color: white;
         }
 
         .btn-delete:hover {
-            background-color: #a71d2a;
+            background-color: #c82333;
         }
 
         .btn-container {
@@ -106,31 +114,48 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 1px solid #ccc;
-            background-color: white;
+            border: 1px solid #ced4da;
+            background-color: #ffffff;
             padding: 20px;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            border-radius: 8px;
         }
 
         .form-popup .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .form-popup .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-weight: bold;
         }
 
         .form-popup .form-group input {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            background-color: #ffffff;
         }
 
         .form-popup .btn {
             display: inline-block;
-            margin-top: 10px;
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-popup .btn:hover {
+            background-color: #0056b3;
         }
 
         .overlay {
@@ -151,19 +176,25 @@
 
         .pagination button {
             margin: 0 5px;
-            padding: 5px 10px;
+            padding: 8px 16px;
             cursor: pointer;
+            background-color: #e9ecef;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
 
-        .pagination .page-numbers {
-            display: inline-flex;
-            gap: 5px;
+        .pagination button:hover {
+            background-color: #007bff;
+            color: white;
         }
 
         .pagination .current-page {
             font-weight: bold;
+            color: #007bff;
         }
     </style>
+
 </head>
 
 <body>
@@ -172,34 +203,46 @@
 
         <div class="container">
             <h2>Danh sách thanh toán</h2>
-            <div>
-                <button class="btn btn-danger btn-reset" onclick="resetFilters()">Đặt lại bộ lọc</button>
+
+            <!-- Filter Buttons -->
+            
+
+            <div class="filter mb-4">
+                <div class="filter-group">
+                    <label for="filter-thoi-gian-thu-thang">Tháng:</label>
+                    <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12"
+                        class="form-control">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-thoi-gian-thu-nam">Năm:</label>
+                    <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030"
+                        class="form-control">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-status">Trạng thái:</label>
+                    <select id="filter-status" class="form-control">
+                        <option value="">Chọn trạng thái</option>
+                        <option value="Đã thanh toán">Đã thanh toán</option>
+                        <option value="Chưa thanh toán">Chưa thanh toán</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-room">Mã phòng:</label>
+                    <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
+                </div>
+
+                <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
+                <div class="filter-group-btn my-4">
+                    <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
+                    <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
+                    <button class="btn bg-success mx-auto" onclick="openAddResidentPopup()">Thêm dữ liệu</button>
+                  </div>
             </div>
-            <div class="filter">
-                <label for="filter-thoi-gian-thu-thang">Tháng:</label>
-                <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12">
 
-                <label for="filter-thoi-gian-thu-nam">Năm:</label>
-                <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030">
-
-                <label for="filter-status">Trạng thái:</label>
-                <select id="filter-status">
-                    <option value="">Chọn trạng thái</option>
-                    <option value="Đã thanh toán">Đã thanh toán</option>
-                    <option value="Chưa thanh toán">Chưa thanh toán</option>
-                </select>
-
-                <label for="filter-room">Mã phòng:</label>
-                <input type="text" id="filter-room" placeholder="Nhập mã phòng">
-
-                <button class="btn" onclick="filterData()">Tìm kiếm</button>
-            </div>
-            <div>
-                <button class="btn btn-success btn-add" type="button" onclick="openAddPopup()">Thêm khoản thu
-                    mới</button>
-            </div>
-
-            <table>
+            <table class="table mt-4">
                 <thead>
                     <tr>
                         <th>Mã căn hộ</th>
@@ -215,33 +258,35 @@
                 </tbody>
             </table>
 
-            <div class="pagination">
-                <button onclick="previousPage()">Previous</button>
+            <div class="pagination mt-4">
+                <button class="btn btn-outline-secondary" onclick="previousPage()">Previous</button>
                 <span class="page-numbers" id="pageNumbers"></span>
-                <button onclick="nextPage()">Next</button>
+                <button class="btn btn-outline-secondary" onclick="nextPage()">Next</button>
             </div>
         </div>
+
+        <!-- Add Payment Popup -->
         <div class="form-popup" id="addPopup">
             <h2>Thêm khoản thu mới</h2>
             <form>
                 <div class="form-group">
                     <label for="add-ma-can-ho">Mã căn hộ:</label>
-                    <input type="text" id="add-ma-can-ho">
+                    <input type="text" id="add-ma-can-ho" class="form-control">
                 </div>
 
                 <div class="form-group">
                     <label for="add-tong-tien">Tổng tiền:</label>
-                    <input type="text" id="add-tong-tien">
+                    <input type="text" id="add-tong-tien" class="form-control">
                 </div>
 
                 <div class="form-group">
                     <label for="add-thoi-gian-thu">Thời gian thu:</label>
-                    <input type="date" id="add-thoi-gian-thu">
+                    <input type="date" id="add-thoi-gian-thu" class="form-control">
                 </div>
 
                 <div class="form-group">
                     <label for="add-thoi-gian-dong">Thời gian đóng:</label>
-                    <input type="date" id="add-thoi-gian-dong">
+                    <input type="date" id="add-thoi-gian-dong" class="form-control">
                 </div>
 
                 <button class="btn btn-success" type="button" onclick="saveNewPayment()">Thêm</button>
@@ -249,27 +294,28 @@
             </form>
         </div>
 
+        <!-- Edit Payment Popup -->
         <div class="form-popup" id="editPopup">
             <h2>Sửa thông tin khoản thu</h2>
             <form>
                 <div class="form-group">
                     <label for="edit-ma-can-ho">Mã căn hộ:</label>
-                    <input type="text" id="edit-ma-can-ho" disabled>
+                    <input type="text" id="edit-ma-can-ho" disabled class="form-control">
                 </div>
 
                 <div class="form-group">
                     <label for="edit-tong-tien">Tổng tiền:</label>
-                    <input type="text" id="edit-tong-tien">
+                    <input type="text" id="edit-tong-tien" class="form-control">
                 </div>
 
                 <div class="form-group">
                     <label for="edit-thoi-gian-thu">Thời gian thu:</label>
-                    <input type="date" id="edit-thoi-gian-thu" disable>
+                    <input type="date" id="edit-thoi-gian-thu" class="form-control" disabled>
                 </div>
 
                 <div class="form-group">
                     <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
-                    <input type="date" id="edit-thoi-gian-dong">
+                    <input type="date" id="edit-thoi-gian-dong" class="form-control">
                 </div>
 
                 <button class="btn btn-success" type="button" onclick="saveEdit()">Lưu</button>
@@ -308,7 +354,7 @@
                     <td>${payment.trangThai}</td>
                     <td>
                         <div class="btn-container">
-                            <button class="btn btn-edit" onclick="openEditPopup('${payment.maCanHo}', '${payment.tongTien}', 
+                            <button class="btn btn-primary" onclick="openEditPopup('${payment.maCanHo}', '${payment.tongTien}', 
                                         '${payment.thoiGianThu}', '${payment.thoiGianDong}', '${payment.trangThai}')">Edit</button>
                             <button class="btn btn-delete" onclick="DeletePayment('${payment.maCanHo}')">Delete</button>
                         </div>

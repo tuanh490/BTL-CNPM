@@ -32,7 +32,11 @@
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }   
         .overlay {
             display: none;
             position: fixed;
@@ -51,7 +55,7 @@
         <div class="container">
             <h2 style="text-align: center; margin-top: 20px">Phí ủng hộ</h2>
 
-            <button class="btn btn-primary my-3" onclick="openAddPopup()">Thêm Phí Ủng Hộ</button>
+            <button class="btn btn-success" onclick="openAddPopup()">Thêm Phí Ủng Hộ</button>
 
             <table class="table table-bordered">
                 <thead>
@@ -125,8 +129,8 @@
           <td>${item.mo_ta || ''}</td>
           <td>${item.thoi_gian || ''}</td>
           <td>
-            <button class="btn btn-warning btn-sm" onclick="editPhi(${item.id})">Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deletePhi(${item.id})">Delete</button>
+            <button class="btn btn-primary" onclick="editPhi(${item.id})">Edit</button>
+            <button class="btn btn-danger" onclick="deletePhi(${item.id})">Delete</button>
           </td>
         `;
                     tableBody.appendChild(row);
