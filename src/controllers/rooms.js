@@ -19,7 +19,7 @@ export async function createRoom(req, res) {
     const [result] = await pool.query(`CALL Them_phong(?, ?, ?, ?);`,
         [ma_phong, trang_thai, dien_tich, can_cuoc_cong_dan])
 
-    res.redirect(303, `/rooms/${ma_phong}`)
+    res.redirect(303, `/rooms`)
 }
 
 export async function showRoom(req, res, next) {
@@ -48,7 +48,7 @@ export async function updateRoom(req, res) {
         dien_tich = ?,
         can_cuoc_cong_dan = ?
         WHERE ma_phong = ?;
-        `, [ma_phong, trang_thai, dien_tich, ma_phong, can_cuoc_cong_dan])
+        `, [ma_phong, trang_thai, dien_tich, ma_phong, id])
 
     res.redirect(303, `/rooms/${ma_phong}`)
 }

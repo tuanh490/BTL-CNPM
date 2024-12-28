@@ -7,7 +7,7 @@ import { isAuthenticated } from '../middlewares/userMiddleware.js'
 const router = express.Router()
 
 router.route('/register')
-    .get(isAuthenticated, users.renderRegister)
+    .get(/*isAuthenticated,*/ users.renderRegister)
     .post(isAuthenticated, CatchAsync(users.register))
 
 router.route('/login')

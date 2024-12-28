@@ -12,6 +12,7 @@ import residentRoute from './router/residents.js'
 import billRoute from './router/bills.js'
 import userRoute from './router/users.js'
 import donationRoute from './router/donations.js'
+import vehicleRoute from './router/vehicle.js'
 
 import ExpressError from './utils/ExpressError.js'
 import passport from './passport.js';
@@ -43,6 +44,13 @@ app.use(flash())
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/donations', donationRoute)
+app.use('/bills', billRoute)
+app.use('/rooms', roomRoute)
+app.use('/residents', residentRoute)
+app.use('/vehicle', vehicleRoute)
+app.use('/', userRoute)
+
 app.use('/quy_dinh', (req, res) => {
     res.render('quy_dinh')
 })
@@ -50,12 +58,7 @@ app.use('/quy_dinh', (req, res) => {
 app.use('/tra_cuu', (req, res) => {
     res.render('tra_cuu')
 })
-app.use('/resident', (req, res) => {
-    res.render('residents/index')
-})
-app.use('/room', (req, res) => {
-    res.render('rooms/index')
-})
+
 app.use('/bill', (req, res) => {
     res.render('bills/bill')
 })
@@ -64,29 +67,20 @@ app.use('/tra_cuu', (req, res) => {
     res.render('tra_cuu')
 })
 
-app.use('/login', (req, res) => {
-    res.render('users/login')
+app.get('/resident', (req, res) => {
+    res.render('residents/index')
 })
-app.use('/register', (req, res) => {
-    res.render('users/register')
+
+app.get('/room', (req, res) => {
+    res.render('rooms/index')
 })
+
 app.use('/change-password', (req, res) => {
     res.render('users/change-password')
 })
 app.use('/user-info', (req, res) => {
     res.render('users/user-info')
 })
-app.use('/vehicle', (req, res) => {
-    res.render('vehicle/index')
-})
-
-
-app.use('/donations', donationRoute)
-app.use('/bills', billRoute)
-app.use('/rooms', roomRoute)
-app.use('/residents', residentRoute)
-
-app.use('/', userRoute)
 
 app.get('/', (req, res) => {
     res.render('index');
