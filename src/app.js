@@ -106,6 +106,10 @@ app.get('/monthly_bills', (req, res) => {
     res.render('bills/monthly_bills/index');
 })
 
+app.get('/user_typed_bills', (req, res) => {
+    res.render('bills/user_typed_bills/index');
+})
+
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
