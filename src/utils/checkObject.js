@@ -7,7 +7,7 @@ export default async function checkObject(table, id_name, id) {
         WHERE ${id_name} = ?
         `, [id])
 
-    return rows.length == 0;
+    return rows.length != 0;
 }
 
 

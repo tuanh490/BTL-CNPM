@@ -11,7 +11,6 @@ router.route('/')
     .post(validateVehicle, CatchAsync(vehicle.createVehicle))
 
 router.route('/:id')
-    .get(doesVehicleExist, CatchAsync(vehicle.showVehicle))
     .put(doesVehicleExist, validateVehicle, CatchAsync(vehicle.updateVehicle))
     .delete(doesVehicleExist, CatchAsync(vehicle.deleteVehicle))
 

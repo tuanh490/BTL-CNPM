@@ -11,7 +11,6 @@ router.route('/')
     .post(validateRoom, CatchAsync(rooms.createRoom))
 
 router.route('/:id')
-    .get(doesRoomExist, CatchAsync(rooms.showRoom))
     .put(doesRoomExist, validateRoom, CatchAsync(rooms.updateRoom))
     .delete(doesRoomExist, CatchAsync(rooms.deleteRoom))
 
