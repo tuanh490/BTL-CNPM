@@ -50,7 +50,15 @@ app.use('/quy_dinh', (req, res) => {
 app.use('/tra_cuu', (req, res) => {
     res.render('tra_cuu')
 })
-
+app.use('/resident', (req, res) => {
+    res.render('residents/index')
+})
+app.use('/room', (req, res) => {
+    res.render('rooms/index')
+})
+app.use('/bill', (req, res) => {
+    res.render('bills/bill')
+})
 app.use('/donations', donationRoute)
 app.use('/bills', billRoute)
 app.use('/rooms', roomRoute)
