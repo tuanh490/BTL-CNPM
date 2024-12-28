@@ -84,6 +84,9 @@ app.get('/room', (req, res) => {
 app.use('/change-password', (req, res) => {
     res.render('users/change-password')
 })
+app.use('/register', (req, res) => {
+    res.render('users/register')
+})
 app.use('/user-info', (req, res) => {
     res.render('users/user-info')
 })
