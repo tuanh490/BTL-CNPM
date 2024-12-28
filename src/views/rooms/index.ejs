@@ -183,98 +183,102 @@
 <body>
 
     <%-include('../partials/header') %>
-    <div class="container">
-        <h2>Danh sách căn hộ</h2>
+        <div class="container">
+            <h2>Danh sách căn hộ</h2>
 
-        <div class="filter">
-            <label for="filter-ma-can-ho">Mã căn hộ:</label>
-            <input type="text" id="filter-ma-can-ho" placeholder="Nhập mã căn hộ">
+            <div class="filter">
+                <label for="filter-ma-can-ho">Mã căn hộ:</label>
+                <input type="text" id="filter-ma-can-ho" placeholder="Nhập mã căn hộ">
 
-            <label for="filter-trang-thai">Trạng thái:</label>
-            <input type="text" id="filter-trang-thai" placeholder="Nhập trạng thái">
+                <label for="filter-trang-thai">Trạng thái:</label>
+                <input type="text" id="filter-trang-thai" placeholder="Nhập trạng thái">
 
-            <button class="btn" onclick="filterData()">Tìm kiếm</button>
+                <button class="btn" onclick="filterData()">Tìm kiếm</button>
+            </div>
+
+            <!-- Add Resident Button -->
+            <div class="mt-3">
+                <button class="btn btn-add btn-success" onclick="openAddRoomPopup()">Thêm căn hộ mới</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã căn hộ</th>
+                        <th>Địa điểm</th>
+                        <th>Họ tên chủ hộ</th>
+                        <th>Mã CCCD</th>
+                        <th>Diện tích</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="apartmentTableBody">
+                    <!-- Data will be dynamically loaded here -->
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button onclick="previousPage()">Previous</button>
+                <span class="page-numbers" id="pageNumbers"></span>
+                <button onclick="nextPage()">Next</button>
+            </div>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Mã căn hộ</th>
-                    <th>Địa điểm</th>
-                    <th>Họ tên chủ hộ</th>
-                    <th>Mã CCCD</th>
-                    <th>Diện tích</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody id="apartmentTableBody">
-                <!-- Data will be dynamically loaded here -->
-            </tbody>
-        </table>
+        <div class="form-popup" id="editPopup">
+            <h2>Sửa thông tin căn hộ</h2>
+            <form>
+                <div class="form-group">
+                    <label for="edit-ma-can-ho">Mã căn hộ:</label>
+                    <input type="text" id="edit-ma-can-ho" disabled>
+                </div>
 
-        <div class="pagination">
-            <button onclick="previousPage()">Previous</button>
-            <span class="page-numbers" id="pageNumbers"></span>
-            <button onclick="nextPage()">Next</button>
+                <div class="form-group">
+                    <label for="edit-chu-ho">Họ tên chủ hộ:</label>
+                    <input type="text" id="edit-chu-ho">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-cccd">Mã CCCD:</label>
+                    <input type="text" id="edit-cccd">
+                </div>
+
+                <button class="btn btn-edit" type="button" onclick="saveEdit()">Lưu</button>
+                <button class="btn btn-delete" type="button" onclick="closeEditPopup()">Đóng</button>
+            </form>
         </div>
-    </div>
 
-    <div class="form-popup" id="editPopup">
-        <h2>Sửa thông tin căn hộ</h2>
-        <form>
-            <div class="form-group">
-                <label for="edit-ma-can-ho">Mã căn hộ:</label>
-                <input type="text" id="edit-ma-can-ho" disabled>
-            </div>
+        <div class="overlay" id="overlay"></div>
 
-            <div class="form-group">
-                <label for="edit-chu-ho">Họ tên chủ hộ:</label>
-                <input type="text" id="edit-chu-ho">
-            </div>
+        <script>
+            let apartments = [
+                { maCanHo: 'A101', diaDiem: 'Tầng 1', chuHo: 'Nguyễn Văn A', cccd: '123456789012', dienTich: '80m²', trangThai: 'Đang sử dụng' },
+                { maCanHo: 'B202', diaDiem: 'Tầng 2', chuHo: null, cccd: null, dienTich: '60m²', trangThai: 'Trống' },
+                { maCanHo: 'C303', diaDiem: 'Tầng 3', chuHo: 'Phạm Văn C', cccd: '456789123456', dienTich: '90m²', trangThai: 'Đang sử dụng' },
+                { maCanHo: 'D404', diaDiem: 'Tầng 4', chuHo: null, cccd: null, dienTich: '70m²', trangThai: 'Trống' },
+                { maCanHo: 'E505', diaDiem: 'Tầng 5', chuHo: 'Lê Thị D', cccd: '654321987654', dienTich: '85m²', trangThai: 'Đang sử dụng' },
+                { maCanHo: 'F606', diaDiem: 'Tầng 6', chuHo: null, cccd: null, dienTich: '95m²', trangThai: 'Trống' },
+                { maCanHo: 'G707', diaDiem: 'Tầng 7', chuHo: 'Nguyễn Văn E', cccd: '789456123789', dienTich: '88m²', trangThai: 'Đang sử dụng' },
+                { maCanHo: 'H808', diaDiem: 'Tầng 8', chuHo: null, cccd: null, dienTich: '75m²', trangThai: 'Trống' },
+                { maCanHo: 'I909', diaDiem: 'Tầng 9', chuHo: null, cccd: null, dienTich: '100m²', trangThai: 'Trống' },
+                { maCanHo: 'J1010', diaDiem: 'Tầng 10', chuHo: null, cccd: null, dienTich: '110m²', trangThai: 'Trống' },
+            ];
 
-            <div class="form-group">
-                <label for="edit-cccd">Mã CCCD:</label>
-                <input type="text" id="edit-cccd">
-            </div>
+            let currentPage = 1;
+            const pageSize = 5;
 
-            <button class="btn btn-edit" type="button" onclick="saveEdit()">Lưu</button>
-            <button class="btn btn-delete" type="button" onclick="closeEditPopup()">Đóng</button>
-        </form>
-    </div>
+            function renderTable() {
+                const tableBody = document.getElementById('apartmentTableBody');
+                tableBody.innerHTML = '';
 
-    <div class="overlay" id="overlay"></div>
+                const startIndex = (currentPage - 1) * pageSize;
+                const endIndex = startIndex + pageSize;
 
-    <script>
-        let apartments = [
-            { maCanHo: 'A101', diaDiem: 'Tầng 1', chuHo: 'Nguyễn Văn A', cccd: '123456789012', dienTich: '80m²', trangThai: 'Đang sử dụng' },
-            { maCanHo: 'B202', diaDiem: 'Tầng 2', chuHo: null, cccd: null, dienTich: '60m²', trangThai: 'Trống' },
-            { maCanHo: 'C303', diaDiem: 'Tầng 3', chuHo: 'Phạm Văn C', cccd: '456789123456', dienTich: '90m²', trangThai: 'Đang sử dụng' },
-            { maCanHo: 'D404', diaDiem: 'Tầng 4', chuHo: null, cccd: null, dienTich: '70m²', trangThai: 'Trống' },
-            { maCanHo: 'E505', diaDiem: 'Tầng 5', chuHo: 'Lê Thị D', cccd: '654321987654', dienTich: '85m²', trangThai: 'Đang sử dụng' },
-            { maCanHo: 'F606', diaDiem: 'Tầng 6', chuHo: null, cccd: null, dienTich: '95m²', trangThai: 'Trống' },
-            { maCanHo: 'G707', diaDiem: 'Tầng 7', chuHo: 'Nguyễn Văn E', cccd: '789456123789', dienTich: '88m²', trangThai: 'Đang sử dụng' },
-            { maCanHo: 'H808', diaDiem: 'Tầng 8', chuHo: null, cccd: null, dienTich: '75m²', trangThai: 'Trống' },
-            { maCanHo: 'I909', diaDiem: 'Tầng 9', chuHo: null, cccd: null, dienTich: '100m²', trangThai: 'Trống' },
-            { maCanHo: 'J1010', diaDiem: 'Tầng 10', chuHo: null, cccd: null, dienTich: '110m²', trangThai: 'Trống' },
-        ];
+                const currentPageData = apartments.slice(startIndex, endIndex);
 
-        let currentPage = 1;
-        const pageSize = 5;
+                currentPageData.forEach(apartment => {
+                    const row = document.createElement('tr');
 
-        function renderTable() {
-            const tableBody = document.getElementById('apartmentTableBody');
-            tableBody.innerHTML = '';
-
-            const startIndex = (currentPage - 1) * pageSize;
-            const endIndex = startIndex + pageSize;
-
-            const currentPageData = apartments.slice(startIndex, endIndex);
-
-            currentPageData.forEach(apartment => {
-                const row = document.createElement('tr');
-
-                row.innerHTML = `
+                    row.innerHTML = `
                 <td>${apartment.maCanHo}</td>
                 <td>${apartment.diaDiem}</td>
                 <td>${apartment.chuHo || 'NULL'}</td>
@@ -289,141 +293,231 @@
                 </td>
             `;
 
-                tableBody.appendChild(row);
-            });
-            renderPagination();
-        }
+                    tableBody.appendChild(row);
+                });
+                renderPagination();
+            }
 
-        function renderPagination() {
-            const pageNumbers = document.getElementById('pageNumbers');
-            pageNumbers.innerHTML = '';
+            function renderPagination() {
+                const pageNumbers = document.getElementById('pageNumbers');
+                pageNumbers.innerHTML = '';
 
-            const totalPages = Math.ceil(apartments.length / pageSize);
+                const totalPages = Math.ceil(apartments.length / pageSize);
 
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement('button');
-                button.textContent = i;
-                button.className = i === currentPage ? 'current-page' : '';
-                button.onclick = () => {
-                    currentPage = i;
-                    renderTable();
-                };
+                for (let i = 1; i <= totalPages; i++) {
+                    const button = document.createElement('button');
+                    button.textContent = i;
+                    button.className = i === currentPage ? 'current-page' : '';
+                    button.onclick = () => {
+                        currentPage = i;
+                        renderTable();
+                    };
 
-                pageNumbers.appendChild(button);
+                    pageNumbers.appendChild(button);
 
-                if (i === 2 && totalPages > 3) {
-                    const ellipsis = document.createElement('span');
-                    ellipsis.textContent = '...';
-                    pageNumbers.appendChild(ellipsis);
-                    break;
+                    if (i === 2 && totalPages > 3) {
+                        const ellipsis = document.createElement('span');
+                        ellipsis.textContent = '...';
+                        pageNumbers.appendChild(ellipsis);
+                        break;
+                    }
+                }
+
+                if (totalPages > 2) {
+                    const lastButton = document.createElement('button');
+                    lastButton.textContent = 'End';
+                    lastButton.onclick = () => {
+                        currentPage = totalPages;
+                        renderTable();
+                    };
+                    pageNumbers.appendChild(lastButton);
                 }
             }
 
-            if (totalPages > 2) {
-                const lastButton = document.createElement('button');
-                lastButton.textContent = 'End';
-                lastButton.onclick = () => {
-                    currentPage = totalPages;
+            function filterData() {
+                const maCanHo = document.getElementById('filter-ma-can-ho').value.trim();
+                const trangThai = document.getElementById('filter-trang-thai').value.trim();
+
+                if (maCanHo) {
+                    apartments = apartments.filter(apartment => apartment.maCanHo === maCanHo);
+                } else if (trangThai) {
+                    apartments = apartments.filter(apartment => apartment.trangThai === trangThai);
+                }
+
+                currentPage = 1;
+                renderTable();
+            }
+
+            function previousPage() {
+                if (currentPage > 1) {
+                    currentPage--;
                     renderTable();
+                }
+            }
+
+            function nextPage() {
+                const totalPages = Math.ceil(apartments.length / pageSize);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            }
+
+            function resetApartment(maCanHo) {
+                const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
+                if (apartment) {
+                    apartment.chuHo = null;
+                    apartment.cccd = null;
+                    apartment.trangThai = 'Trống';
+                }
+                alert(`Căn hộ ${maCanHo} đã được reset về trạng thái ban đầu!`);
+                renderTable();
+            }
+
+            function openEditPopup(maCanHo, chuHo, cccd) {
+                document.getElementById('edit-ma-can-ho').value = maCanHo;
+                document.getElementById('edit-chu-ho').value = chuHo || '';
+                document.getElementById('edit-cccd').value = cccd || '';
+
+                document.getElementById('editPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            function closeEditPopup() {
+                document.getElementById('editPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+            function openAddRoomoomPopup() {
+                document.getElementById('addResidentPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            function closeAddRoomoomPopup() {
+                document.getElementById('addResidentPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+            function saveNewResident() {
+                const name = document.getElementById('add-name').value;
+                const dob = document.getElementById('add-dob').value;
+                const gender = document.getElementById('add-gender').value;
+                const cccd = document.getElementById('add-cccd').value;
+                const arrival = document.getElementById('add-arrival').value;
+                const departure = document.getElementById('add-departure').value;
+
+                if (!name || !dob) {
+                    alert('Ten va ngay sinh là bắt buộc!');
+                    return;
+                }
+
+                const newResident = {
+                    name: name,
+                    dob: dob, // Default or dynamic value
+                    gender: gender,
+                    cccd: cccd || null,
+                    arrival: arrival || null,
+                    departure: departure || null,
+                    status: departure ? 'Đang ở' : 'Đã rời đi'
                 };
-                pageNumbers.appendChild(lastButton);
-            }
-        }
 
-        function filterData() {
-            const maCanHo = document.getElementById('filter-ma-can-ho').value.trim();
-            const trangThai = document.getElementById('filter-trang-thai').value.trim();
+                residents.push(newResident);
 
-            if (maCanHo) {
-                apartments = apartments.filter(apartment => apartment.maCanHo === maCanHo);
-            } else if (trangThai) {
-                apartments = apartments.filter(apartment => apartment.trangThai === trangThai);
-            }
-
-            currentPage = 1;
-            renderTable();
-        }
-
-        function previousPage() {
-            if (currentPage > 1) {
-                currentPage--;
+                alert('Nhân khẩu mới đã được thêm!');
+                closeAddResidentPopup();
                 renderTable();
             }
-        }
+            // <td>${resident.name}</td>
+            //           <td>${resident.dob}</td>
+            //           <td>${resident.gender}</td>
+            //           <td>${resident.cccd}</td>
+            //           <td>${resident.arrival}</td>
+            //           <td>${resident.departure}</td>
+            //           <td>${resident.status}</td>
+            function openEditPopup(name, dob, gender, cccd, arrival, departure) {
+                document.getElementById('edit-name').value = name;
+                document.getElementById('edit-dob').value = dob;
+                document.getElementById('edit-gender').value = gender;
+                document.getElementById('edit-cccd').value = cccd || '';
+                document.getElementById('edit-arrival').value = arrival || '';
+                document.getElementById('edit-departure').value = departure || '';
 
-        function nextPage() {
-            const totalPages = Math.ceil(apartments.length / pageSize);
-            if (currentPage < totalPages) {
-                currentPage++;
+                document.getElementById('editPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            function closeEditPopup() {
+                document.getElementById('editPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            function saveEdit() {
+                const name = document.getElementById('edit-name').value;
+                const dob = document.getElementById('edit-dob').value;
+                const gender = document.getElementById('edit-gender').value;
+                const cccd = document.getElementById('edit-cccd').value;
+                const arrival = document.getElementById('edit-arrival').value;
+                const departure = document.getElementById('edit-departure').value;
+
+                if (!name || !dob) {
+                    alert('Ten va ngay sinh là bắt buộc!');
+                    return;
+                }
+                const resident = residents.find(resident => resident.name === name);
+                if (resident) {
+                    resident.name = name;
+                    resident.dob = dob;
+                    resident.gender = gender;
+                    resident.cccd = cccd || null;
+                    resident.arrival = arrival || null;
+                    resident.departure = departure;
+                    resident.status = departure ? 'Đang ở' : 'Đã rời đi';
+                }
+
+
+                alert('Nhân khẩu đã được sửa!');
+                closeEditPopup();
                 renderTable();
             }
-        }
 
-        function resetApartment(maCanHo) {
-            const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
-            if (apartment) {
-                apartment.chuHo = null;
-                apartment.cccd = null;
-                apartment.trangThai = 'Trống';
-            }
-            alert(`Căn hộ ${maCanHo} đã được reset về trạng thái ban đầu!`);
-            renderTable();
-        }
+            function saveEdit() {
+                const maCanHo = document.getElementById('edit-ma-can-ho').value;
+                const chuHo = document.getElementById('edit-chu-ho').value.trim();
+                const cccd = document.getElementById('edit-cccd').value.trim();
 
-        function openEditPopup(maCanHo, chuHo, cccd) {
-            document.getElementById('edit-ma-can-ho').value = maCanHo;
-            document.getElementById('edit-chu-ho').value = chuHo || '';
-            document.getElementById('edit-cccd').value = cccd || '';
+                const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
+                if (apartment) {
+                    apartment.chuHo = chuHo || null;
+                    apartment.cccd = cccd || null;
+                    apartment.trangThai = chuHo && cccd ? 'Đang sử dụng' : 'Trống';
+                }
 
-            document.getElementById('editPopup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-
-        function closeEditPopup() {
-            document.getElementById('editPopup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        function saveEdit() {
-            const maCanHo = document.getElementById('edit-ma-can-ho').value;
-            const chuHo = document.getElementById('edit-chu-ho').value.trim();
-            const cccd = document.getElementById('edit-cccd').value.trim();
-
-            const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
-            if (apartment) {
-                apartment.chuHo = chuHo || null;
-                apartment.cccd = cccd || null;
-                apartment.trangThai = chuHo && cccd ? 'Đang sử dụng' : 'Trống';
+                alert('Thông tin căn hộ đã được cập nhật!');
+                closeEditPopup();
+                renderTable();
             }
 
-            alert('Thông tin căn hộ đã được cập nhật!');
-            closeEditPopup();
-            renderTable();
-        }
-
-        function resetApartment(maCanHo) {
-            const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
-            if (apartment) {
-                apartment.chuHo = null;
-                apartment.cccd = null;
-                apartment.trangThai = 'Trống';
+            function resetApartment(maCanHo) {
+                const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
+                if (apartment) {
+                    apartment.chuHo = null;
+                    apartment.cccd = null;
+                    apartment.trangThai = 'Trống';
+                }
+                alert(`Căn hộ ${maCanHo} đã được reset về trạng thái ban đầu!`);
+                renderTable();
             }
-            alert(`Căn hộ ${maCanHo} đã được reset về trạng thái ban đầu!`);
+
             renderTable();
-        }
-
-        renderTable();
-    </script>
+        </script>
 
 
-    <%-include('../partials/footer_infosection') %>
+        <%-include('../partials/footer_infosection') %>
 
 
-    <script src="javascripts/jquery-3.4.1.min.js"></script>
-    <script src="javascripts/bootstrap.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-    </script>
-    <script src="javascripts/custom.js"></script>
+            <script src="javascripts/jquery-3.4.1.min.js"></script>
+            <script src="javascripts/bootstrap.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+            </script>
+            <script src="javascripts/custom.js"></script>
 
 
 
