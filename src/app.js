@@ -61,17 +61,17 @@ app.use('/quy_dinh', (req, res) => {
     res.render('quy_dinh')
 })
 
-app.use('/tra_cuu', (req, res) => {
-    res.render('tra_cuu')
+app.use('/phi_co_so', (req, res) => {
+    res.render('bills/base_bills/index')
 })
 
 app.use('/bill', (req, res) => {
     res.render('bills/bill')
 })
 
-app.use('/phi_co_so', (req, res) => {
-    res.render('phi_co_so')
-})
+// app.use('/phi_co_so', (req, res) => {
+//     res.render('phi_co_so')
+// })
 
 app.get('/resident', (req, res) => {
     res.render('residents/index')

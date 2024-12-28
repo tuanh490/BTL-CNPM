@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Home</title>
+
+  <!-- slider stylesheet -->
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
+  <!-- font awesome style -->
+  <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
+
+  <!-- Custom styles for this template -->
+  <link href="stylesheets/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="stylesheets/responsive.css" rel="stylesheet" />
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ccc;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .btn-edit {
+      background-color: #007bff;
+    }
+
+    .form-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid #ccc;
+      background-color: white;
+      padding: 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-popup .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-popup .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-popup .form-group input,
+    .form-popup .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
+</head>
+
+<body>
+  <%-include('../../partials/header') %>
+    <div class="container">
+      <h2 class="my-4">Quản lý Phí Cơ Sở</h2>
+
+      <!-- Button to Add New Fee -->
+      <button class="btn btn-primary" onclick="openAddPopup()">Thêm Phí Cơ Sở</button>
+
+      <!-- Table displaying the fee data -->
+      <table class="table table-bordered mt-3">
+        <thead>
+          <tr>
+            <th>Mã Phí</th>
+            <th>Loại Phí</th>
+            <th>Giá Cơ Sở</th>
+            <th>Mô Tả</th>
+            <th>Ngày Tạo</th>
+            <th>Hành Động</th>
+          </tr>
+        </thead>
+        <tbody id="feeTableBody">
+          <!-- Data will be dynamically loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add/Edit Fee Popup -->
+    <div class="form-popup" id="feeFormPopup">
+      <h3 id="formTitle">Thêm Phí Cơ Sở</h3>
+      <form id="feeForm">
+        <div class="form-group">
+          <label for="feeType">Loại Phí</label>
+          <input type="text" id="feeType" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="basePrice">Giá Cơ Sở</label>
+          <input type="number" id="basePrice" class="form-control" step="0.01" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Mô Tả</label>
+          <textarea id="description" class="form-control"></textarea>
+        </div>
+
+        <button type="button" class="btn btn-success" onclick="saveFee()">Lưu</button>
+        <button type="button" class="btn btn-danger" onclick="closePopup()">Đóng</button>
+      </form>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+      // Sample data for fees (you can replace this with data fetched from the database)
+      let fees = [
+        { id: 1, loaiPhi: 'Phí dịch vụ', giaCoSo: 500000, moTa: 'Phí dịch vụ hàng tháng', createdAt: '2024-12-28' },
+        { id: 2, loaiPhi: 'Phí bảo trì', giaCoSo: 200000, moTa: 'Phí bảo trì định kỳ', createdAt: '2024-12-27' },
+      ];
+
+      let editingFeeId = null;
+
+      // Render the table with fee data
+      function renderTable() {
+        const tableBody = document.getElementById('feeTableBody');
+        tableBody.innerHTML = '';
+
+        fees.forEach(fee => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+                    <td>${fee.id}</td>
+                    <td>${fee.loaiPhi}</td>
+                    <td>${fee.giaCoSo}</td>
+                    <td>${fee.moTa}</td>
+                    <td>${fee.createdAt}</td>
+                    <td>
+                        <button class="btn btn-edit" onclick="openEditPopup(${fee.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteFee(${fee.id})">Delete</button>
+                    </td>
+                `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Open the popup for adding a new fee
+      function openAddPopup() {
+        document.getElementById('formTitle').innerText = 'Thêm Phí Cơ Sở';
+        document.getElementById('feeType').value = '';
+        document.getElementById('basePrice').value = '';
+        document.getElementById('description').value = '';
+        editingFeeId = null;
+
+        document.getElementById('feeFormPopup').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+      }
+
+      // Open the popup for editing an existing fee
+      function openEditPopup(id) {
+        const fee = fees.find(f => f.id === id);
+        if (fee) {
+          document.getElementById('formTitle').innerText = 'Sửa Phí Cơ Sở';
+          document.getElementById('feeType').value = fee.loaiPhi;
+          document.getElementById('basePrice').value = fee.giaCoSo;
+          document.getElementById('description').value = fee.moTa;
+          editingFeeId = id;
+
+          document.getElementById('feeFormPopup').style.display = 'block';
+          document.getElementById('overlay').style.display = 'block';
+        }
+      }
+
+      // Close the popup
+      function closePopup() {
+        document.getElementById('feeFormPopup').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+      }
+
+      // Save the fee (either new or edited)
+      function saveFee() {
+        const feeType = document.getElementById('feeType').value;
+        const basePrice = parseFloat(document.getElementById('basePrice').value);
+        const description = document.getElementById('description').value;
+
+        if (feeType && basePrice) {
+          if (editingFeeId === null) {
+            // Adding new fee
+            const newFee = {
+              id: fees.length + 1,
+              loaiPhi: feeType,
+              giaCoSo: basePrice,
+              moTa: description,
+              createdAt: new Date().toISOString().split('T')[0],
+            };
+            fees.push(newFee);
+          } else {
+            // Editing existing fee
+            const fee = fees.find(f => f.id === editingFeeId);
+            if (fee) {
+              fee.loaiPhi = feeType;
+              fee.giaCoSo = basePrice;
+              fee.moTa = description;
+            }
+          }
+
+          renderTable();
+          closePopup();
+        }
+      }
+
+      // Delete a fee
+      function deleteFee(id) {
+        fees = fees.filter(fee => fee.id !== id);
+        renderTable();
+      }
+
+      // Initial render of the table
+      renderTable();
+    </script>
+    <%-include('../../partials/footer_infosection') %>
+
+</body>
+
+</html>
