@@ -12,22 +12,15 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Đổi mật khẩu</title>
+    <title>Đăng ký</title>
 
-    <!-- slider stylesheet -->
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-    <!-- bootstrap core css -->
+    <!-- Bootstrap core CSS -->
     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
-    <!-- font awesome style -->
+    <!-- Font awesome -->
     <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
-
-    <!-- Custom styles for this template -->
+    <!-- Custom styles -->
     <link href="stylesheets/style.css" rel="stylesheet" />
-    <!-- responsive style -->
     <link href="stylesheets/responsive.css" rel="stylesheet" />
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,7 +29,7 @@
             padding: 0;
         }
 
-        .change-password-section {
+        .register-section {
             background: white;
             max-width: 600px;
             margin: 50px auto;
@@ -59,6 +52,7 @@
             color: #555;
         }
 
+        input[type="text"],
         input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -67,6 +61,7 @@
             border-radius: 4px;
             margin-bottom: 15px;
             background-color: #fefefe;
+            color: #333;
         }
 
         input:focus {
@@ -84,13 +79,6 @@
             text-decoration: none;
             margin: 5px 15px;
             font-size: 20px;
-        }
-
-        a.text_ {
-            color: red;
-            text-decoration: none;
-            margin: 60px60px;
-            font-size: 18px;
         }
 
         a.text-primary:hover {
@@ -112,51 +100,55 @@
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
+
+        .login-prompt {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
     </style>
 </head>
 
 <body>
     <%- include('../partials/header') %>
-        <!-- Change Password Section -->
+        <!-- Register Section -->
         <section class="contact_section layout_padding">
-            <div class="change-password-section">
+            <div class="register-section">
                 <div class="heading_container">
-                    <h2>Đổi mật khẩu</h2>
+                    <h2>Đăng ký</h2>
                 </div>
-                <form method="POST" action="/change-password">
+                <form method="POST" action="/register">
                     <div>
-                        <label for="current-password">
-                            <h3>Mật khẩu hiện tại</h3>
+                        <label for="username">
+                            <h3>Tên đăng nhập</h3>
                         </label>
-                        <input id="current-password" type="password" placeholder="Mật khẩu hiện tại"
-                            name="current_password" required />
+                        <input id="username" type="text" placeholder="Tên đăng nhập" name="username" required />
                     </div>
 
                     <div>
-                        <label for="new-password">
-                            <h3>Mật khẩu mới</h3>
+                        <label for="password">
+                            <h3>Mật khẩu</h3>
                         </label>
-                        <input id="new-password" type="password" placeholder="Mật khẩu mới" name="new_password"
-                            required />
+                        <input id="password" type="password" placeholder="Mật khẩu" name="password" required />
                     </div>
 
                     <div>
-                        <label for="confirm-new-password">
-                            <h3>Xác nhận mật khẩu mới</h3>
+                        <label for="confirm-password">
+                            <h3>Xác nhận mật khẩu</h3>
                         </label>
-                        <input id="confirm-new-password" type="password" placeholder="Xác nhận mật khẩu mới"
-                            name="confirm_new_password" required />
+                        <input id="confirm-password" type="password" placeholder="Xác nhận mật khẩu"
+                            name="confirm_password" required />
                     </div>
 
-                    <button type="submit">Cập nhật mật khẩu</button>
+                    <button type="submit">Đăng ký</button>
 
-                    <div class="center">
-                        <h3><a href="/" class="text_">Quay lại trang chủ</a></h3>
+                    <div class="center login-prompt">
+                        <p>Đã có tài khoản? <a href="/login" class="text-primary">Đăng nhập ngay</a></p>
                     </div>
                 </form>
             </div>
         </section>
-        <!-- End Change Password Section -->
+        <!-- End Register Section -->
 
         <%- include('../partials/footer_infosection') %>
 
