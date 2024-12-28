@@ -67,7 +67,7 @@ app.use('/residents', residentRoute)
 app.use('/', userRoute)
 
 app.get('/', (req, res) => {
-    res.render('resident_index');
+    res.render('index');
 })
 
 app.all('*', (req, res, next) => {
