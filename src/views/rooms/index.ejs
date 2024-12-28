@@ -359,6 +359,17 @@
             }
         }
 
+        function resetApartment(maCanHo) {
+            const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
+            if (apartment) {
+                apartment.chuHo = null;
+                apartment.cccd = null;
+                apartment.trangThai = 'Trống';
+            }
+            alert(`Căn hộ ${maCanHo} đã được reset về trạng thái ban đầu!`);
+            renderTable();
+        }
+
         function openEditPopup(maCanHo, chuHo, cccd) {
             document.getElementById('edit-ma-can-ho').value = maCanHo;
             document.getElementById('edit-chu-ho').value = chuHo || '';
