@@ -2,7 +2,7 @@ import express from 'express'
 
 import * as users from '../controllers/users.js'
 import CatchAsync from '../utils/CatchAsync.js'
-import { isAuthenticated } from '../middlewares/middleware.js'
+import { isAuthenticated } from '../middlewares/userMiddleware.js'
 
 const router = express.Router()
 
@@ -16,7 +16,8 @@ router.route('/login')
 
 router.post('/logout', users.logout)
 
-router.post('/change_password', isAuthenticated, CatchAsync(users.changePassword))
+router.route('/change_password')
+    .post(isAuthenticated, CatchAsync(users.changePassword))
 
 router.get('/profile', isAuthenticated, CatchAsync(users.getProfile))
 

@@ -80,18 +80,23 @@ export async function logout(req, res) {
     })
 }
 
-function validatePassword(password) {
-    return true
-}
-
 export async function changePassword(req, res) {
-    const { password } = req.body;
+    const { newPassword, oldPassword } = req.body;
     const userId = req.user.id;
 
-    if (!validatePassword())
-        return res.status(400).json({ message: 'Invalid password' })
+    const [rows] = await pool.query(`
+        SELECT password_hash
+        FROM users
+        WHERE id = ?;
+        `, [userId])
 
-    const hashedPassword = await hashPassword(password);
+    const isMatched = await bcrypt.compare(oldPassword, rows[0].password_hash)
+    if (!isMatched) {
+        req.flash('error', 'Old password is incorrect')
+        return res.redirect(303, '/')
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
     const result = pool.query(`
             UPDATE users
             SET password_hash = ?

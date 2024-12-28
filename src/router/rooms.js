@@ -2,7 +2,7 @@ import express from 'express'
 
 import * as rooms from '../controllers/rooms.js'
 import CatchAsync from '../utils/CatchAsync.js'
-import { doesRoomExist, validateRoom } from '../middlewares/middleware.js'
+import { doesRoomExist, validateRoom } from '../middlewares/roomMiddleware.js'
 
 const router = express.Router()
 
