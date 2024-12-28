@@ -95,7 +95,7 @@ app.use('/vehicles', (req, res) => {
     res.render('vehicle/index')
 })
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index_copy');
 })
 
 app.all('*', (req, res, next) => {
