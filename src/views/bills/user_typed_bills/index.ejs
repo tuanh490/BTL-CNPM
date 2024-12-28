@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Payment List</title>
+
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
+    <link href="stylesheets/style.css" rel="stylesheet" />
+    <link href="stylesheets/responsive.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }   
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <%-include('../../partials/header') %>
+        <div class="container">
+            <h2 style="text-align: center; margin-top: 20px">Phí ủng hộ</h2>
+
+            <button class="btn btn-success" onclick="openAddPopup()">Thêm Phí Ủng Hộ</button>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mã Phòng</th>
+                        <th>Loại Phí</th>
+                        <th>Số Tiền</th>
+                        <th>Mô Tả</th>
+                        <th>Thời Gian</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="phiTableBody">
+                    <!-- Dữ liệu sẽ được tải động từ server -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Form Popup -->
+        <div class="form-popup" id="phiFormPopup">
+            <h4 id="popupTitle">Thêm Phí Ủng Hộ</h4>
+            <form id="phiForm">
+                <div class="mb-3">
+                    <label for="maPhong" class="form-label">Mã Phòng</label>
+                    <input type="text" id="maPhong" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="loaiPhi" class="form-label">Loại Phí</label>
+                    <input type="text" id="loaiPhi" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="soTien" class="form-label">Số Tiền</label>
+                    <input type="number" id="soTien" class="form-control" step="0.01">
+                </div>
+
+                <div class="mb-3">
+                    <label for="moTa" class="form-label">Mô Tả</label>
+                    <textarea id="moTa" class="form-control"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="thoiGian" class="form-label">Thời Gian</label>
+                    <input type="date" id="thoiGian" class="form-control">
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="savePhi()">Save</button>
+                <button type="button" class="btn btn-danger" onclick="closePopup()">Close</button>
+            </form>
+        </div>
+        <div class="overlay" id="overlay"></div>
+
+        <script>
+            let phiData = [];
+            let editingId = null;
+
+            // Render the table
+            function renderTable() {
+                const tableBody = document.getElementById('phiTableBody');
+                tableBody.innerHTML = '';
+
+                phiData.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.ma_phong}</td>
+          <td>${item.loai_phi}</td>
+          <td>${item.so_tien || ''}</td>
+          <td>${item.mo_ta || ''}</td>
+          <td>${item.thoi_gian || ''}</td>
+          <td>
+            <button class="btn btn-primary" onclick="editPhi(${item.id})">Edit</button>
+            <button class="btn btn-danger" onclick="deletePhi(${item.id})">Delete</button>
+          </td>
+        `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Open add popup
+            function openAddPopup() {
+                editingId = null;
+                document.getElementById('phiForm').reset();
+                document.getElementById('popupTitle').innerText = 'Thêm Phí Tự Nhập';
+                document.getElementById('phiFormPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            // Open edit popup
+            function editPhi(id) {
+                const phi = phiData.find(p => p.id === id);
+                if (!phi) return;
+
+                editingId = id;
+                document.getElementById('maPhong').value = phi.ma_phong;
+                document.getElementById('loaiPhi').value = phi.loai_phi;
+                document.getElementById('soTien').value = phi.so_tien || '';
+                document.getElementById('moTa').value = phi.mo_ta || '';
+                document.getElementById('thoiGian').value = phi.thoi_gian || '';
+
+                document.getElementById('popupTitle').innerText = 'Sửa Phí Tự Nhập';
+                document.getElementById('phiFormPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            // Close popup
+            function closePopup() {
+                document.getElementById('phiFormPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            // Save data
+            function savePhi() {
+                const maPhong = document.getElementById('maPhong').value;
+                const loaiPhi = document.getElementById('loaiPhi').value;
+                const soTien = parseFloat(document.getElementById('soTien').value) || null;
+                const moTa = document.getElementById('moTa').value;
+                const thoiGian = document.getElementById('thoiGian').value || null;
+
+                if (editingId) {
+                    const phi = phiData.find(p => p.id === editingId);
+                    if (phi) {
+                        phi.ma_phong = maPhong;
+                        phi.loai_phi = loaiPhi;
+                        phi.so_tien = soTien;
+                        phi.mo_ta = moTa;
+                        phi.thoi_gian = thoiGian;
+                    }
+                } else {
+                    const newPhi = {
+                        id: phiData.length + 1,
+                        ma_phong: maPhong,
+                        loai_phi: loaiPhi,
+                        so_tien: soTien,
+                        mo_ta: moTa,
+                        thoi_gian: thoiGian,
+                    };
+                    phiData.push(newPhi);
+                }
+
+                renderTable();
+                closePopup();
+            }
+
+            // Delete data
+            function deletePhi(id) {
+                phiData = phiData.filter(p => p.id !== id);
+                renderTable();
+            }
+
+            // Initial render
+            renderTable();
+        </script>
+        <%-include('../../partials/footer_infosection') %>
+</body>
+
+</html>

@@ -157,6 +157,13 @@
         .pagination .current-page {
             font-weight: bold;
         }
+
+        .filter-group-btn {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-direction: 'row';
+        }
     </style>
 </head>
 
@@ -166,24 +173,33 @@
             <h2>Danh sách xe</h2>
 
             <!-- Filters -->
-            <div class="filter">
-                <label for="filter-ma-phong">Mã phòng:</label>
-                <input type="text" id="filter-ma-phong" placeholder="Nhập mã phòng">
+            <div class="filter mt-4">
+                <div class="filter-group">
+                    <label for="filter-ma-phong">Mã phòng:</label>
+                    <input type="text" id="filter-ma-phong" placeholder="Nhập mã phòng" class="form-control">
+                </div>
 
-                <label for="filter-loai-xe">Loại xe:</label>
-                <select id="filter-loai-xe">
-                    <option value="">Tất cả</option>
-                    <option value="xe_may">Xe máy</option>
-                    <option value="o_to">Ô tô</option>
-                    <option value="xe_dap">Xe đạp</option>
-                </select>
+                <div class="filter-group">
+                    <label for="filter-loai-xe">Loại xe:</label>
+                    <select id="filter-loai-xe" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="xe_may">Xe máy</option>
+                        <option value="o_to">Ô tô</option>
+                        <option value="xe_dap">Xe đạp</option>
+                    </select>
+                </div>
 
-                <button class="btn btn-primary" onclick="filterVehicles()">Tìm kiếm</button>
+                <div class="filter-group-btn">
+                    <button class="btn btn-primary" onclick="filterVehicles()">Tìm kiếm</button>
+                    <button class="btn btn-danger bg-danger" onclick="resetFilters()">Đặt lại bộ lọc</button>
+                </div>
+
             </div>
 
             <!-- Add Vehicle Button -->
-            <div class="mt-3">
+            <div class="button-group mt-4">
                 <button class="btn btn-success" onclick="openAddVehiclePopup()">Thêm xe mới</button>
+                <a href="/history_vehicle" class="btn btn-info">Lịch sử</a>
             </div>
 
             <!-- Vehicles Table -->
@@ -193,7 +209,7 @@
                         <th>Mã phòng</th>
                         <th>Loại xe</th>
                         <th>Biển xe</th>
-                        
+
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -230,7 +246,7 @@
                     <label for="add-bien-xe">Biển xe:</label>
                     <input type="text" id="add-bien-xe" class="form-control">
                 </div>
-                
+
 
                 <button type="button" class="btn btn-success" onclick="saveNewVehicle()">Thêm</button>
                 <button type="button" class="btn btn-secondary" onclick="closeAddVehiclePopup()">Đóng</button>
@@ -256,7 +272,7 @@
                     <label for="edit-bien-xe">Biển xe:</label>
                     <input type="text" id="edit-bien-xe" class="form-control">
                 </div>
-                
+
 
                 <button type="button" class="btn btn-success" onclick="saveEdit()">Lưu</button>
                 <button type="button" class="btn btn-secondary" onclick="closeEditPopup()">Đóng</button>
@@ -272,19 +288,19 @@
                     ma_phong: '101',
                     loai_xe: 'xe_may',
                     bien_xe: '29A12345',
-                    
+
                 },
                 {
                     ma_phong: '102',
                     loai_xe: 'o_to',
                     bien_xe: '30B67890',
-                    
+
                 },
                 {
                     ma_phong: '103',
                     loai_xe: 'xe_dap',
                     bien_xe: 'Xe123',
-                    
+
                 }
             ];
 
@@ -314,6 +330,54 @@
 
                 renderPagination();
             }
+            // lưu delete vehicle
+            let deletedVehicles = [];
+            function deleteVehicle(maPhong) {
+                const vehicleToDelete = vehicles.find(vehicle => vehicle.ma_phong === maPhong);
+                if (vehicleToDelete) {
+                    deletedVehicles.push(vehicleToDelete);
+                    vehicles = vehicles.filter(vehicle => vehicle.ma_phong !== maPhong);
+                    renderTable();
+                    renderDeletedTable(); // Render lại bảng các xe đã xóa
+                }
+            }
+            function renderDeletedTable() {
+                const tableBody = document.getElementById('deletedVehicleTableBody');
+                tableBody.innerHTML = '';
+                deletedVehicles.forEach(vehicle => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+        <td>${vehicle.ma_phong}</td>
+        <td>${vehicle.loai_xe}</td>
+        <td>${vehicle.bien_xe}</td>
+        `;
+                    tableBody.appendChild(row);
+                });
+            }
+            function renderTable() {
+                // Render bảng hiện tại như bình thường
+                const tableBody = document.getElementById('vehicleTableBody');
+                tableBody.innerHTML = '';
+                const startIndex = (currentPage - 1) * pageSize;
+                const currentVehicles = vehicles.slice(startIndex, startIndex + pageSize);
+
+                currentVehicles.forEach(vehicle => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+        <td>${vehicle.ma_phong}</td>
+        <td>${vehicle.loai_xe}</td>
+        <td>${vehicle.bien_xe}</td>
+        <td>
+            <button class="btn btn-primary" onclick="openEditPopup('${vehicle.ma_phong}', '${vehicle.loai_xe}', '${vehicle.bien_xe}')">Edit</button>
+            <button class="btn btn-danger" onclick="deleteVehicle('${vehicle.ma_phong}')">Delete</button>
+        </td>
+        `;
+                    tableBody.appendChild(row);
+                });
+
+                renderPagination();
+            }
+
 
             function renderPagination() {
                 const pageNumbers = document.getElementById('pageNumbers');
@@ -363,6 +427,15 @@
                 currentPage = 1; // Reset to first page after filter
                 renderTable();
             }
+            function resetFilters() {
+                currentPage = 1; // Đặt lại trang hiện tại về trang 1
+
+                // Xóa nội dung của các bộ lọc
+                document.getElementById('filter-ma-phong').value = '';
+                document.getElementById('filter-loai-xe').value = '';
+
+                renderTable(); // Hiển thị lại bảng với dữ liệu gốc
+            }
 
             function openAddVehiclePopup() {
                 document.getElementById('overlay').style.display = 'block';
@@ -384,7 +457,7 @@
                     ma_phong: maPhong,
                     loai_xe: loaiXe,
                     bien_xe: bienXe
-                    
+
                 });
 
                 closeAddVehiclePopup();
@@ -416,7 +489,7 @@
                 if (vehicle) {
                     vehicle.loai_xe = loaiXe;
                     vehicle.bien_xe = bienXe;
-                   
+
                 }
 
                 closeEditPopup();

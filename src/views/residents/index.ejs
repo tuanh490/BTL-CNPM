@@ -184,21 +184,25 @@
   <%-include('../partials/header') %>
     <div class="container">
       <h2>Danh sách cư dân</h2>
-
-      <!-- Filters -->
-      <div class="filter">
+      <div class="filter-group">
         <label for="filter-name">Họ tên:</label>
-        <input type="text" id="filter-name" placeholder="Nhập họ tên">
-
-        <label for="filter-cccd">Mã CCCD:</label>
-        <input type="text" id="filter-cccd" placeholder="Nhập mã CCCD">
-
-        <button class="btn btn-primary" onclick="filterResidents()">Tìm kiếm</button>
+        <input type="text" id="filter-name" placeholder="Nhập họ tên" class="form-control">
       </div>
+      <div class="filter-group">
+        <label for="filter-cccd">Mã CCCD:</label>
+        <input type="text" id="filter-cccd" placeholder="Nhập mã CCCD" class="form-control">
+      </div>
+      <!-- Filters -->
+      <div class="filter-group-btn my-4">
+        <button class="btn btn-primary " onclick="filterResident()">Tìm kiếm</button>
+        <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
+        <button class="btn btn-success  mx-auto" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
+      </div>
+
+
 
       <!-- Add Resident Button -->
       <div class="mt-3">
-        <button class="btn btn-add btn-success" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
       </div>
 
       <!-- Residents Table -->
@@ -469,7 +473,7 @@
           pageNumbers.appendChild(lastButton);
         }
       }
-
+      let originalResident = [...residents];
       function filterResidents() {
         const name = document.getElementById('filter-name').value.trim();
         const cccd = document.getElementById('filter-cccd').value.trim();
@@ -482,6 +486,18 @@
 
         currentPage = 1;
         renderTable();
+      }
+      function resetFilters() {
+        // Khôi phục lại mảng dữ liệu ban đầu
+        residents = [...originalResident];
+        currentPage = 1; // Đặt lại trang hiện tại
+
+        // Xóa nội dung của các bộ lọc
+        document.getElementById('filter-name').value = '';
+        document.getElementById('filter-cccd').value = '';
+
+
+        renderTable(); // Hiển thị lại bảng với dữ liệu gốc
       }
 
       function previousPage() {

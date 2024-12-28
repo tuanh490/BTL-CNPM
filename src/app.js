@@ -17,6 +17,8 @@ import vehicleRoute from './router/vehicle.js'
 import ExpressError from './utils/ExpressError.js'
 import passport from './passport.js';
 
+import job from './insertSchedule.js';
+
 const app = express()
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -50,6 +52,8 @@ app.use((req, res, next) => {
     next();
 })
 
+job.start();
+
 app.use('/donations', donationRoute)
 app.use('/bills', billRoute)
 app.use('/rooms', roomRoute)
@@ -61,17 +65,17 @@ app.use('/quy_dinh', (req, res) => {
     res.render('quy_dinh')
 })
 
-app.use('/tra_cuu', (req, res) => {
-    res.render('tra_cuu')
+app.use('/phi_co_so', (req, res) => {
+    res.render('bills/base_bills/index')
 })
 
 app.use('/bill', (req, res) => {
     res.render('bills/bill')
 })
 
-app.use('/tra_cuu', (req, res) => {
-    res.render('tra_cuu')
-})
+// app.use('/phi_co_so', (req, res) => {
+//     res.render('phi_co_so')
+// })
 
 app.get('/resident', (req, res) => {
     res.render('residents/index')
@@ -83,18 +87,32 @@ app.get('/room', (req, res) => {
     res.render('rooms/index')
 })
 
-app.use('/change-password', (req, res) => {
+app.get('/change-password', (req, res) => {
     res.render('users/change-password')
 })
-app.use('/user-info', (req, res) => {
+app.get('/register', (req, res) => {
+    res.render('users/register')
+})
+app.get('/user-info', (req, res) => {
     res.render('users/user-info')
 })
 
-app.use('/vehicles', (req, res) => {
+app.get('/vehicles', (req, res) => {
     res.render('vehicle/index')
+})
+app.use('/history_vehicle', (req, res) => {
+    res.render('vehicle/history_vehicle')
 })
 app.get('/', (req, res) => {
     res.render('index');
+})
+
+app.get('/monthly_bills', (req, res) => {
+    res.render('bills/monthly_bills/index');
+})
+
+app.get('/user_typed_bills', (req, res) => {
+    res.render('bills/user_typed_bills/index');
 })
 
 app.all('*', (req, res, next) => {
