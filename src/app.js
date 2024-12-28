@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(
     session({
-        secret: process.env.SESSION_SECRET,
+        secret: "process.env.SESSION_SECRET",
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -59,7 +59,7 @@ app.use('/residents', residentRoute)
 app.use('/', userRoute)
 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('resident_index');
 })
 
 app.all('*', (req, res, next) => {
