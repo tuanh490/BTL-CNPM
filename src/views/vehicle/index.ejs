@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Vehicle Management</title>
+
+    <!-- Bootstrap & Custom Styles -->
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
+    <link href="stylesheets/style.css" rel="stylesheet" />
+    <link href="stylesheets/responsive.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .filter {
+            margin-bottom: 20px;
+        }
+
+        .filter input {
+            margin-right: 10px;
+            padding: 5px;
+        }
+
+        .filter button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ccc;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .btn {
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #007bff;
+        }
+
+        .btn-edit:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-delete:hover {
+            background-color: #a71d2a;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-popup .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-popup .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-popup .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .form-popup .btn {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .pagination .page-numbers {
+            display: inline-flex;
+            gap: 5px;
+        }
+
+        .pagination .current-page {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+        <div class="container">
+            <h2>Danh sách xe</h2>
+
+            <!-- Filters -->
+            <div class="filter">
+                <label for="filter-ma-phong">Mã phòng:</label>
+                <input type="text" id="filter-ma-phong" placeholder="Nhập mã phòng">
+
+                <label for="filter-loai-xe">Loại xe:</label>
+                <select id="filter-loai-xe">
+                    <option value="">Tất cả</option>
+                    <option value="xe_may">Xe máy</option>
+                    <option value="o_to">Ô tô</option>
+                    <option value="xe_dap">Xe đạp</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="filterVehicles()">Tìm kiếm</button>
+            </div>
+
+            <!-- Add Vehicle Button -->
+            <div class="mt-3">
+                <button class="btn btn-success" onclick="openAddVehiclePopup()">Thêm xe mới</button>
+            </div>
+
+            <!-- Vehicles Table -->
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Mã phòng</th>
+                        <th>Loại xe</th>
+                        <th Biển xe</th>
+                        <th>Phí hàng tháng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="vehicleTableBody">
+                    <!-- Rows will be rendered dynamically -->
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button onclick="previousPage()">Previous</button>
+                <span id="pageNumbers"></span>
+                <button onclick="nextPage()">Next</button>
+            </div>
+        </div>
+
+        <!-- Add Vehicle Popup -->
+        <div class="form-popup" id="addVehiclePopup" style="display:none;">
+            <h2>Thêm xe mới</h2>
+            <form>
+                <div class="form-group">
+                    <label for="add-ma-phong">Mã phòng:</label>
+                    <input type="text" id="add-ma-phong" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="add-loai-xe">Loại xe:</label>
+                    <select id="add-loai-xe" class="form-control">
+                        <option value="xe_may">Xe máy</option>
+                        <option value="o_to">Ô tô</option>
+                        <option value="xe_dap">Xe đạp</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="add-bien-xe">Biển xe:</label>
+                    <input type="text" id="add-bien-xe" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="add-phi-hang-thang">Phí hàng tháng:</label>
+                    <input type="number" id="add-phi-hang-thang" class="form-control">
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="saveNewVehicle()">Thêm</button>
+                <button type="button" class="btn btn-secondary" onclick="closeAddVehiclePopup()">Đóng</button>
+            </form>
+        </div>
+
+        <div class="form-popup" id="editPopup">
+            <h2>Sửa thông tin xe</h2>
+            <form>
+                <div class="form-group">
+                    <label for="edit-ma-phong">Mã phòng:</label>
+                    <input type="text" id="edit-ma-phong" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="edit-loai-xe">Loại xe:</label>
+                    <select id="edit-loai-xe" class="form-control">
+                        <option value="xe_may">Xe máy</option>
+                        <option value="o_to">Ô tô</option>
+                        <option value="xe_dap">Xe đạp</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-bien-xe">Biển xe:</label>
+                    <input type="text" id="edit-bien-xe" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="edit-phi-hang-thang">Phí hàng tháng:</label>
+                    <input type="number" id="edit-phi-hang-thang" class="form-control">
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="saveEdit()">Lưu</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditPopup()">Đóng</button>
+            </form>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay" style="display:none;"></div>
+
+        <script>
+            let vehicles = [
+                {
+                    ma_phong: '101',
+                    loai_xe: 'xe_may',
+                    bien_xe: '29A12345',
+                    phi_hang_thang: 100,
+                },
+                {
+                    ma_phong: '102',
+                    loai_xe: 'o_to',
+                    bien_xe: '30B67890',
+                    phi_hang_thang: 500,
+                },
+                {
+                    ma_phong: '103',
+                    loai_xe: 'xe_dap',
+                    bien_xe: 'Xe123',
+                    phi_hang_thang: 50,
+                }
+            ];
+
+            let currentPage = 1;
+            const pageSize = 5;
+
+            function renderTable() {
+                const tableBody = document.getElementById('vehicleTableBody');
+                tableBody.innerHTML = '';
+                const startIndex = (currentPage - 1) * pageSize;
+                const currentVehicles = vehicles.slice(startIndex, startIndex + pageSize);
+
+                currentVehicles.forEach(vehicle => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+          <td>${vehicle.ma_phong}</td>
+          <td>${vehicle.loai_xe}</td>
+          <td>${vehicle.bien_xe}</td>
+          <td>${vehicle.phi_hang_thang}</td>
+          <td>
+            <button class="btn btn-primary" onclick="openEditPopup('${vehicle.ma_phong}', '${vehicle.loai_xe}', '${vehicle.bien_xe}', ${vehicle.phi_hang_thang})">Edit</button>
+            <button class="btn btn-danger" onclick="deleteVehicle('${vehicle.ma_phong}')">Delete</button>
+          </td>
+        `;
+                    tableBody.appendChild(row);
+                });
+
+                renderPagination();
+            }
+
+            function renderPagination() {
+                const pageNumbers = document.getElementById('pageNumbers');
+                pageNumbers.innerHTML = '';
+                const totalPages = Math.ceil(vehicles.length / pageSize);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const button = document.createElement('button');
+                    button.textContent = i;
+                    if (i === currentPage) {
+                        button.classList.add('current-page');
+                    }
+                    button.onclick = () => {
+                        currentPage = i;
+                        renderTable();
+                    };
+                    pageNumbers.appendChild(button);
+                }
+            }
+
+            function previousPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                }
+            }
+
+            function nextPage() {
+                const totalPages = Math.ceil(vehicles.length / pageSize);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            }
+
+            function filterVehicles() {
+                const maPhongFilter = document.getElementById('filter-ma-phong').value.toLowerCase();
+                const loaiXeFilter = document.getElementById('filter-loai-xe').value;
+
+                vehicles = vehicles.filter(vehicle => {
+                    return (
+                        (vehicle.ma_phong.toLowerCase().includes(maPhongFilter)) &&
+                        (loaiXeFilter === '' || vehicle.loai_xe === loaiXeFilter)
+                    );
+                });
+
+                currentPage = 1; // Reset to first page after filter
+                renderTable();
+            }
+
+            function openAddVehiclePopup() {
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('addVehiclePopup').style.display = 'block';
+            }
+
+            function closeAddVehiclePopup() {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('addVehiclePopup').style.display = 'none';
+            }
+
+            function saveNewVehicle() {
+                const maPhong = document.getElementById('add-ma-phong').value;
+                const loaiXe = document.getElementById('add-loai-xe').value;
+                const bienXe = document.getElementById('add-bien-xe').value;
+                const phiHangThang = document.getElementById('add-phi-hang-thang').value;
+
+                vehicles.push({
+                    ma_phong: maPhong,
+                    loai_xe: loaiXe,
+                    bien_xe: bienXe,
+                    phi_hang_thang: phiHangThang
+                });
+
+                closeAddVehiclePopup();
+                renderTable();
+            }
+
+            function openEditPopup(maPhong, loaiXe, bienXe, phiHangThang) {
+                document.getElementById('edit-ma-phong').value = maPhong;
+                document.getElementById('edit-loai-xe').value = loaiXe;
+                document.getElementById('edit-bien-xe').value = bienXe;
+                document.getElementById('edit-phi-hang-thang').value = phiHangThang;
+
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('editPopup').style.display = 'block';
+            }
+
+            function closeEditPopup() {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('editPopup').style.display = 'none';
+            }
+
+            function saveEdit() {
+                const maPhong = document.getElementById('edit-ma-phong').value;
+                const loaiXe = document.getElementById('edit-loai-xe').value;
+                const bienXe = document.getElementById('edit-bien-xe').value;
+                const phiHangThang = document.getElementById('edit-phi-hang-thang').value;
+
+                const vehicle = vehicles.find(vehicle => vehicle.ma_phong === maPhong);
+                if (vehicle) {
+                    vehicle.loai_xe = loaiXe;
+                    vehicle.bien_xe = bienXe;
+                    vehicle.phi_hang_thang = phiHangThang;
+                }
+
+                closeEditPopup();
+                renderTable();
+            }
+
+            function deleteVehicle(maPhong) {
+                vehicles = vehicles.filter(vehicle => vehicle.ma_phong !== maPhong);
+                renderTable();
+            }
+
+            // Initial render
+            renderTable();
+        </script>
+</body>
+
+</html>

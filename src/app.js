@@ -59,6 +59,28 @@ app.use('/room', (req, res) => {
 app.use('/bill', (req, res) => {
     res.render('bills/bill')
 })
+
+app.use('/tra_cuu', (req, res) => {
+    res.render('tra_cuu')
+})
+
+app.use('/login', (req, res) => {
+    res.render('users/login')
+})
+app.use('/register', (req, res) => {
+    res.render('users/register')
+})
+app.use('/change-password', (req, res) => {
+    res.render('users/change-password')
+})
+app.use('/user-info', (req, res) => {
+    res.render('users/user-info')
+})
+app.use('/vehicle', (req, res) => {
+    res.render('vehicle/index')
+})
+
+
 app.use('/donations', donationRoute)
 app.use('/bills', billRoute)
 app.use('/rooms', roomRoute)
