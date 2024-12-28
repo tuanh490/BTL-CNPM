@@ -69,8 +69,8 @@ app.use('/bill', (req, res) => {
     res.render('bills/bill')
 })
 
-app.use('/tra_cuu', (req, res) => {
-    res.render('tra_cuu')
+app.use('/phi_co_so', (req, res) => {
+    res.render('phi_co_so')
 })
 
 app.get('/resident', (req, res) => {

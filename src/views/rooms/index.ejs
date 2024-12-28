@@ -195,11 +195,11 @@
 
                 <button class="btn" onclick="filterData()">Tìm kiếm</button>
             </div>
-
-            <!-- Add Resident Button -->
-            <div class="mt-3">
-                <button class="btn btn-add btn-success" onclick="openAddRoomPopup()">Thêm căn hộ mới</button>
+            <div>
+                <button class="btn btn-success btn-add" type="button" onclick="openAddPopup()">Thêm căn hộ mới</button>
             </div>
+
+
             <table>
                 <thead>
                     <tr>
@@ -224,6 +224,34 @@
             </div>
         </div>
 
+        <div class="form-popup" id="addPopup">
+            <h2>Thêm căn hộ mới</h2>
+            <form>
+                <div class="form-group">
+                    <label for="add-ma-can-ho">Mã căn hộ:</label>
+                    <input type="text" id="add-ma-can-ho">
+                </div>
+
+                <div class="form-group">
+                    <label for="add-chu-ho">Họ tên chủ hộ:</label>
+                    <input type="text" id="add-chu-ho">
+                </div>
+
+                <div class="form-group">
+                    <label for="add-cccd">Mã CCCD:</label>
+                    <input type="text" id="add-cccd">
+                </div>
+
+                <div class="form-group">
+                    <label for="add-dien-tich">Diện tích:</label>
+                    <input type="text" id="add-dien-tich">
+                </div>
+
+                <button class="btn btn-success" type="button" onclick="saveNewApartment()">Thêm</button>
+                <button class="btn btn-delete" type="button" onclick="closeAddPopup()">Đóng</button>
+            </form>
+        </div>
+
         <div class="form-popup" id="editPopup">
             <h2>Sửa thông tin căn hộ</h2>
             <form>
@@ -240,6 +268,11 @@
                 <div class="form-group">
                     <label for="edit-cccd">Mã CCCD:</label>
                     <input type="text" id="edit-cccd">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-dien-tich">Diện tích</label>
+                    <input type="text" id="edit-dien-tich">
                 </div>
 
                 <button class="btn btn-edit" type="button" onclick="saveEdit()">Lưu</button>
@@ -279,19 +312,19 @@
                     const row = document.createElement('tr');
 
                     row.innerHTML = `
-                <td>${apartment.maCanHo}</td>
-                <td>${apartment.diaDiem}</td>
-                <td>${apartment.chuHo || 'NULL'}</td>
-                <td>${apartment.cccd || 'NULL'}</td>
-                <td>${apartment.dienTich}</td>
-                <td>${apartment.trangThai}</td>
-                <td>
-                    <div class="btn-container">
-                        <button class="btn btn-edit" onclick="openEditPopup('${apartment.maCanHo}', '${apartment.chuHo}', '${apartment.cccd}', '${apartment.dienTich}')">Edit</button>
-                        <button class="btn btn-delete" onclick="resetApartment('${apartment.maCanHo}')">Delete</button>
-                    </div>
-                </td>
-            `;
+                    <td>${apartment.maCanHo}</td>
+                    <td>${apartment.diaDiem}</td>
+                    <td>${apartment.chuHo || 'NULL'}</td>
+                    <td>${apartment.cccd || 'NULL'}</td>
+                    <td>${apartment.dienTich}</td>
+                    <td>${apartment.trangThai}</td>
+                    <td>
+                        <div class="btn-container">
+                            <button class="btn btn-edit" onclick="openEditPopup('${apartment.maCanHo}', '${apartment.chuHo}', '${apartment.cccd}', '${apartment.dienTich}')">Edit</button>
+                            <button class="btn btn-delete" onclick="resetApartment('${apartment.maCanHo}')">Delete</button>
+                        </div>
+                    </td>
+                `;
 
                     tableBody.appendChild(row);
                 });
@@ -362,22 +395,48 @@
                     renderTable();
                 }
             }
+            function openAddPopup() {
+                document.getElementById('addPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
 
-            function resetApartment(maCanHo) {
-                const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
-                if (apartment) {
-                    apartment.chuHo = null;
-                    apartment.cccd = null;
-                    apartment.trangThai = 'Trống';
+            function closeAddPopup() {
+                document.getElementById('addPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            function saveNewApartment() {
+                const maCanHo = document.getElementById('add-ma-can-ho').value.trim();
+                const chuHo = document.getElementById('add-chu-ho').value.trim();
+                const cccd = document.getElementById('add-cccd').value.trim();
+                const dienTich = document.getElementById('add-dien-tich').value.trim();
+
+                if (!maCanHo || !dienTich) {
+                    alert('Mã căn hộ và diện tích là bắt buộc!');
+                    return;
                 }
-                alert(`Căn hộ ${maCanHo} đã được reset về trạng thái ban đầu!`);
+
+                const newApartment = {
+                    maCanHo: maCanHo,
+                    diaDiem: 'Tầng mới', // Default or dynamic value
+                    chuHo: chuHo || null,
+                    cccd: cccd || null,
+                    dienTich: dienTich,
+                    trangThai: chuHo && cccd ? 'Đang sử dụng' : 'Trống'
+                };
+
+                apartments.push(newApartment);
+
+                alert('Căn hộ mới đã được thêm!');
+                closeAddPopup();
                 renderTable();
             }
 
-            function openEditPopup(maCanHo, chuHo, cccd) {
+            function openEditPopup(maCanHo, chuHo, cccd, dienTich) {
                 document.getElementById('edit-ma-can-ho').value = maCanHo;
                 document.getElementById('edit-chu-ho').value = chuHo || '';
                 document.getElementById('edit-cccd').value = cccd || '';
+                document.getElementById('edit-dien-tich').value = dienTich || '';
 
                 document.getElementById('editPopup').style.display = 'block';
                 document.getElementById('overlay').style.display = 'block';
@@ -386,107 +445,19 @@
             function closeEditPopup() {
                 document.getElementById('editPopup').style.display = 'none';
                 document.getElementById('overlay').style.display = 'none';
-            }
-            function openAddRoomoomPopup() {
-                document.getElementById('addResidentPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            }
-
-            function closeAddRoomoomPopup() {
-                document.getElementById('addResidentPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }
-            function saveNewResident() {
-                const name = document.getElementById('add-name').value;
-                const dob = document.getElementById('add-dob').value;
-                const gender = document.getElementById('add-gender').value;
-                const cccd = document.getElementById('add-cccd').value;
-                const arrival = document.getElementById('add-arrival').value;
-                const departure = document.getElementById('add-departure').value;
-
-                if (!name || !dob) {
-                    alert('Ten va ngay sinh là bắt buộc!');
-                    return;
-                }
-
-                const newResident = {
-                    name: name,
-                    dob: dob, // Default or dynamic value
-                    gender: gender,
-                    cccd: cccd || null,
-                    arrival: arrival || null,
-                    departure: departure || null,
-                    status: departure ? 'Đang ở' : 'Đã rời đi'
-                };
-
-                residents.push(newResident);
-
-                alert('Nhân khẩu mới đã được thêm!');
-                closeAddResidentPopup();
-                renderTable();
-            }
-            // <td>${resident.name}</td>
-            //           <td>${resident.dob}</td>
-            //           <td>${resident.gender}</td>
-            //           <td>${resident.cccd}</td>
-            //           <td>${resident.arrival}</td>
-            //           <td>${resident.departure}</td>
-            //           <td>${resident.status}</td>
-            function openEditPopup(name, dob, gender, cccd, arrival, departure) {
-                document.getElementById('edit-name').value = name;
-                document.getElementById('edit-dob').value = dob;
-                document.getElementById('edit-gender').value = gender;
-                document.getElementById('edit-cccd').value = cccd || '';
-                document.getElementById('edit-arrival').value = arrival || '';
-                document.getElementById('edit-departure').value = departure || '';
-
-                document.getElementById('editPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            }
-
-            function closeEditPopup() {
-                document.getElementById('editPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }
-
-            function saveEdit() {
-                const name = document.getElementById('edit-name').value;
-                const dob = document.getElementById('edit-dob').value;
-                const gender = document.getElementById('edit-gender').value;
-                const cccd = document.getElementById('edit-cccd').value;
-                const arrival = document.getElementById('edit-arrival').value;
-                const departure = document.getElementById('edit-departure').value;
-
-                if (!name || !dob) {
-                    alert('Ten va ngay sinh là bắt buộc!');
-                    return;
-                }
-                const resident = residents.find(resident => resident.name === name);
-                if (resident) {
-                    resident.name = name;
-                    resident.dob = dob;
-                    resident.gender = gender;
-                    resident.cccd = cccd || null;
-                    resident.arrival = arrival || null;
-                    resident.departure = departure;
-                    resident.status = departure ? 'Đang ở' : 'Đã rời đi';
-                }
-
-
-                alert('Nhân khẩu đã được sửa!');
-                closeEditPopup();
-                renderTable();
             }
 
             function saveEdit() {
                 const maCanHo = document.getElementById('edit-ma-can-ho').value;
                 const chuHo = document.getElementById('edit-chu-ho').value.trim();
                 const cccd = document.getElementById('edit-cccd').value.trim();
+                const dienTich = document.getElementById('edit-dien-tich').value.trim();
 
                 const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
                 if (apartment) {
                     apartment.chuHo = chuHo || null;
                     apartment.cccd = cccd || null;
+                    apartment.dienTich = dienTich || null;
                     apartment.trangThai = chuHo && cccd ? 'Đang sử dụng' : 'Trống';
                 }
 
@@ -496,15 +467,17 @@
             }
 
             function resetApartment(maCanHo) {
-                const apartment = apartments.find(apartment => apartment.maCanHo === maCanHo);
-                if (apartment) {
-                    apartment.chuHo = null;
-                    apartment.cccd = null;
-                    apartment.trangThai = 'Trống';
+                const index = apartments.findIndex(apartment => apartment.maCanHo === maCanHo);
+                if (index !== -1) {
+                    const confirmation = confirm(`Bạn có chắc muốn xóa căn hộ ${maCanHo}?`);
+                    if (confirmation) {
+                        apartments.splice(index, 1); // Remove the record from the array
+                        alert(`Căn hộ ${maCanHo} đã được xóa!`);
+                        renderTable();
+                    }
                 }
-                alert(`Căn hộ ${maCanHo} đã được reset về trạng thái ban đầu!`);
-                renderTable();
             }
+
 
             renderTable();
         </script>
