@@ -17,6 +17,8 @@ import vehicleRoute from './router/vehicle.js'
 import ExpressError from './utils/ExpressError.js'
 import passport from './passport.js';
 
+import job from './insertSchedule.js';
+
 const app = express()
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -49,6 +51,8 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     next();
 })
+
+job.start();
 
 app.use('/donations', donationRoute)
 app.use('/bills', billRoute)

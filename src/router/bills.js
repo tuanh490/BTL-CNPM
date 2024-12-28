@@ -30,7 +30,6 @@ router.route('/base_bills')
     .post(CatchAsync(base_bills.createBaseBill))
 
 router.route('/base_bills/:id')
-    .get(CatchAsync(base_bills.showBaseBill))
     .put(CatchAsync(base_bills.updateBaseBill))
     .delete(CatchAsync(base_bills.deleteBaseBill))
 

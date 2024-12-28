@@ -19,3 +19,9 @@ export const donationSchema = Joi.object({
     so_tien: Joi.number().min(0).required(),
     thoi_gian: Joi.date().allow('', null)
 })
+
+export const baseBillSchema = Joi.object({
+    loai_phi: Joi.string().max(50).required(),
+    gia_co_so: Joi.number().required(),
+    mo_ta: Joi.string().allow('', null).default('')
+})
