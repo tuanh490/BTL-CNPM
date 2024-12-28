@@ -186,6 +186,9 @@
       <h2>Danh sách cư dân</h2>
 
       <!-- Filters -->
+      <div>
+        <button class="btn btn-danger btn-reset" onclick="resetFilters()">Đặt lại bộ lọc</button>
+    </div>
       <div class="filter">
         <label for="filter-name">Họ tên:</label>
         <input type="text" id="filter-name" placeholder="Nhập họ tên">
@@ -469,7 +472,7 @@
           pageNumbers.appendChild(lastButton);
         }
       }
-
+      let originalResident = [...residents];
       function filterResidents() {
         const name = document.getElementById('filter-name').value.trim();
         const cccd = document.getElementById('filter-cccd').value.trim();
@@ -483,6 +486,18 @@
         currentPage = 1;
         renderTable();
       }
+      function resetFilters() {
+    // Khôi phục lại mảng dữ liệu ban đầu
+    residents = [...originalResident];
+    currentPage = 1; // Đặt lại trang hiện tại
+
+    // Xóa nội dung của các bộ lọc
+    document.getElementById('filter-name').value = '';
+    document.getElementById('filter-cccd').value = '';
+
+
+    renderTable(); // Hiển thị lại bảng với dữ liệu gốc
+}
 
       function previousPage() {
         if (currentPage > 1) {

@@ -185,7 +185,9 @@
     <%-include('../partials/header') %>
     <div class="container">
         <h2>Danh sách căn hộ</h2>
-    
+        <div>
+            <button class="btn btn-danger btn-reset" onclick="resetFilters()">Đặt lại bộ lọc</button>
+        </div>
         <div class="filter">
             <label for="filter-ma-can-ho">Mã căn hộ:</label>
             <input type="text" id="filter-ma-can-ho" placeholder="Nhập mã căn hộ">
@@ -366,7 +368,7 @@
                 pageNumbers.appendChild(lastButton);
             }
         }
-    
+        let originalApartment = [...apartments];
         function filterData() {
             const maCanHo = document.getElementById('filter-ma-can-ho').value.trim();
             const trangThai = document.getElementById('filter-trang-thai').value.trim();
@@ -380,6 +382,18 @@
             currentPage = 1;
             renderTable();
         }
+        function resetFilters() {
+    // Khôi phục lại mảng dữ liệu ban đầu
+    apartments = [...originalApartment];
+    currentPage = 1; // Đặt lại trang hiện tại
+
+    // Xóa nội dung của các bộ lọc
+    document.getElementById('filter-ma-can-ho').value = '';
+    document.getElementById('filter-trang-thai').value = '';
+
+
+    renderTable(); // Hiển thị lại bảng với dữ liệu gốc
+}
     
         function previousPage() {
             if (currentPage > 1) {
