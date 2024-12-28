@@ -76,7 +76,9 @@ app.use('/tra_cuu', (req, res) => {
 app.get('/resident', (req, res) => {
     res.render('residents/index')
 })
-
+app.get('/declare', (req, res) => {
+    res.render('residents/declare')
+})
 app.get('/room', (req, res) => {
     res.render('rooms/index')
 })
