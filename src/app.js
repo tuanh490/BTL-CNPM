@@ -85,17 +85,17 @@ app.get('/room', (req, res) => {
     res.render('rooms/index')
 })
 
-app.use('/change-password', (req, res) => {
+app.get('/change-password', (req, res) => {
     res.render('users/change-password')
 })
-app.use('/register', (req, res) => {
+app.get('/register', (req, res) => {
     res.render('users/register')
 })
-app.use('/user-info', (req, res) => {
+app.get('/user-info', (req, res) => {
     res.render('users/user-info')
 })
 
-app.use('/vehicles', (req, res) => {
+app.get('/vehicles', (req, res) => {
     res.render('vehicle/index')
 })
 app.get('/', (req, res) => {

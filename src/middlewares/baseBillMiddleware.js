@@ -2,7 +2,7 @@ import checkObject from "../utils/checkObject.js";
 import { baseBillSchema } from "../schemas.js";
 import ExpressError from "../utils/ExpressError.js";
 
-export async function doesDonationExist(req, res, next) {
+export async function doesBaseBillExist(req, res, next) {
     const { id } = req.params
 
     if (!checkObject("phi_co_so", "id_phi_co_so", id)) {
