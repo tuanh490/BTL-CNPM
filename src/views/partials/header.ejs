@@ -42,8 +42,9 @@
                     class="bi bi-person-circle login-circle"></i></a>
                 <ul class="dropdown">
                   <li><a href="/login">Đăng nhập</a></li>
-                  <li><a href="/register">Đăng kí</a></li>
-
+                  <li>
+                    <button  onclick="logout()">Đăng xuất</button>
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -53,4 +54,10 @@
     </div>
   </header>
   <!-- end header section -->
+  <script>
+    function logout() {
+      // localStorage.removeItem('authToken'); 
+      window.location.href = '/login';
+    }
+  </script>
 </div>
