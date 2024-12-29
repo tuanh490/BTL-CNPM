@@ -107,7 +107,7 @@
 <body>
   <%-include('../../partials/header') %>
     <div class="container">
-      <h2 class="my-4">Quản lý Phí Cơ Sở</h2>
+      <h2 class="text-center">Quản lý Phí Cơ Sở</h2>
 
       <!-- Button to Add New Fee -->
       <button class="btn btn-primary" onclick="openAddPopup()">Thêm Phí Cơ Sở</button>
@@ -133,6 +133,7 @@
     <!-- Add/Edit Fee Popup -->
     <div class="form-popup" id="feeFormPopup">
       <h3 id="formTitle">Thêm Phí Cơ Sở</h3>
+     
       <form id="feeForm">
         <div class="form-group">
           <label for="feeType">Loại Phí</label>
@@ -257,7 +258,7 @@
         fees = fees.filter(fee => fee.id !== id);
         renderTable();
       }
-      function open_2(){}
+      function open_2() { }
       // Initial render of the table
       renderTable();
     </script>

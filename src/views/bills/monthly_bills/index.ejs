@@ -171,7 +171,7 @@
     <%-include('../../partials/header') %>
 
         <div class="container">
-            <h2>Danh sách thanh toán</h2>
+            <h2 class="text-center">Danh sách thanh toán</h2>
 
             <!-- Filter Buttons -->
 
@@ -290,10 +290,34 @@
                     <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
                     <input type="date" id="edit-thoi-gian-dong" class="form-control">
                 </div>
-
                 <button class="btn btn-success" type="button" onclick="saveEdit()">Lưu</button>
                 <button class="btn btn-delete" type="button" onclick="closeEditPopup()">Đóng</button>
+
             </form>
+        </div>
+        <div class="form-popup" id="billPopup">
+            <h2>Thông tin thanh toán</h2>
+            <div class="form-group">
+                <label for="edit-ma-can-ho">Mã căn hộ:</label>
+                <input type="text" id="edit-ma-can-ho" disabled class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="edit-tong-tien">Tổng tiền:</label>
+                <input type="text" id="edit-tong-tien" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="edit-thoi-gian-thu">Thời gian thu:</label>
+                <input type="date" id="edit-thoi-gian-thu" class="form-control" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
+                <input type="date" id="edit-thoi-gian-dong" class="form-control">
+            </div>
+            <button class="btn btn-delete" type="button" onclick="closeBillDetail()">Đóng</button>
+
         </div>
 
         <div class="overlay" id="overlay"></div>
@@ -321,7 +345,7 @@
 
                     row.innerHTML = `
                     <td>${payment.maCanHo}</td>
-                    <td>${payment.tongTien}</td>
+                    <td><button class="btn btn-primary" onclick="openBillDetail()">${payment.tongTien}</button></td>
                     <td>${payment.thoiGianThu}</td>
                     <td>${payment.thoiGianDong}</td>
                     <td>${payment.trangThai}</td>
@@ -329,7 +353,7 @@
                         <div class="btn-container">
                             <button class="btn btn-primary" onclick="openEditPopup('${payment.maCanHo}', '${payment.tongTien}', 
                                         '${payment.thoiGianThu}', '${payment.thoiGianDong}', '${payment.trangThai}')">Edit</button>
-                            <button class="btn btn-delete" onclick="DeletePayment('${payment.maCanHo}')">Delete</button>
+                            <button class="btn btn-delete" onclick="deletePayment('${payment.maCanHo}')">Delete</button>
                         </div>
                     </td>
                 `;
@@ -384,9 +408,20 @@
                 document.getElementById('overlay').style.display = 'block';
             }
 
+            function openBillDetail() {
+                document.getElementById('billPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
             function closeEditPopup() {
                 document.getElementById('editPopup').style.display = 'none';
                 document.getElementById('overlay').style.display = 'none';
+            }
+
+            function closeBillDetail() {
+                document.getElementById('billPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+                renderTable();
             }
 
             function saveEdit() {
@@ -444,6 +479,19 @@
                 renderTable();
             }
 
+
+
+            function deletePayment(name) {
+                const index = payments.findIndex(r => r.maCanHo === name);
+                if (index !== -1) {
+                    const confirmation = confirm(`Bạn có chắc muốn xóa khoản thanh toán này?`);
+                    if (confirmation) {
+                        payments.splice(index, 1);
+                        alert(`Khoản phí này đã được xóa`);
+                        renderTable();
+                    }
+                }
+            }
 
             let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
 

@@ -98,14 +98,19 @@
                 <!-- Password -->
                 <div class="form-group">
                     <label for="password">Mật khẩu:</label>
-                    <input id="password" type="password" value="**********" />
+                    <input id="password" type="text" value="datdz" readonly/>
                 </div>
 
                 <!-- Change Password Button -->
                 <div class="form-group">
-                    <a href="/change-password" class="btn-change-password">Cập nhật thông tin</a>
+                    <a href="/change-password" class="btn btn-change-password">Cập nhật thông tin</a>
+                </div>
+                <div class="link-container d-flex justify-content-center align-items-center flex-column">
+                    <h3><a href="/register" class="text-primary">Tạo tài khoản mới</a></h3>
+                    <h3> <a href="/change-password" class="text-primary">Đổi mật khẩu</a></h3>
                 </div>
             </form>
+
         </div>
 
         <%- include('../partials/footer_infosection')%>

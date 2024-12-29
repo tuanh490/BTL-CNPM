@@ -171,7 +171,7 @@
 <body>
     <%- include('../partials/header') %>
         <div class="container">
-            <h2>Danh sách xe</h2>
+            <h2 class="text-center">Danh sách xe</h2>
 
             <!-- Filters -->
             <div class="filter mt-4">
@@ -194,14 +194,13 @@
                     <button class="btn btn-primary" onclick="filterVehicles()">Tìm kiếm</button>
                     <button class="btn btn-danger bg-danger" onclick="resetFilters()">Đặt lại bộ lọc</button>
                     <button class="btn btn-success" onclick="openAddVehiclePopup()">Thêm xe mới</button>
-                    <a href="/history_vehicle" class="btn btn-info">Lịch sử</a>
                     &emsp;&emsp;&emsp;&emsp;
-                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount"></span></button>
+                    <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount"></span></button>
                 </div>
 
             </div>
 
-            
+
 
             <!-- Vehicles Table -->
             <table class="table table-striped mt-3">
@@ -210,7 +209,6 @@
                         <th>Mã phòng</th>
                         <th>Loại xe</th>
                         <th>Biển xe</th>
-
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -323,7 +321,7 @@
           
           <td>
             <button class="btn btn-primary" onclick="openEditPopup('${vehicle.ma_phong}', '${vehicle.loai_xe}', '${vehicle.bien_xe}')">Edit</button>
-            <button class="btn btn-danger" onclick="deleteVehicle('${vehicle.ma_phong}')">Delete</button>
+            <button class="btn btn-danger" onclick="deleteVehicle('${vehicle.bien_xe}')">Delete</button>
           </td>
         `;
                     tableBody.appendChild(row);
@@ -331,30 +329,7 @@
                 document.getElementById('recordCount').textContent = vehicles.length;
                 renderPagination();
             }
-            // lưu delete vehicle
-            let deletedVehicles = [];
-            function deleteVehicle(maPhong) {
-                const vehicleToDelete = vehicles.find(vehicle => vehicle.ma_phong === maPhong);
-                if (vehicleToDelete) {
-                    deletedVehicles.push(vehicleToDelete);
-                    vehicles = vehicles.filter(vehicle => vehicle.ma_phong !== maPhong);
-                    renderTable();
-                    renderDeletedTable(); // Render lại bảng các xe đã xóa
-                }
-            }
-            function renderDeletedTable() {
-                const tableBody = document.getElementById('deletedVehicleTableBody');
-                tableBody.innerHTML = '';
-                deletedVehicles.forEach(vehicle => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-        <td>${vehicle.ma_phong}</td>
-        <td>${vehicle.loai_xe}</td>
-        <td>${vehicle.bien_xe}</td>
-        `;
-                    tableBody.appendChild(row);
-                });
-            }
+
             function renderTable() {
                 // Render bảng hiện tại như bình thường
                 const tableBody = document.getElementById('vehicleTableBody');
@@ -370,7 +345,7 @@
         <td>${vehicle.bien_xe}</td>
         <td>
             <button class="btn btn-primary" onclick="openEditPopup('${vehicle.ma_phong}', '${vehicle.loai_xe}', '${vehicle.bien_xe}')">Edit</button>
-            <button class="btn btn-danger" onclick="deleteVehicle('${vehicle.ma_phong}')">Delete</button>
+            <button class="btn btn-danger" onclick="deleteVehicle('${vehicle.bien_xe}')">Delete</button>
         </td>
         `;
                     tableBody.appendChild(row);
@@ -413,7 +388,7 @@
                     renderTable();
                 }
             }
-
+            let originalVehicle = [...vehicles];
             function filterVehicles() {
                 const maPhongFilter = document.getElementById('filter-ma-phong').value.toLowerCase();
                 const loaiXeFilter = document.getElementById('filter-loai-xe').value;
@@ -428,9 +403,10 @@
                 currentPage = 1; // Reset to first page after filter
                 renderTable();
             }
-            function resetFilters() {
-                currentPage = 1; // Đặt lại trang hiện tại về trang 1
 
+            function resetFilters() {
+                vehicles = [...originalVehicle];
+                currentPage = 1;
                 // Xóa nội dung của các bộ lọc
                 document.getElementById('filter-ma-phong').value = '';
                 document.getElementById('filter-loai-xe').value = '';
@@ -465,11 +441,11 @@
                 renderTable();
             }
 
-            function openEditPopup(maPhong, loaiXe, bienXe, phiHangThang) {
+            function openEditPopup(maPhong, loaiXe, bienXe) {
                 document.getElementById('edit-ma-phong').value = maPhong;
                 document.getElementById('edit-loai-xe').value = loaiXe;
                 document.getElementById('edit-bien-xe').value = bienXe;
-                document.getElementById('edit-phi-hang-thang').value = phiHangThang;
+
 
                 document.getElementById('overlay').style.display = 'block';
                 document.getElementById('editPopup').style.display = 'block';
@@ -484,7 +460,7 @@
                 const maPhong = document.getElementById('edit-ma-phong').value;
                 const loaiXe = document.getElementById('edit-loai-xe').value;
                 const bienXe = document.getElementById('edit-bien-xe').value;
-                const phiHangThang = document.getElementById('edit-phi-hang-thang').value;
+
 
                 const vehicle = vehicles.find(vehicle => vehicle.ma_phong === maPhong);
                 if (vehicle) {
@@ -497,9 +473,18 @@
                 renderTable();
             }
 
-            function deleteVehicle(maPhong) {
-                vehicles = vehicles.filter(vehicle => vehicle.ma_phong !== maPhong);
-                renderTable();
+            function deleteVehicle(bienXe) {
+                const vehicleToDelete = vehicles.find(vehicle => vehicle.bien_xe === bienXe);
+                if (vehicleToDelete.ma_phong) { // Kiểm tra nếu tìm thấy vehicleToDelete
+                    const confirmation = confirm(`Bạn có chắc muốn xóa xe ${bienXe}?`);
+                    if (confirmation) {
+                        vehicles.splice(vehicleToDelete, 1);
+                        alert(`Cư dân ${bienXe} đã được xóa!`);
+                        renderTable();
+                    }
+                } else {
+                    alert(`Không tìm thấy xe với mã phòng: ${bienXe}`);
+                }
             }
 
             // Initial render

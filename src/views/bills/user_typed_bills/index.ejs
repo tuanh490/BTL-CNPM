@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif; 
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
@@ -167,7 +167,7 @@
 <body>
     <%-include('../../partials/header') %>
         <div class="container">
-            <h2>Phí ủng hộ</h2>
+            <h2 class="text-center">Phí điện nước internet</h2>
 
             <div class="filter mb-4">
                 <div class="filter-group">
@@ -194,8 +194,8 @@
                     <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
                     <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm khoản thu mới</button>
                     &emsp;&emsp;&emsp;&emsp;
-                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
-                  </div>
+                    <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
+                </div>
             </div>
 
             <table class="table table-bordered">
@@ -258,47 +258,47 @@
 
         <script>
             let phiData = [
-    {
-        id: 1,
-        ma_phong: 'A101',
-        loai_phi: 'Tiền điện',
-        so_tien: 500000,
-        mo_ta: 'Thanh toán tiền điện tháng 12',
-        thoi_gian: '2024-12-01'
-    },
-    {
-        id: 2,
-        ma_phong: 'A102',
-        loai_phi: 'Tiền nước',
-        so_tien: 200000,
-        mo_ta: 'Thanh toán tiền nước tháng 12',
-        thoi_gian: '2024-12-03'
-    },
-    {
-        id: 3,
-        ma_phong: 'B201',
-        loai_phi: 'Tiền vệ sinh',
-        so_tien: 150000,
-        mo_ta: 'Thanh toán phí vệ sinh hàng tháng',
-        thoi_gian: '2024-11-28'
-    },
-    {
-        id: 4,
-        ma_phong: 'B202',
-        loai_phi: 'Tiền thuê phòng',
-        so_tien: 2500000,
-        mo_ta: 'Tiền thuê phòng tháng 11',
-        thoi_gian: '2024-11-30'
-    },
-    {
-        id: 5,
-        ma_phong: 'C301',
-        loai_phi: 'Tiền internet',
-        so_tien: 300000,
-        mo_ta: 'Phí sử dụng internet tháng 11',
-        thoi_gian: '2024-11-25'
-    },
-];
+                {
+                    id: 1,
+                    ma_phong: 'A101',
+                    loai_phi: 'Tiền điện',
+                    so_tien: 500000,
+                    mo_ta: 'Thanh toán tiền điện tháng 12',
+                    thoi_gian: '2024-12-01'
+                },
+                {
+                    id: 2,
+                    ma_phong: 'A102',
+                    loai_phi: 'Tiền nước',
+                    so_tien: 200000,
+                    mo_ta: 'Thanh toán tiền nước tháng 12',
+                    thoi_gian: '2024-12-03'
+                },
+                {
+                    id: 3,
+                    ma_phong: 'B201',
+                    loai_phi: 'Tiền vệ sinh',
+                    so_tien: 150000,
+                    mo_ta: 'Thanh toán phí vệ sinh hàng tháng',
+                    thoi_gian: '2024-11-28'
+                },
+                {
+                    id: 4,
+                    ma_phong: 'B202',
+                    loai_phi: 'Tiền thuê phòng',
+                    so_tien: 2500000,
+                    mo_ta: 'Tiền thuê phòng tháng 11',
+                    thoi_gian: '2024-11-30'
+                },
+                {
+                    id: 5,
+                    ma_phong: 'C301',
+                    loai_phi: 'Tiền internet',
+                    so_tien: 300000,
+                    mo_ta: 'Phí sử dụng internet tháng 11',
+                    thoi_gian: '2024-11-25'
+                },
+            ];
             let editingId = null;
 
             let currentPage = 1;
@@ -434,8 +434,16 @@
 
             // Delete data
             function deletePhi(id) {
-                phiData = phiData.filter(p => p.id !== id);
-                renderTable();
+                const phiToDelete = phiData.find(p => p.id === id);
+                if (phiToDelete) {
+                    const confirmation = confirm(`Bạn có chắc muốn xóa phí ${phiToDelete.loai_phi} của phòng ${phiToDelete.ma_phong}?`);
+                    if (confirmation) {
+                        phiData = phiData.filter(p => p.id !== id);
+                        renderTable();
+                    }
+                } else {
+                    alert(`Không tìm thấy phí với ID: ${id}`);
+                }
             }
 
             let originalPayments = [...phiData]; // Lưu lại dữ liệu gốc
@@ -448,8 +456,8 @@
                 // Áp dụng bộ lọc
                 const filteredPayments = originalPayments.filter(payment => {
                     if (!payment.thoi_gian || isNaN(new Date(payment.thoi_gian).getTime())) {
-            return false;
-        }
+                        return false;
+                    }
                     const thuDate = new Date(payment.thoi_gian);
                     const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
                     const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;

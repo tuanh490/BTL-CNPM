@@ -183,7 +183,7 @@
 <body>
   <%- include('../partials/header') %>
     <div class="container">
-      <h2>Danh sách cư dân</h2>
+      <h2 class="text-center">Danh sách cư dân</h2>
       <div class="filter-group">
         <label for="filter-name">Họ tên:</label>
         <input type="text" id="filter-name" placeholder="Nhập họ tên" class="form-control">
@@ -192,13 +192,24 @@
         <label for="filter-cccd">Mã CCCD:</label>
         <input type="text" id="filter-cccd" placeholder="Nhập mã CCCD" class="form-control">
       </div>
+      <div class="filter-group">
+        <label for="filter-tt">Trạng thái:</label>
+        <select id="filter-tt" class="form-control">
+          <option value="">Tất cả</option>
+          <option value="Đang ở">Đang ở</option>
+          <option value="Đã rời đi">Đã rời đi</option>
+          <option value="Tạm vắng">Tạm vắng</option>
+          <option value="Tạm trú">Tạm trú</option>
+          <option value="Thường trú">Thường trú</option>
+        </select>
+      </div>
       <!-- Filters -->
       <div class="filter-group-btn my-4">
         <button class="btn btn-primary " onclick="filterResidents()">Tìm kiếm</button>
         <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
         <button class="btn btn-success  mx-auto" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
         &emsp;&emsp;&emsp;&emsp;
-                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
+        <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
       </div>
 
       <!-- Residents Table -->
@@ -244,6 +255,7 @@
         <div class="form-group">
           <label for="add-status">Trạng thái:</label>
           <select id="add-status" class="form-control">
+
             <option value="Đang ở">Đang ở</option>
             <option value="Đã rời đi">Đã rời đi</option>
             <option value="Tạm vắng">Tạm vắng</option>
@@ -274,8 +286,9 @@
           <input type="date" id="edit-arrival" class="form-control">
         </div>
         <div class="form-group">
-          <label for="add-status">Trạng thái:</label>
-          <select id="add-status" class="form-control">
+          <label for="edit-status">Trạng thái:</label>
+          <select id="edit-status" class="form-control">
+
             <option value="Đang ở">Đang ở</option>
             <option value="Đã rời đi">Đã rời đi</option>
             <option value="Tạm vắng">Tạm vắng</option>
@@ -349,11 +362,12 @@
       let originalResident = [...residents];
 
       function filterResidents() {
-        const name = document.getElementById('filter-name').value.trim();
-        const cccd = document.getElementById('filter-cccd').value.trim();
-
+        const name = document.getElementById('filter-name').value;
+        const cccd = document.getElementById('filter-cccd').value;
+        const tt = document.getElementById('filter-tt').value;
         residents = originalResident.filter(resident => {
-          return (name ? resident.name.includes(name) : true) && (cccd ? resident.cccd.includes(cccd) : true);
+          return (name ? resident.name.includes(name) : true) && (cccd ? resident.cccd.includes(cccd) : true)
+            && (tt === '' || resident.status === tt);
         });
 
         currentPage = 1;
@@ -365,6 +379,7 @@
         currentPage = 1;
         document.getElementById('filter-name').value = '';
         document.getElementById('filter-cccd').value = '';
+        document.getElementById('filter-tt').value = '';
         renderTable();
       }
 
