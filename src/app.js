@@ -107,7 +107,7 @@ app.get('/', (req, res) => {
     res.render('index');
 })
 
-app.get('/monthly_bills', (req, res) => {
+app.get('/monthly_bill', (req, res) => {
     res.render('bills/monthly_bills/index');
 })
 
