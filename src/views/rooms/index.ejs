@@ -190,15 +190,19 @@
               
             </div>
             <div class="filter-group">
-                <label for="filter-ma-phong">Mã căn hộ:</label>
-                <input type="text" id="filter-ma-phong" placeholder="Nhập mã căn hộ" class="form-control">
+                <label for="filter-ma-can-ho">Mã căn hộ:</label>
+                <input type="text" id="filter-ma-can-ho" placeholder="Nhập mã căn hộ" class="form-control">
             </div>
             <div class="filter-group">
                 <label for="filter-trang-thai">Trạng thái:</label>
-                <input type="text" id="filter-ma-phong" placeholder="Nhập trạng thái" class="form-control">
+                <select id="filter-trang-thai" class="form-control">
+                    <option value="">Chọn trạng thái</option>
+                    <option value="Đã thanh toán">Đang sử dụng</option>
+                    <option value="Chưa thanh toán">Trống</option>
+                </select>
             </div>
             <div class="filter-group-btn my-4">
-                <button class="btn btn-primary " onclick="filterVehicles()">Tìm kiếm</button>
+                <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
                 <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
                 <button class="btn btn-success mx-auto" type="button" onclick="openAddPopup()">Thêm căn hộ mới</button>
             </div>

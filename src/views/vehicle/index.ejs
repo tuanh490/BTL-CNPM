@@ -14,11 +14,13 @@
 
     <title>Vehicle Management</title>
 
-    <!-- Bootstrap & Custom Styles -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
     <link href="stylesheets/style.css" rel="stylesheet" />
     <link href="stylesheets/responsive.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
         body {
@@ -42,7 +44,6 @@
 
         .filter button {
             padding: 5px 10px;
-            background-color: #007bff;
             color: white;
             border: none;
             cursor: pointer;
@@ -192,15 +193,13 @@
                 <div class="filter-group-btn">
                     <button class="btn btn-primary" onclick="filterVehicles()">Tìm kiếm</button>
                     <button class="btn btn-danger bg-danger" onclick="resetFilters()">Đặt lại bộ lọc</button>
+                    <button class="btn btn-success" onclick="openAddVehiclePopup()">Thêm xe mới</button>
+                    <a href="/history_vehicle" class="btn btn-info">Lịch sử</a>
                 </div>
 
             </div>
 
-            <!-- Add Vehicle Button -->
-            <div class="button-group mt-4">
-                <button class="btn btn-success" onclick="openAddVehiclePopup()">Thêm xe mới</button>
-                <a href="/history_vehicle" class="btn btn-info">Lịch sử</a>
-            </div>
+            
 
             <!-- Vehicles Table -->
             <table class="table table-striped mt-3">

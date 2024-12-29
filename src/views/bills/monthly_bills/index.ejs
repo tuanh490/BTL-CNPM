@@ -17,11 +17,20 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif; 
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
-            /* Màu nền sáng hơn */
+        }
+
+
+        header .profile-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .container {
@@ -34,73 +43,56 @@
 
         .filter input {
             margin-right: 10px;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            background-color: #ffffff;
+            padding: 5px;
         }
 
         .filter button {
-            padding: 10px 15px;
+            padding: 5px 10px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .filter button:hover {
-            background-color: #0056b3;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #ffffff;
+            background-color: white;
         }
 
         table,
         th,
         td {
-            border: 1px solid #e1e1e1;
+            border: 1px solid #ccc;
         }
 
         th,
         td {
-            padding: 12px;
+            padding: 10px;
             text-align: left;
         }
 
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-
         .btn {
-            padding: 8px 12px;
+            color: white;
+            padding: 5px 10px;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
         }
 
         .btn-edit {
-            background-color: #28a745;
-            color: white;
+            background-color: #007bff;
         }
 
         .btn-edit:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
 
         .btn-delete {
             background-color: #dc3545;
-            color: white;
         }
 
         .btn-delete:hover {
-            background-color: #c82333;
+            background-color: #a71d2a;
         }
 
         .btn-container {
@@ -114,48 +106,31 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 1px solid #ced4da;
-            background-color: #ffffff;
+            border: 1px solid #ccc;
+            background-color: white;
             padding: 20px;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            border-radius: 8px;
         }
 
         .form-popup .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-popup .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
+            margin-bottom: 5px;
         }
 
         .form-popup .form-group input {
             width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-            background-color: #ffffff;
+            padding: 8px;
+            box-sizing: border-box;
         }
 
         .form-popup .btn {
             display: inline-block;
-            width: 100%;
-            padding: 12px 15px;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .form-popup .btn:hover {
-            background-color: #0056b3;
+            margin-top: 10px;
         }
 
         .overlay {
@@ -176,22 +151,17 @@
 
         .pagination button {
             margin: 0 5px;
-            padding: 8px 16px;
+            padding: 5px 10px;
             cursor: pointer;
-            background-color: #e9ecef;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
 
-        .pagination button:hover {
-            background-color: #007bff;
-            color: white;
+        .pagination .page-numbers {
+            display: inline-flex;
+            gap: 5px;
         }
 
         .pagination .current-page {
             font-weight: bold;
-            color: #007bff;
         }
     </style>
 
@@ -224,8 +194,8 @@
                     <label for="filter-status">Trạng thái:</label>
                     <select id="filter-status" class="form-control">
                         <option value="">Chọn trạng thái</option>
-                        <option value="Đã thanh toán">Đã thanh toán</option>
-                        <option value="Chưa thanh toán">Chưa thanh toán</option>
+                        <option value="Đã thanh toán"> Đã thanh toán</option>
+                        <option value="Chưa thanh toán"> Chưa thanh toán</option>
                     </select>
                 </div>
 
@@ -238,7 +208,7 @@
                 <div class="filter-group-btn my-4">
                     <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
                     <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
-                    <button class="btn bg-success mx-auto" onclick="openAddResidentPopup()">Thêm dữ liệu</button>
+                    <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm dữ liệu</button>
                   </div>
             </div>
 
@@ -503,7 +473,7 @@
                 // Xóa nội dung của các bộ lọc
                 document.getElementById('filter-thoi-gian-thu-thang').value = '';
                 document.getElementById('filter-thoi-gian-thu-nam').value = '';
-                document.getElementById('filter-status').value = '';
+                document.getElementById('   ').value = '';
                 document.getElementById('filter-room').value = '';
 
                 renderTable(); // Hiển thị lại bảng với dữ liệu gốc
