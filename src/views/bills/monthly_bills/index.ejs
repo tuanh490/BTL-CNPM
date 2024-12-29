@@ -329,7 +329,7 @@
                         <div class="btn-container">
                             <button class="btn btn-primary" onclick="openEditPopup('${payment.maCanHo}', '${payment.tongTien}', 
                                         '${payment.thoiGianThu}', '${payment.thoiGianDong}', '${payment.trangThai}')">Edit</button>
-                            <button class="btn btn-delete" onclick="DeletePayment('${payment.maCanHo}')">Delete</button>
+                            <button class="btn btn-delete" onclick="DeletePayment('${payment.maCanHo}','${payment.thoiGianThu}')">Delete</button>
                         </div>
                     </td>
                 `;
@@ -443,7 +443,19 @@
                 closeAddPopup();
                 renderTable();
             }
-
+            function DeletePayment(maCanHo, thoiGianThu) {
+                const index = payments.findIndex(
+        payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
+    );
+        if (index !== -1 ) {
+          const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
+          if (confirmation) {
+            payments.splice(index, 1); // Remove the record from the array
+            alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
+            renderTable();
+          }
+        }
+      }
 
             let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
 

@@ -443,7 +443,7 @@
           <td>
             <button class="btn btn-primary" onclick="openEditPopup('${resident.name}', '${resident.dob}', '${resident.gender}',
                     '${resident.cccd}', '${resident.arrival}', '${resident.departure}')">Edit</button>
-            <button class="btn btn-danger" onclick="deleteResident('${resident.name}')">Delete</button>
+            <button class="btn btn-danger" onclick="deleteResident('${resident.name}','${resident.cccd}')">Delete</button>
           </td>
         `;
           tableBody.appendChild(row);
@@ -626,13 +626,13 @@
         renderTable();
       }
 
-      function deleteResident(name) {
-        const index = residents.findIndex(resident => resident.name === name);
+      function deleteResident(name, cccd) {
+        const index = residents.findIndex(r => r.name === name && r.cccd===cccd);
         if (index !== -1) {
-          const confirmation = confirm(`Bạn có chắc muốn xóa cư dân ${name}?`);
+          const confirmation = confirm(`Bạn có chắc muốn xóa cư dân ${name}, mã căn cước ${cccd}?`);
           if (confirmation) {
-            residents.splice(index, 1); // Remove the record from the array
-            alert(`Cư dân ${name} đã được xóa!`);
+            residents.splice(index, 1);
+            alert(`Cư dân ${name}, mã căn cước ${cccd} đã được xóa!`);
             renderTable();
           }
         }
