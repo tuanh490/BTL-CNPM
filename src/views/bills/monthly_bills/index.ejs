@@ -228,10 +228,10 @@
                 </tbody>
             </table>
 
-            <div class="pagination mt-4">
-                <button class="btn btn-outline-secondary" onclick="previousPage()">Previous</button>
+            <div class="pagination ">
+                <button  onclick="previousPage()">Previous</button>
                 <span class="page-numbers" id="pageNumbers"></span>
-                <button class="btn btn-outline-secondary" onclick="nextPage()">Next</button>
+                <button class="" onclick="nextPage()">Next</button>
             </div>
         </div>
 
@@ -473,7 +473,7 @@
                 // Xóa nội dung của các bộ lọc
                 document.getElementById('filter-thoi-gian-thu-thang').value = '';
                 document.getElementById('filter-thoi-gian-thu-nam').value = '';
-                document.getElementById('   ').value = '';
+                document.getElementById('filter-status').value = '';
                 document.getElementById('filter-room').value = '';
 
                 renderTable(); // Hiển thị lại bảng với dữ liệu gốc
