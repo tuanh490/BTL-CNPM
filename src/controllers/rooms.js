@@ -52,7 +52,7 @@ export async function updateRoom(req, res) {
     }
 
 
-    const result = await pool.query(`
+    await pool.query(`
         UPDATE phong
         SET
         trang_thai = ?,

@@ -16,7 +16,22 @@ export async function createMonthlyBill(req, res) {
 
 export async function showMonthlyBill(req, res) {
     // Currently not in use
-    res.redirect(303, '/bills/monthly_bills/:id')
+    const { id } = req.params
+    const [phi_hang_thang] = await pool.query(`
+        SELECT loai_phi, so_tien, mo_ta
+        FROM phi_hang_thang
+        WHERE id_thanh_toan = ? 
+        `, [id])
+
+    const [phi_tu_nhap] = await pool.query(`
+        SELECT loai_phi, so_tien, mo_ta, thoi_gian
+        FROM phi_tu_nhap
+        WHERE id_thanh_toan = ?
+        `, [id])
+
+
+    // Fix to render
+    res.redirect(303, `/monthly_bills/${id}`, { phi_hang_thang, phi_tu_nhap })
 }
 
 export async function updateMonthlyBill(req, res) {
@@ -31,7 +46,7 @@ export async function updateMonthlyBill(req, res) {
     }
 
     const result = await pool.query(`
-        UPDATE phi_tu_nhap
+        UPDATE thanh_toan_hang_thang
         SET
         thoi_gian_dong = ?,
         trang_thai = ?

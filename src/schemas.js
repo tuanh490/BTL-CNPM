@@ -37,3 +37,14 @@ export const monthlyBillSchema = Joi.object({
     thoi_gian_dong: Joi.date().allow('', null),
     trang_thai: Joi.number().allow(null).default(0)
 })
+
+export const residentSchema = Joi.object({
+    can_cuoc_cong_dan: Joi.string().length(12).allow('', null).default(null),
+    ma_phong: Joi.string().max(10).required(),
+    ho_ten: Joi.string().max(100).required(),
+    gioi_tinh: Joi.string().default(null),
+    ngay_sinh: Joi.date().allow('', null),
+    timeIn: Joi.date().required().allow('', null),
+    timeOut: Joi.date().allow('', null),
+    dang_o: Joi.number()
+})
