@@ -13,6 +13,7 @@ import billRoute from './router/bills.js'
 import userRoute from './router/users.js'
 import donationRoute from './router/donations.js'
 import vehicleRoute from './router/vehicle.js'
+import residencyRoute from './router/residency.js'
 
 import ExpressError from './utils/ExpressError.js'
 import passport from './passport.js';
@@ -58,6 +59,7 @@ app.use('/donations', donationRoute)
 app.use('/rooms', roomRoute)
 app.use('/residents', residentRoute)
 app.use('/vehicle', vehicleRoute)
+app.use('/residency', residencyRoute)
 app.use('/', billRoute)
 app.use('/', userRoute)
 

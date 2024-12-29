@@ -48,3 +48,11 @@ export const residentSchema = Joi.object({
     timeOut: Joi.date().allow('', null),
     dang_o: Joi.number()
 })
+
+export const residencySchema = Joi.object({
+    trang_thai: Joi.string().required(),
+    thoi_gian: Joi.date().allow('', null),
+    mo_ta: Joi.string().allow('', null).default(''),
+    can_cuoc_cong_dan: Joi.string().length(12).allow('', null).default(null),
+    ho_ten: Joi.string().required()
+})
