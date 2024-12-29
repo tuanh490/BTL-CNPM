@@ -296,35 +296,86 @@
             </form>
         </div>
         <div class="form-popup" id="billPopup">
-            <h2>Thông tin thanh toán</h2>
-            <div class="form-group">
-                <label for="edit-ma-can-ho">Mã căn hộ:</label>
-                <input type="text" id="edit-ma-can-ho" disabled class="form-control">
-            </div>
+            <table class="table mt-4">
+                <h2>Thông tin thanh toán</h2>
+                <thead>
+                    <tr>
+                        <th>Mã căn hộ</th>
+                        <th>Thời gian</th>
+                        <th>Tiền quản lý</th>
+                        <th>Tiền dịch vụ</th>
+                        <th>Tiền điện</th>
+                        <th>Tiền nước</th>
+                        <th>Tiền internet</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody id="billDetailTableBody">
 
-            <div class="form-group">
-                <label for="edit-tong-tien">Tổng tiền:</label>
-                <input type="text" id="edit-tong-tien" class="form-control">
-            </div>
-
-            <div class="form-group">
-                <label for="edit-thoi-gian-thu">Thời gian thu:</label>
-                <input type="date" id="edit-thoi-gian-thu" class="form-control" disabled>
-            </div>
-
-            <div class="form-group">
-                <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
-                <input type="date" id="edit-thoi-gian-dong" class="form-control">
-            </div>
+                </tbody>
+            </table>
             <button class="btn btn-delete" type="button" onclick="closeBillDetail()">Đóng</button>
 
         </div>
 
         <div class="overlay" id="overlay"></div>
         <script>
+            let billDetail = [
+                {
+                    maCanHo: 'A101',
+                    thoiGian: '2024-01-01',
+                    tienQuanLy: '1,000,000 VND',
+                    tienDichVu: '1,000,000 VND',
+                    tienDien: '1,000,000 VND',
+                    tienNuoc: '1,000,000 VND',
+                    tienInternet: '1,000,000 VND',
+                    tongTien: '5,000,000 VND'
+                },
+
+            ]
+
+            function renderTableBillDetail(maCanHo, thoiGianThu) {
+                const tableBody = document.getElementById('billDetailTableBody');
+                tableBody.innerHTML = '';
+                const billDetail = payments.find(payments => payments.maCanHo === maCanHo && payments.thoiGianThu === thoiGianThu);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${billDetail.maCanHo}</td>
+                    <td>${billDetail.thoiGianThu}</td>
+                    <td>${billDetail.chiPhi.tienQuanLy}</td>
+                    <td>${billDetail.chiPhi.tienDichVu}</td>
+                    <td>${billDetail.chiPhi.tienDien}</td>
+                    <td>${billDetail.chiPhi.tienNuoc}</td>
+                    <td>${billDetail.chiPhi.tienInternet}</td>
+                    <td>${billDetail.chiPhi.tongTien}</td>
+                `;
+                tableBody.appendChild(row);
+
+
+                document.getElementById('recordCount').textContent = payments.length;
+            }
+
             let payments = [
-                { maCanHo: 'A101', tongTien: '5,000,000 VND', thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán' },
-                { maCanHo: 'B202', tongTien: '3,000,000 VND', thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán' },
+                {
+                    maCanHo: 'A101', chiPhi: {
+                        tienQuanLy: 1000000,
+                        tienDichVu: 1000000,
+                        tienDien: 1000000,
+                        tienNuoc: 1000000,
+                        tienInternet: 1000000,
+                        tongTien: 5000000
+                    }, thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán'
+                },
+                {
+                    maCanHo: 'B202', chiPhi: {
+                        tienQuanLy: 1000000,
+                        tienDichVu: 1000000,
+                        tienDien: 1000000,
+                        tienNuoc: 0,
+                        tienInternet: 0,
+                        tongTien: 0,
+                    }, thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán'
+                },
                 // Add more dummy data
             ];
 
@@ -345,7 +396,7 @@
 
                     row.innerHTML = `
                     <td>${payment.maCanHo}</td>
-                    <td><button class="btn btn-primary" onclick="openBillDetail()">${payment.tongTien}</button></td>
+                    <td><button class="btn btn-primary" onclick="openBillDetail('${payment.maCanHo}', '${payment.thoiGianThu}')">${payment.chiPhi.tongTien}</button></td>
                     <td>${payment.thoiGianThu}</td>
                     <td>${payment.thoiGianDong}</td>
                     <td>${payment.trangThai}</td>
@@ -408,9 +459,11 @@
                 document.getElementById('overlay').style.display = 'block';
             }
 
-            function openBillDetail() {
+            function openBillDetail(maCanHo, thoiGianThu) {
+
                 document.getElementById('billPopup').style.display = 'block';
                 document.getElementById('overlay').style.display = 'block';
+                renderTableBillDetail(maCanHo, thoiGianThu)
             }
 
             function closeEditPopup() {
@@ -480,17 +533,17 @@
             }
             function DeletePayment(maCanHo, thoiGianThu) {
                 const index = payments.findIndex(
-        payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
-    );
-        if (index !== -1 ) {
-          const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
-          if (confirmation) {
-            payments.splice(index, 1); // Remove the record from the array
-            alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
-            renderTable();
-          }
-        }
-      }
+                    payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
+                );
+                if (index !== -1) {
+                    const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
+                    if (confirmation) {
+                        payments.splice(index, 1); // Remove the record from the array
+                        alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
+                        renderTable();
+                    }
+                }
+            }
 
             let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
 
