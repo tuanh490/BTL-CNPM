@@ -205,6 +205,8 @@
                 <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
                 <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
                 <button class="btn btn-success mx-auto" type="button" onclick="openAddPopup()">Thêm căn hộ mới</button>
+                &emsp;&emsp;&emsp;&emsp;
+                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
             </div>
 
             
@@ -338,6 +340,7 @@
 
                     tableBody.appendChild(row);
                 });
+                document.getElementById('recordCount').textContent = apartments.length;
                 renderPagination();
             }
 

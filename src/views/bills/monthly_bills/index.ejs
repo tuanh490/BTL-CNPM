@@ -48,7 +48,6 @@
 
         .filter button {
             padding: 5px 10px;
-            background-color: #007bff;
             color: white;
             border: none;
             cursor: pointer;
@@ -208,7 +207,9 @@
                 <div class="filter-group-btn my-4">
                     <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
                     <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
-                    <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm dữ liệu</button>
+                    <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm khoản thu mới</button>
+                    &emsp;&emsp;&emsp;&emsp;
+                    <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
                 </div>
             </div>
 
@@ -335,6 +336,7 @@
 
                     tableBody.appendChild(row);
                 });
+                document.getElementById('recordCount').textContent = payments.length;
                 renderPagination();
             }
 

@@ -197,6 +197,8 @@
         <button class="btn btn-primary " onclick="filterResidents()">Tìm kiếm</button>
         <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
         <button class="btn btn-success  mx-auto" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
+        &emsp;&emsp;&emsp;&emsp;
+                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
       </div>
 
       <!-- Residents Table -->
@@ -322,7 +324,7 @@
     `;
           tableBody.appendChild(row);
         });
-
+        document.getElementById('recordCount').textContent = residents.length;
         renderPagination();
       }
 

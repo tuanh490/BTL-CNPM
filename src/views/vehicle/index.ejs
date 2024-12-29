@@ -195,6 +195,8 @@
                     <button class="btn btn-danger bg-danger" onclick="resetFilters()">Đặt lại bộ lọc</button>
                     <button class="btn btn-success" onclick="openAddVehiclePopup()">Thêm xe mới</button>
                     <a href="/history_vehicle" class="btn btn-info">Lịch sử</a>
+                    &emsp;&emsp;&emsp;&emsp;
+                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount"></span></button>
                 </div>
 
             </div>
@@ -326,7 +328,7 @@
         `;
                     tableBody.appendChild(row);
                 });
-
+                document.getElementById('recordCount').textContent = vehicles.length;
                 renderPagination();
             }
             // lưu delete vehicle
@@ -373,7 +375,7 @@
         `;
                     tableBody.appendChild(row);
                 });
-
+                document.getElementById('recordCount').textContent = vehicles.length;
                 renderPagination();
             }
 
