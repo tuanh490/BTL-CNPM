@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Payment List</title>
+
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css" />
+    <link href="stylesheets/style.css" rel="stylesheet" />
+    <link href="stylesheets/responsive.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        header .profile-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .filter {
+            margin-bottom: 20px;
+        }
+
+        .filter input {
+            margin-right: 10px;
+            padding: 5px;
+        }
+
+        .filter button {
+            padding: 5px 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ccc;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .btn {
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #007bff;
+        }
+
+        .btn-edit:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-delete:hover {
+            background-color: #a71d2a;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-popup .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-popup .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-popup .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .form-popup .btn {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .pagination .page-numbers {
+            display: inline-flex;
+            gap: 5px;
+        }
+
+        .pagination .current-page {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <%-include('../partials/header') %>
+        <div class="container">
+            <h2 class="text-center">Phí ủng hộ</h2>
+
+            <div class="filter mb-4">
+                <div class="filter-group">
+                    <label for="filter-thoi-gian-thu-thang">Tháng:</label>
+                    <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12"
+                        class="form-control">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-thoi-gian-thu-nam">Năm:</label>
+                    <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030"
+                        class="form-control">
+                </div>
+
+
+                <div class="filter-group">
+                    <label for="filter-room">Mã phòng:</label>
+                    <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
+                </div>
+
+                <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
+                <div class="filter-group-btn my-4">
+                    <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
+                    <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
+                    <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm khoản thu mới</button>
+                    &emsp;&emsp;&emsp;&emsp;
+                    <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
+                </div>
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mã Phòng</th>
+                        <th>Loại Phí</th>
+                        <th>Số Tiền</th>
+                        <th>Mô Tả</th>
+                        <th>Thời Gian</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="phiTableBody">
+                    <!-- Dữ liệu sẽ được tải động từ server -->
+                </tbody>
+            </table>
+            <div class="pagination mt-4">
+                <button class="" onclick="previousPage()">Previous</button>
+                <span class="page-numbers" id="pageNumbers"></span>
+                <button class="" onclick="nextPage()">Next</button>
+            </div>
+        </div>
+
+        <!-- Form Popup -->
+        <div class="form-popup" id="phiFormPopup">
+            <h4 id="popupTitle">Thêm Phí Ủng Hộ</h4>
+            <form id="phiForm">
+                <div class="mb-3">
+                    <label for="maPhong" class="form-label">Mã Phòng</label>
+                    <input type="text" id="maPhong" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="loaiPhi" class="form-label">Loại Phí</label>
+                    <input type="text" id="loaiPhi" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="soTien" class="form-label">Số Tiền</label>
+                    <input type="number" id="soTien" class="form-control" step="0.01">
+                </div>
+
+                <div class="mb-3">
+                    <label for="moTa" class="form-label">Mô Tả</label>
+                    <textarea id="moTa" class="form-control"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="thoiGian" class="form-label">Thời Gian</label>
+                    <input type="date" id="thoiGian" class="form-control">
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="savePhi()">Save</button>
+                <button type="button" class="btn btn-danger" onclick="closePopup()">Close</button>
+            </form>
+        </div>
+        <div class="overlay" id="overlay"></div>
+
+        <script>
+            let phiData = [
+
+            ];
+            let editingId = null;
+
+            let currentPage = 1;
+            const pageSize = 5;
+
+            // Render the table
+            function renderTable() {
+                const tableBody = document.getElementById('phiTableBody');
+                tableBody.innerHTML = '';
+
+                const startIndex = (currentPage - 1) * pageSize;
+                const endIndex = startIndex + pageSize;
+
+                const currentPageData = phiData.slice(startIndex, endIndex);
+
+                currentPageData.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.ma_phong}</td>
+          <td>${item.loai_phi}</td>
+          <td>${item.so_tien || ''}</td>
+          <td>${item.mo_ta || ''}</td>
+          <td>${item.thoi_gian || ''}</td>
+          <td>
+            <button class="btn btn-primary" onclick="editPhi(${item.id})">Edit</button>
+            <button class="btn btn-danger" onclick="deletePhi(${item.id})">Delete</button>
+          </td>
+        `;
+                    tableBody.appendChild(row);
+                });
+                document.getElementById('recordCount').textContent = phiData.length;
+                renderPagination();
+            }
+            function renderPagination() {
+                const pageNumbers = document.getElementById('pageNumbers');
+                pageNumbers.innerHTML = '';
+
+                const totalPages = Math.ceil(phiData.length / pageSize);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const button = document.createElement('button');
+                    button.textContent = i;
+                    button.className = i === currentPage ? 'current-page' : '';
+                    button.onclick = () => {
+                        currentPage = i;
+                        renderTable();
+                    };
+
+                    pageNumbers.appendChild(button);
+                }
+            }
+
+            function previousPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                }
+            }
+
+            function nextPage() {
+                const totalPages = Math.ceil(phiData.length / pageSize);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            }
+
+            // Open add popup
+            function openAddPopup() {
+                editingId = null;
+                document.getElementById('phiForm').reset();
+                document.getElementById('popupTitle').innerText = 'Thêm Phí Tự Nhập';
+                document.getElementById('phiFormPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            // Open edit popup
+            function editPhi(id) {
+                const phi = phiData.find(p => p.id === id);
+                if (!phi) return;
+
+                editingId = id;
+                document.getElementById('maPhong').value = phi.ma_phong;
+                document.getElementById('loaiPhi').value = phi.loai_phi;
+                document.getElementById('soTien').value = phi.so_tien || '';
+                document.getElementById('moTa').value = phi.mo_ta || '';
+                document.getElementById('thoiGian').value = phi.thoi_gian || '';
+
+                document.getElementById('popupTitle').innerText = 'Sửa Phí Tự Nhập';
+                document.getElementById('phiFormPopup').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+
+            // Close popup
+            function closePopup() {
+                document.getElementById('phiFormPopup').style.display = 'none';
+                document.getElementById('overlay').style.display = 'none';
+            }
+
+            // Save data
+            function savePhi() {
+                const maPhong = document.getElementById('maPhong').value;
+                const loaiPhi = document.getElementById('loaiPhi').value;
+                const soTien = parseFloat(document.getElementById('soTien').value) || null;
+                const moTa = document.getElementById('moTa').value;
+                const thoiGian = document.getElementById('thoiGian').value || null;
+
+                if (editingId) {
+                    const phi = phiData.find(p => p.id === editingId);
+                    if (phi) {
+                        phi.ma_phong = maPhong;
+                        phi.loai_phi = loaiPhi;
+                        phi.so_tien = soTien;
+                        phi.mo_ta = moTa;
+                        phi.thoi_gian = thoiGian;
+                    }
+                } else {
+                    const newPhi = {
+                        id: phiData.length + 1,
+                        ma_phong: maPhong,
+                        loai_phi: loaiPhi,
+                        so_tien: soTien,
+                        mo_ta: moTa,
+                        thoi_gian: thoiGian,
+                    };
+                    phiData.push(newPhi);
+                }
+
+                renderTable();
+                closePopup();
+            }
+
+            // Delete data
+            function deletePhi(id) {
+                const phiToDelete = phiData.find(p => p.id === id);
+                if (phiToDelete) {
+                    const confirmation = confirm(`Bạn có chắc muốn xóa phí ${phiToDelete.loai_phi} của phòng ${phiToDelete.ma_phong}?`);
+                    if (confirmation) {
+                        phiData = phiData.filter(p => p.id !== id);
+                        renderTable();
+                    }
+                } else {
+                    alert(`Không tìm thấy phí với ID: ${id}`);
+                }
+            }
+
+            let originalPayments = [...phiData]; // Lưu lại dữ liệu gốc
+
+            function filterData() {
+                const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
+                const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
+                const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
+
+                // Áp dụng bộ lọc
+                const filteredPayments = originalPayments.filter(payment => {
+                    if (!payment.thoi_gian || isNaN(new Date(payment.thoi_gian).getTime())) {
+                        return false;
+                    }
+                    const thuDate = new Date(payment.thoi_gian);
+                    const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
+                    const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
+                    const matchesRoomCode = roomCode ? payment.ma_phong.toLowerCase().includes(roomCode) : true;
+
+                    return matchesYear && matchesMonth && matchesRoomCode;
+                });
+
+                phiData = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
+                currentPage = 1; // Đặt lại trang hiện tại
+                renderTable(); // Hiển thị lại bảng
+            }
+
+            function resetFilters() {
+                // Khôi phục lại mảng dữ liệu ban đầu
+                phiData = [...originalPayments];
+                currentPage = 1; // Đặt lại trang hiện tại
+
+                // Xóa nội dung của các bộ lọc
+                document.getElementById('filter-thoi-gian-thu-thang').value = '';
+                document.getElementById('filter-thoi-gian-thu-nam').value = '';
+                document.getElementById('filter-room').value = '';
+
+                renderTable(); // Hiển thị lại bảng với dữ liệu gốc
+            }
+
+            // Initial render
+            renderTable();
+        </script>
+        <%-include('../partials/footer_infosection') %>
+</body>
+
+</html>

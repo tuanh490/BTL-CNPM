@@ -100,9 +100,7 @@ app.get('/user-info', (req, res) => {
 app.get('/vehicles', (req, res) => {
     res.render('vehicle/index')
 })
-app.use('/history_vehicle', (req, res) => {
-    res.render('vehicle/history_vehicle')
-})
+
 app.get('/', (req, res) => {
     res.render('index');
 })
@@ -115,6 +113,9 @@ app.get('/user_typed_bills', (req, res) => {
     res.render('bills/user_typed_bills/index');
 })
 
+app.get('/ung_ho', (req, res) => {
+    res.render('donations/index.ejs');
+})
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
