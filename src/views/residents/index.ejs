@@ -192,11 +192,25 @@
         <label for="filter-cccd">Mã CCCD:</label>
         <input type="text" id="filter-cccd" placeholder="Nhập mã CCCD" class="form-control">
       </div>
+      <div class="filter-group">
+        <label for="filter-ngay-sinh">Ngày sinh:</label>
+        <input type="date" id="filter-ngay-sinh" placeholder="Nhập mã CCCD" class="form-control">
+      </div>
+      <div class="filter-group">
+        <label for="filter-trang-thai">Trạng thái:</label>
+        <select id="filter-trang-thai" class="form-control">
+            <option value="">Tất cả</option>
+            <option value="Đang ở"> Đang ở</option>
+            <option value="Đã rời đi"> Đã rời đi</option>
+        </select>
+    </div>
       <!-- Filters -->
       <div class="filter-group-btn my-4">
-        <button class="btn btn-primary " onclick="filterResident()">Tìm kiếm</button>
+        <button class="btn btn-primary " onclick="filterResidents()">Tìm kiếm</button>
         <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
         <button class="btn btn-success  mx-auto" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
+        &emsp;&emsp;&emsp;&emsp;
+                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
       </div>
 
 
@@ -434,7 +448,7 @@
         `;
           tableBody.appendChild(row);
         });
-
+        document.getElementById('recordCount').textContent = residents.length;
         renderPagination();
       }
 
@@ -477,13 +491,19 @@
       function filterResidents() {
         const name = document.getElementById('filter-name').value.trim();
         const cccd = document.getElementById('filter-cccd').value.trim();
+        const status = document.getElementById('filter-trang-thai').value.trim();
+        const dob = document.getElementById('filter-ngay-sinh').value.trim();
+        
+        const filteredResidents = originalResident.filter(resident => {
+                    
+                    const matchesName = name ? resident.name === name : true;
+                    const matchesCCCD = cccd ? resident.cccd === cccd : true;
+                    const matchesStatus = status ? resident.status === status : true;
+                    const matchesDOB = dob ? resident.dob === dob : true;
 
-        if (name) {
-          residents = residents.filter(resident => resident.name === name);
-        } else if (cccd) {
-          residents = residents.filter(resident => resident.cccd === cccd);
-        }
-
+                    return matchesName && matchesCCCD && matchesStatus && matchesDOB;
+                });
+        residents = filteredResidents;
         currentPage = 1;
         renderTable();
       }
