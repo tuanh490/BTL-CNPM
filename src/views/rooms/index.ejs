@@ -196,9 +196,9 @@
             <div class="filter-group">
                 <label for="filter-trang-thai">Trạng thái:</label>
                 <select id="filter-trang-thai" class="form-control">
-                    <option value="">Chọn trạng thái</option>
-                    <option value="Đã thanh toán">Đang sử dụng</option>
-                    <option value="Chưa thanh toán">Trống</option>
+                    <option value="">Tất cả</option>
+                    <option value="Đang sử dụng">Đang sử dụng</option>
+                    <option value="Trống">Trống</option>
                 </select>
             </div>
             <div class="filter-group-btn my-4">
@@ -378,18 +378,22 @@
             }
             let originalApartment = [...apartments];
             function filterData() {
-                const maCanHo = document.getElementById('filter-ma-can-ho').value.trim();
-                const trangThai = document.getElementById('filter-trang-thai').value.trim();
+    const maCanHo = document.getElementById('filter-ma-can-ho').value.trim().toLowerCase();
+    const trangThai = document.getElementById('filter-trang-thai').value.trim();
 
-                if (maCanHo) {
-                    apartments = apartments.filter(apartment => apartment.maCanHo === maCanHo);
-                } else if (trangThai) {
-                    apartments = apartments.filter(apartment => apartment.trangThai === trangThai);
-                }
+    // Lọc dữ liệu từ danh sách gốc `originalApartment`
+    apartments = originalApartment.filter(apartment => {
+        const matchesRoomCode = maCanHo ? apartment.maCanHo.toLowerCase().includes(maCanHo) : true;
+        const matchesStatus = trangThai ? apartment.trangThai === trangThai : true;
 
-                currentPage = 1;
-                renderTable();
-            }
+        return matchesRoomCode && matchesStatus;
+    });
+
+    // Đặt lại trang hiện tại về trang đầu tiên và hiển thị bảng
+    currentPage = 1;
+    renderTable();
+}
+
             function resetFilters() {
                 // Khôi phục lại mảng dữ liệu ban đầu
                 apartments = [...originalApartment];
