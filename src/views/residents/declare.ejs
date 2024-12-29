@@ -216,6 +216,7 @@
       <table class="table table-striped mt-3">
         <thead>
           <tr>
+            <th>ID</th>
             <th>Họ tên</th>
             <th>Mã CCCD</th>
             <th>Thời gian</th>
@@ -273,6 +274,7 @@
     <div class="form-popup" id="editPopup" style="display:none;">
       <h2>Sửa thông tin cư dân</h2>
       <form>
+        <input type="hidden" id="edit-id">
         <div class="form-group">
           <label for="edit-name">Họ tên:</label>
           <input type="text" id="edit-name" class="form-control">
@@ -307,13 +309,15 @@
     <script>
       let residents = [
         // Resident data
-        { name: 'Nguyen Van An', cccd: '123456789012', arrival: '2023-01-10', status: 'Đang ở' },
-        { name: 'Tran Thi Bich', cccd: '987654321098', arrival: '2022-08-01', status: 'Đã rời đi' },
-        { name: 'Pham Van Cuong', cccd: '456123789045', arrival: '2023-03-12', status: 'Đang ở' },
-        { name: 'Le Thi Dung', cccd: '789456123078', arrival: '2022-12-25', status: 'Đã rời đi' },
+        { id: 1, name: 'Nguyen Van An', cccd: '123456789012', arrival: '2023-01-10', status: 'Đang ở' },
+        { id: 2, name: 'Tran Thi Bich', cccd: '987654321098', arrival: '2022-08-01', status: 'Đã rời đi' },
+        { id: 3, name: 'Pham Van Cuong', cccd: '456123789045', arrival: '2023-03-12', status: 'Đang ở' },
+        { id: 4, name: 'Le Thi Dung', cccd: '789456123078', arrival: '2022-12-25', status: 'Đã rời đi' },
         // Add more residents here...
       ];
-
+      let originalResident = [...residents];
+      let nextId = Math.max(...residents.map(r => r.id)) + 1;
+      let editingId = null;
       let currentPage = 1;
       const pageSize = 5;
 
@@ -326,13 +330,14 @@
         currentResidents.forEach(resident => {
           const row = document.createElement('tr');
           row.innerHTML = `
+        <td>${resident.id}</td>
       <td>${resident.name}</td>
       <td>${resident.cccd}</td>
       <td>${resident.arrival}</td>
       <td>${resident.status}</td>
       <td>
-        <button class="btn btn-primary" onclick="openEditPopup('${resident.name}', '${resident.cccd}', '${resident.arrival}', '${resident.status}')">Edit</button>
-        <button class="btn btn-danger" onclick="deleteResident('${resident.name}','${resident.cccd}')">Delete</button>
+        <button class="btn btn-primary" onclick="openEditPopup(${resident.id})">Edit</button>
+        <button class="btn btn-danger" onclick="deleteResident(${resident.id},'${resident.name}','${resident.cccd}')">Delete</button>
       </td>
     `;
           tableBody.appendChild(row);
@@ -359,13 +364,13 @@
         }
       }
 
-      let originalResident = [...residents];
+      
 
       function filterResidents() {
         const name = document.getElementById('filter-name').value;
         const cccd = document.getElementById('filter-cccd').value;
         const tt = document.getElementById('filter-tt').value;
-        residents = originalResident.filter(resident => {
+        residents = residents.filter(resident => {
           return (name ? resident.name.includes(name) : true) && (cccd ? resident.cccd.includes(cccd) : true)
             && (tt === '' || resident.status === tt);
         });
@@ -419,6 +424,7 @@
           return;
         }
         const newResident = {
+          id: nextId++,
           name: name,
           cccd: cccd || null,
           arrival: arrival || null,
@@ -426,19 +432,25 @@
         };
 
         residents.push(newResident);
+        originalResident = [...residents];
         alert('Cư dân mới đã được thêm!');
         closeAddResidentPopup();
         renderTable();
       }
 
-      function openEditPopup(name, cccd, arrival, status) {
-        document.getElementById('edit-name').value = name;
-        document.getElementById('edit-cccd').value = cccd;
-        document.getElementById('edit-arrival').value = arrival;
+      function openEditPopup(id) {
+  const resident = residents.find(r => r.id === id);
+  if (resident) {
+    document.getElementById('edit-name').value = resident.name;
+    document.getElementById('edit-cccd').value = resident.cccd;
+    document.getElementById('edit-arrival').value = resident.arrival;
+    document.getElementById('edit-status').value = resident.status;
 
-        document.getElementById('editPopup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-      }
+    editingId = id; // Lưu ID của bản ghi đang chỉnh sửa
+    document.getElementById('editPopup').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+  }
+}
 
       function closeEditPopup() {
         document.getElementById('editPopup').style.display = 'none';
@@ -446,32 +458,24 @@
       }
 
       function saveEdit() {
-        const name = document.getElementById('edit-name').value;
-        const cccd = document.getElementById('edit-cccd').value;
-        const arrival = document.getElementById('edit-arrival').value;
-        const status = document.getElementById('edit-status').value;
+  if (editingId === null) return;
 
-        if (!name || !arrival) {
-          alert('Tên và thời gian là bắt buộc!');
-          return;
-        }
+  const resident = residents.find(r => r.id === editingId);
+  if (resident) {
+    resident.name = document.getElementById('edit-name').value;
+    resident.cccd = document.getElementById('edit-cccd').value || null;
+    resident.arrival = document.getElementById('edit-arrival').value || null;
+    resident.status = document.getElementById('edit-status').value || 'Đang ở';
 
-        const resident = residents.find(resident => resident.name === name);
-        if (resident) {
-          resident.name = name;
-          resident.cccd = cccd || null;
-          resident.arrival = arrival || null;
-          resident.status = status || 'Đang ở';
-        }
-
-        alert('Thông tin cư dân đã được sửa!');
-        closeEditPopup();
-        renderTable();
-      }
+    alert('Thông tin cư dân đã được sửa!');
+    closeEditPopup();
+    renderTable();
+  }
+}
 
 
-      function deleteResident(name, cccd) {
-        const index = residents.findIndex(r => r.name === name && r.cccd===cccd);
+      function deleteResident(id,name, cccd) {
+        const index = residents.findIndex(r => r.id===id);
         if (index !== -1) {
           const confirmation = confirm(`Bạn có chắc muốn xóa cư dân ${name}, mã căn cước ${cccd}?`);
           if (confirmation) {

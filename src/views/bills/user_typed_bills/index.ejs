@@ -299,6 +299,7 @@
                     thoi_gian: '2024-11-25'
                 },
             ];
+            let originalPayments = [...phiData];
             let editingId = null;
 
             let currentPage = 1;
@@ -325,7 +326,7 @@
           <td>${item.thoi_gian || ''}</td>
           <td>
             <button class="btn btn-primary" onclick="editPhi(${item.id})">Edit</button>
-            <button class="btn btn-danger" onclick="DeletePayment('${item.ma_phong}')">Delete</button>
+            <button class="btn btn-danger" onclick="DeletePayment('${item.id}', '${item.ma_phong}')">Delete</button>
           </td>
         `;
                     tableBody.appendChild(row);
@@ -433,8 +434,8 @@
             }
 
             // Delete data
-            function DeletePayment(ma_phong) {
-        const index = phiData.findIndex(payment => payment.ma_phong === ma_phong);
+            function DeletePayment(id, ma_phong) {
+        const index = phiData.findIndex(payment => payment.ma_phong === ma_phong && payment.id===id);
         if (index !== -1) {
           const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${ma_phong}?`);
           if (confirmation) {
@@ -445,7 +446,6 @@
         }
       }
 
-            let originalPayments = [...phiData]; // Lưu lại dữ liệu gốc
 
             function filterData() {
                 const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
