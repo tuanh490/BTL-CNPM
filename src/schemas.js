@@ -25,3 +25,15 @@ export const baseBillSchema = Joi.object({
     gia_co_so: Joi.number().required(),
     mo_ta: Joi.string().allow('', null).default('')
 })
+
+export const userTypedBillSchema = Joi.object({
+    loai_phi: Joi.string().max(50).required(),
+    so_tien: Joi.number().required(),
+    mo_ta: Joi.string().allow('', null).default(''),
+    thoi_gian: Joi.date().allow('', null)
+})
+
+export const monthlyBillSchema = Joi.object({
+    thoi_gian_dong: Joi.date().allow('', null),
+    trang_thai: Joi.number().allow(null).default(0)
+})

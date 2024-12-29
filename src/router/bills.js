@@ -5,26 +5,42 @@ import * as user_typed_bills from '../controllers/bills/user_typed_bills.js'
 import * as base_bills from '../controllers/bills/base_bills.js'
 import CatchAsync from '../utils/CatchAsync.js'
 import { doesBaseBillExist, validateBaseBill } from '../middlewares/baseBillMiddleware.js'
-
+import { doesUserTypedBillExist, validateUserTypedBill } from '../middlewares/userTypedBillMiddleware.js'
+import { doesMonthlyBillExist, validateMonthlyBill } from '../middlewares/monthlyBillMiddleware.js'
 
 const router = express.Router()
 
 router.route('/monthly_bills')
     .get(CatchAsync(monthly_bills.renderMonthlyBills))
-    .post(CatchAsync(monthly_bills.createMonthlyBill))
+// .post(validateMonthlyBill, CatchAsync(monthly_bills.createMonthlyBill))
 
 router.route('/monthly_bills/:id')
-    .get(CatchAsync(monthly_bills.showMonthlyBill))
-    .put(CatchAsync(monthly_bills.updateMonthlyBill))
+    .put(doesMonthlyBillExist, validateMonthlyBill, CatchAsync(monthly_bills.updateMonthlyBill))
+// .get(doesMonthlyBillExist, CatchAsync(monthly_bills.showMonthlyBill))
 
-router.route('/user_typed_bills')
-    .get(CatchAsync(user_typed_bills.renderUserTypedBills))
-    .post(CatchAsync(user_typed_bills.createUserTypedBill))
+router.route('/monthly_bills/:id/user_typed_bills')
+    .get(
+        doesMonthlyBillExist,
+        CatchAsync(user_typed_bills.renderUserTypedBills)
+    )
+    .post(
+        doesMonthlyBillExist,
+        validateUserTypedBill,
+        CatchAsync(user_typed_bills.createUserTypedBill)
+    )
 
-router.route('/user_typed_bills/:id')
-    .get(CatchAsync(user_typed_bills.showUserTypedBill))
-    .put(CatchAsync(user_typed_bills.updateUserTypedBill))
-    .delete(CatchAsync(user_typed_bills.deleteUserTypedBill))
+router.route('/monthly_bills/:id/user_typed_bills/:userTypedBillId')
+    .put(
+        doesMonthlyBillExist,
+        doesUserTypedBillExist,
+        validateUserTypedBill,
+        CatchAsync(user_typed_bills.updateUserTypedBill)
+    )
+    .delete(
+        doesMonthlyBillExist,
+        doesUserTypedBillExist,
+        CatchAsync(user_typed_bills.deleteUserTypedBill)
+    )
 
 router.route('/base_bills')
     .get(CatchAsync(base_bills.renderBaseBills))

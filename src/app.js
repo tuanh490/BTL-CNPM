@@ -55,10 +55,10 @@ app.use((req, res, next) => {
 job.start();
 
 app.use('/donations', donationRoute)
-app.use('/bills', billRoute)
 app.use('/rooms', roomRoute)
 app.use('/residents', residentRoute)
 app.use('/vehicle', vehicleRoute)
+app.use('/', billRoute)
 app.use('/', userRoute)
 
 app.use('/quy_dinh', (req, res) => {

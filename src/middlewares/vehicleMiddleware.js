@@ -5,7 +5,7 @@ import ExpressError from "../utils/ExpressError.js";
 export async function doesVehicleExist(req, res, next) {
     const { id } = req.params
 
-    if (!checkObject("xe", "bien_xe", id)) {
+    if (!(await checkObject("xe", "bien_xe", id))) {
         req.flash('error', 'Vehicle not found')
         return res.redirect(303, '/vehicle')
     }

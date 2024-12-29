@@ -5,7 +5,7 @@ import ExpressError from "../utils/ExpressError.js";
 export async function doesBaseBillExist(req, res, next) {
     const { id } = req.params
 
-    if (!checkObject("phi_co_so", "id_phi_co_so", id)) {
+    if (!(await checkObject("phi_co_so", "id_phi_co_so", id))) {
         req.flash('error', 'Base bill not found')
         return res.redirect(303, '/base_bills')
     }

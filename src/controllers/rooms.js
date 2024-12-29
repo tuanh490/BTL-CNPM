@@ -14,7 +14,7 @@ export async function renderRooms(req, res) {
 export async function createRoom(req, res, next) {
     let { ma_phong, can_cuoc_cong_dan, trang_thai, dien_tich } = req.body.room
 
-    const roomExist = await checkObject("phong", "ma_phong", req.body.room.ma_phong)
+    const roomExist = await checkObject("phong", "ma_phong", ma_phong)
     if (roomExist) {
         req.flash('error', 'Room already exists')
         return res.redirect(303, '/rooms')
@@ -22,6 +22,13 @@ export async function createRoom(req, res, next) {
 
     if (can_cuoc_cong_dan.toUpperCase() == 'NULL')
         can_cuoc_cong_dan = null;
+    else {
+        const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
+        if (!checkResident) {
+            req.flash('error', 'Identification number not found')
+            return res.redirect(303, '/rooms')
+        }
+    }
 
     const [result] = await pool.query(`CALL Them_phong(?, ?, ?, ?);`,
         [ma_phong, trang_thai, dien_tich, can_cuoc_cong_dan])
@@ -36,6 +43,14 @@ export async function updateRoom(req, res) {
 
     if (can_cuoc_cong_dan.toUpperCase() == 'NULL')
         can_cuoc_cong_dan = null;
+    else {
+        const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
+        if (!checkResident) {
+            req.flash('error', 'Identification number not found')
+            return res.redirect(303, '/rooms')
+        }
+    }
+
 
     const result = await pool.query(`
         UPDATE phong

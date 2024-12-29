@@ -1,11 +1,9 @@
 import pool from '../../database.js'
-import ExpressError from '../../utils/ExpressError.js'
-import checkObject from '../../utils/checkObject.js'
 
 export async function renderBaseBills(req, res) {
     const [base_bills] = await pool.query(`
         SELECT *
-        FROM phong
+        FROM phi_co_so
         `)
 
     res.render('bills/base_bills/index', { base_bills })
@@ -20,7 +18,7 @@ export async function createBaseBill(req, res) {
 
 
     req.flash('success', 'Successfully create base bill')
-    res.redirect(303, '/bills/base_bills')
+    res.redirect(303, '/base_bills')
 }
 
 export async function updateBaseBill(req, res) {
@@ -37,7 +35,7 @@ export async function updateBaseBill(req, res) {
         `, [loai_phi, gia_co_so, mo_ta, id])
 
     req.flash('success', 'Successfully update base bill')
-    res.redirect(303, '/bills/base_bills')
+    res.redirect(303, '/base_bills')
 }
 
 export async function deleteBaseBill(req, res) {
@@ -47,5 +45,5 @@ export async function deleteBaseBill(req, res) {
         WHERE id_phi_co_so = ?;
         `, [id])
     req.flash('success', 'Successfully delete base bill')
-    res.redirect(303, '/bills/base_bills')
+    res.redirect(303, '/base_bills')
 }

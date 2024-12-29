@@ -1,4 +1,5 @@
 import pool from '../database.js'
+import checkObject from '../utils/checkObject.js'
 
 export async function renderVehicle(req, res) {
     const [vehicle] = await pool.query(`
@@ -12,10 +13,16 @@ export async function renderVehicle(req, res) {
 export async function createVehicle(req, res, next) {
     let { ma_phong, loai_xe, bien_xe } = req.body.vehicle
 
-    const vehicleExist = await checkObject("xe", "bien_xe", req.params.body.vehicle)
+    const vehicleExist = await checkObject("xe", "bien_xe", bien_xe)
     if (vehicleExist) {
-        req.flash('error', 'Vehicle already exists')
+        req.flash('error', 'License plate is already in use')
         return res.redirect(303, `/vehicle`)
+    }
+
+    const roomExist = await checkObject("phong", "ma_phong", ma_phong)
+    if (!roomExist) {
+        req.flash('error', 'Room does not exist')
+        return res.redirect(303, '/rooms')
     }
 
     const [result] = await pool.query(`CALL Them_xe(?, ?, ?);`,
@@ -28,6 +35,20 @@ export async function createVehicle(req, res, next) {
 export async function updateVehicle(req, res) {
     const { id } = req.params
     let { ma_phong, loai_xe, bien_xe } = req.body.vehicle
+
+    if (id != bien_xe) {
+        const vehicleExist = await checkObject("xe", "bien_xe", bien_xe)
+        if (vehicleExist) {
+            req.flash('error', 'License plate is already in use')
+            return res.redirect(303, `/vehicle`)
+        }
+    }
+
+    const roomExist = await checkObject("phong", "ma_phong", ma_phong)
+    if (!roomExist) {
+        req.flash('error', 'Room does not exist')
+        return res.redirect(303, '/rooms')
+    }
 
     const result = await pool.query(`
         UPDATE xe

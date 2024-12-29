@@ -5,7 +5,7 @@ import ExpressError from "../utils/ExpressError.js";
 export async function doesDonationExist(req, res, next) {
     const { id } = req.params
 
-    if (!checkObject("khoan_phi_ung_ho", "id", id)) {
+    if (!(await checkObject("khoan_phi_ung_ho", "id", id))) {
         req.flash('error', 'Donation not found')
         return res.redirect(303, '/donations')
     }
