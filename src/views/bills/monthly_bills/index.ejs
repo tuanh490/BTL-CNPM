@@ -132,10 +132,9 @@
             margin-top: 10px;
         }
         .form-container {
-            max-height: 400px; /* Giới hạn chiều cao */
-            overflow-y: auto; /* Hiển thị thanh cuộn dọc khi cần */
-            padding-right: 10px; /* Thêm khoảng cách cho thanh cuộn */
-            margin-bottom: 15px;
+            max-height: 250px; /* Giới hạn chiều cao bảng */
+    overflow-y: auto; /* Thêm thanh cuộn dọc nếu bảng vượt quá chiều cao */
+    margin-top: 10px; /* Thêm khoảng cách từ trên */
         }
         .overlay {
             display: none;
@@ -167,6 +166,27 @@
         .pagination .current-page {
             font-weight: bold;
         }
+        .phi-khac-header {
+    display: flex;
+    justify-content: space-between; /* Đảm bảo nút và tiêu đề có khoảng cách hợp lý */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    width: 100%; /* Đảm bảo phần tử cha có chiều rộng 100% */
+}
+
+.phi-khac-header h5 {
+    margin: 0; /* Xóa margin mặc định */
+    text-align: center; /* Căn giữa nội dung của h5 */
+    flex-grow: 1; /* Cho phép h5 chiếm toàn bộ không gian bên trái */
+}
+
+.phi-khac-header button {
+    font-size: 14px; /* Đặt kích thước chữ nút */
+    padding: 5px 10px; /* Tạo khoảng cách trong nút */
+    cursor: pointer; /* Thêm hiệu ứng con trỏ */
+}
+.table {
+    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
+}
     </style>
 
 </head>
@@ -300,97 +320,140 @@
             </form>
         </div>
         <div class="form-popup" id="billPopup">
+            <h2 class="center">Thông tin thanh toán</h2>
+                <table class="table mt-4">
+                        <tr>
+                            <th>Mã căn hộ</th>
+                            <td id="roomIdDetailTableBody">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Thời gian</th>
+                            <td id="timeDetailTableBody">
+
+                            </td>
+                        </tr>
+                </table>
             <table class="table mt-4">
-                <h2>Thông tin thanh toán</h2>
+                <h5 class="center">Phí hàng tháng</h3>
                 <thead>
                     <tr>
-                        <th rowspan="2">Mã căn hộ</th>
-                        <th rowspan="2">Thời gian</th>
-                        <th colspan="5">Chi phí</th>
-                        <th rowspan="2">Tổng tiền</th>
-                    </tr>
-                    <tr>
-                        <th>Tiền quản lý</th>
-                        <th>Tiền dịch vụ</th>
-                        <th>Tiền điện</th>
-                        <th>Tiền nước</th>
-                        <th>Tiền internet</th>
+                        <th>Tên phí</th>
+                        <th>Số tiền</th>
+                        <th>Mô tả</th>
                     </tr>
                 </thead>
 
-                <tbody id="billDetailTableBody">
+                <tbody id="phiHangThangDetailTableBody">
 
                 </tbody>
             </table>
+            <div class="phi-khac-header">
+                <h5 class="center">Phí khác</h5>
+                <button class="btn btn-success" onclick="openAddFeePopup()">Thêm phí</button>
+            </div>
+            <div class="form-container">
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th>Tên phí</th>
+                        <th>Số tiền</th>
+                        <th>Mô tả</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="phiKhacDetailTableBody">
+
+                </tbody>
+            
+            </table>
+        </div>
             <button class="btn btn-delete" type="button" onclick="closeBillDetail()">Đóng</button>
         </div>
         
         <div class="form-popup" id="billEditPopup" style="display: none;">
             <h2>Chỉnh sửa thông tin thanh toán</h2>
             <form>
-                <div class="form-container">
                 <div class="form-group">
-                    <label for="editMaCanHo">Mã căn hộ:</label>
-                    <input type="text" id="editMaCanHo" class="form-control" readonly disabled>
+                    <label for="editFeeName">Tên phí:</label>
+                    <input type="text" id="editFeeName" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="editThoiGianThu">Thời gian:</label>
-                    <input type="text" id="editThoiGianThu" class="form-control" readonly disabled>
+                    <label for="editFeeAmount">Số tiền:</label>
+                    <input type="number" id="editFeeAmount" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="editTienQuanLy">Tiền quản lý:</label>
-                    <input type="number" id="editTienQuanLy" class="form-control">
+                    <label for="editFeeDescription">Mô tả:</label>
+                    <input type="text" id="editFeeDescription" class="form-control">
                 </div>
-                <div class="form-group">
-                    <label for="editTienDichVu">Tiền dịch vụ:</label>
-                    <input type="number" id="editTienDichVu" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTienDien">Tiền điện:</label>
-                    <input type="number" id="editTienDien" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTienNuoc">Tiền nước:</label>
-                    <input type="number" id="editTienNuoc" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTienInternet">Tiền internet:</label>
-                    <input type="number" id="editTienInternet" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTongTien">Tổng tiền:</label>
-                    <input type="text" id="editTongTien" class="form-control" readonly>
-                </div>
-            </div>
                 <button type="button" class="btn btn-primary" onclick="saveBillEditChanges()">Lưu</button>
                 <button type="button" class="btn btn-danger" onclick="closeBillEditPopup()">Hủy</button>
             </form>
         
         </div>
-
+        <div class="form-popup" id="addOtherFeePopup" style="display: none;">
+            <h2>Thêm phí khác</h2>
+            <form>
+                <div class="form-group">
+                    <label for="newFeeName">Tên phí:</label>
+                    <input type="text" id="newFeeName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="newFeeAmount">Số tiền:</label>
+                    <input type="number" id="newFeeAmount" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="newFeeDescription">Mô tả:</label>
+                    <input type="text" id="newFeeDescription" class="form-control">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="saveNewOtherFee()">Lưu</button>
+                <button type="button" class="btn btn-danger" onclick="closeAddOtherFeePopup()">Hủy</button>
+            </form>
+        </div>
 
         <div class="overlay" id="overlay"></div>
         <script>
             let payments = [
                 {
-                    maCanHo: 'A101', chiPhi: {
-                        tienQuanLy: 1000000,
-                        tienDichVu: 1000000,
-                        tienDien: 1000000,
-                        tienNuoc: 1000000,
-                        tienInternet: 1000000,
-                        tongTien: 5000000
-                    }, thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán'
+                    maCanHo: 'A101', 
+                    
+                    chiPhiHangThang: [
+                        {
+                            tenPhi: "phí xe",
+                            soTien: "1000000",
+                            moTa: "koco"
+                        }
+                    ],
+                    chiPhiKhac: [
+                        {
+                            tenPhi: "phí internet",
+                            soTien: "2000000",
+                            moTa: "koco"
+                        }
+                    ],
+                    tongTien: 0,   
+                    thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán'
                 },
                 {
-                    maCanHo: 'B202', chiPhi: {
-                        tienQuanLy: 1000000,
-                        tienDichVu: 1000000,
-                        tienDien: 1000000,
-                        tienNuoc: 0,
-                        tienInternet: 0,
-                        tongTien: 3000000
-                    }, thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán'
+                    maCanHo: 'B202', 
+                    chiPhiHangThang: [
+                        {
+                            tenPhi: "phí xe",
+                            soTien: "1000000",
+                            moTa: "koco"
+                        }
+                    ],
+                    chiPhiKhac: [
+                        {
+                            tenPhi: "phí internet",
+                            soTien: "2000000",
+                            moTa: "koco"
+                        }
+                    ],
+                    tongTien: 0, 
+                    
+                    thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán'
                 },
                 // Add more dummy data
             ];
@@ -412,7 +475,7 @@
 
                     row.innerHTML = `
                     <td>${payment.maCanHo}</td>
-                    <td><button class="btn btn-primary" onclick="openBillDetail('${payment.maCanHo}', '${payment.thoiGianThu}')">${payment.chiPhi.tongTien}</button></td>
+                    <td><button class="btn btn-primary" onclick="openBillDetail('${payment.maCanHo}', '${payment.thoiGianThu}')">${payment.tongTien}</button></td>
                     <td>${payment.thoiGianThu}</td>
                     <td>${payment.thoiGianDong}</td>
                     <td>${payment.trangThai}</td>
@@ -466,81 +529,85 @@
             }
 
             function renderTableBillDetail(maCanHo, thoiGianThu) {
-                const tableBody = document.getElementById('billDetailTableBody');
-                tableBody.innerHTML = '';
                 const billDetail = payments.find(payments => payments.maCanHo === maCanHo && payments.thoiGianThu === thoiGianThu);
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${billDetail.maCanHo}</td>
-                    <td>${billDetail.thoiGianThu}</td>
-                    <td>${billDetail.chiPhi.tienQuanLy}</td>
-                    <td>${billDetail.chiPhi.tienDichVu}</td>
-                    <td>${billDetail.chiPhi.tienDien}</td>
-                    <td>${billDetail.chiPhi.tienNuoc}</td>
-                    <td>${billDetail.chiPhi.tienInternet}</td>
-                    <td>${billDetail.chiPhi.tongTien}</td>
-                    <td>
-    <button class="btn btn-primary" onclick="openBillEditPopup('${billDetail.maCanHo}', '${billDetail.thoiGianThu}')">Edit</button>
-</td>
+                const roomIdTableBody = document.getElementById('roomIdDetailTableBody');
+                roomIdTableBody.innerHTML = billDetail.maCanHo;
+                const timeTableBody = document.getElementById('timeDetailTableBody');
+                timeTableBody.innerHTML = billDetail.thoiGianThu;
+                const phiHangThangTableBody = document.getElementById('phiHangThangDetailTableBody');
+                phiHangThangTableBody.innerHTML = '';
+                const phiHangThangData = billDetail.chiPhiHangThang;
+                phiHangThangData.forEach(fee => {
+                    const row_phiHangThang = document.createElement('tr');
+                    row_phiHangThang.innerHTML = `
+                    <td>${fee.tenPhi}</td>
+                    <td>${fee.soTien}</td>
+                    <td>${fee.moTa}</td>
                 `;
-                tableBody.appendChild(row);
+                phiHangThangTableBody.appendChild(row_phiHangThang);
+                })
+
+                const phiKhacTableBody = document.getElementById('phiKhacDetailTableBody');
+                phiKhacTableBody.innerHTML = '';
+                const phiKhacData = billDetail.chiPhiKhac;
+                phiKhacData.forEach(fee => {
+                    const row_phiKhac = document.createElement('tr');
+                    row_phiKhac.innerHTML = `
+                    <td>${fee.tenPhi}</td>
+                    <td>${fee.soTien}</td>
+                    <td>${fee.moTa}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="openBillEditPopup('${billDetail.maCanHo}', '${billDetail.thoiGianThu}',
+                                    '${fee.tenPhi}')"
+                                    >Edit</button>
+                    </td>
+                `;
+                phiKhacTableBody.appendChild(row_phiKhac);
+                })
             }
 
-            function openBillEditPopup(maCanHo, thoiGianThu) {
-                    const billDetail = payments.find(payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu);
+            function openBillEditPopup(maCanHo, thoiGianThu, tenPhi) {
+                // Tìm thông tin thanh toán dựa trên mã căn hộ và thời gian thu
+                const payment = payments.find(p => p.maCanHo === maCanHo && p.thoiGianThu === thoiGianThu);
+                if (!payment) return alert('Không tìm thấy thông tin thanh toán!');
 
-                    if (!billDetail) return alert('Không tìm thấy thông tin thanh toán!');
+                // Tìm phí trong danh sách "chiPhiKhac"
+                const fee = payment.chiPhiKhac.find(f => f.tenPhi === tenPhi);
+                if (!fee) return alert('Không tìm thấy phí này!');
 
-                    // Điền dữ liệu vào form chỉnh sửa
-                    document.getElementById('editMaCanHo').value = billDetail.maCanHo;
-                    document.getElementById('editThoiGianThu').value = billDetail.thoiGianThu;
-                    document.getElementById('editTienQuanLy').value = billDetail.chiPhi.tienQuanLy;
-                    document.getElementById('editTienDichVu').value = billDetail.chiPhi.tienDichVu;
-                    document.getElementById('editTienDien').value = billDetail.chiPhi.tienDien;
-                    document.getElementById('editTienNuoc').value = billDetail.chiPhi.tienNuoc;
-                    document.getElementById('editTienInternet').value = billDetail.chiPhi.tienInternet;
-                    document.getElementById('editTongTien').value = billDetail.chiPhi.tongTien;
+                // Gán giá trị vào các trường trong popup
+                document.getElementById('editFeeName').value = fee.tenPhi;
+                document.getElementById('editFeeAmount').value = fee.soTien;
+                document.getElementById('editFeeDescription').value = fee.moTa;
 
-                    // Hiển thị popup
-                    document.getElementById('billEditPopup').style.display = 'block';
-                }
-
-            // Hàm tính lại tổng tiền khi chỉnh sửa
-            function updateTotal() {
-                const tienQuanLy = parseFloat(document.getElementById('editTienQuanLy').value) || 0;
-                const tienDichVu = parseFloat(document.getElementById('editTienDichVu').value) || 0;
-                const tienDien = parseFloat(document.getElementById('editTienDien').value) || 0;
-                const tienNuoc = parseFloat(document.getElementById('editTienNuoc').value) || 0;
-                const tienInternet = parseFloat(document.getElementById('editTienInternet').value) || 0;
-
-                const tongTien = tienQuanLy + tienDichVu + tienDien + tienNuoc + tienInternet;
-
-                document.getElementById('editTongTien').value = tongTien;
+                // Hiển thị popup
+                document.getElementById('billEditPopup').style.display = 'block';
             }
 
-            // Lắng nghe thay đổi trong các trường số
-            document.querySelectorAll('#billEditPopup input[type="number"]').forEach(input => {
-                input.addEventListener('input', updateTotal);
-            });
 
             // Hàm lưu thay đổi sau khi chỉnh sửa
             function saveBillEditChanges() {
-                const maCanHo = document.getElementById('editMaCanHo').value;
-                const thoiGianThu = document.getElementById('editThoiGianThu').value;
+                const maCanHo = document.getElementById('roomIdDetailTableBody').innerHTML;
+                const thoiGianThu = document.getElementById('timeDetailTableBody').innerHTML;
+                const feeName = document.getElementById('editFeeName').value;
+                const newAmount = parseFloat(document.getElementById('editFeeAmount').value) || 0;
+                const newDescription = document.getElementById('editFeeDescription').value;
 
-                const payment = payments.find(payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu);
-
+                const payment = payments.find(p => p.maCanHo === maCanHo && p.thoiGianThu === thoiGianThu);
                 if (!payment) return alert('Không tìm thấy thông tin thanh toán!');
 
-                // Cập nhật dữ liệu
-                payment.chiPhi.tienQuanLy = parseFloat(document.getElementById('editTienQuanLy').value) || 0;
-                payment.chiPhi.tienDichVu = parseFloat(document.getElementById('editTienDichVu').value) || 0;
-                payment.chiPhi.tienDien = parseFloat(document.getElementById('editTienDien').value) || 0;
-                payment.chiPhi.tienNuoc = parseFloat(document.getElementById('editTienNuoc').value) || 0;
-                payment.chiPhi.tienInternet = parseFloat(document.getElementById('editTienInternet').value) || 0;
-                payment.chiPhi.tongTien = parseFloat(document.getElementById('editTongTien').value) || 0;
+                // Find and update the specific fee
+                const fee = payment.chiPhiKhac.find(f => f.tenPhi === feeName);
+                if (!fee) return alert('Không tìm thấy phí này!');
 
-                alert('Thông tin thanh toán đã được cập nhật!');
+                fee.soTien = newAmount;
+                fee.moTa = newDescription;
+
+                // Update total
+                payment.tongTien = payment.chiPhiHangThang.reduce((sum, f) => sum + f.soTien, 0) +
+                    payment.chiPhiKhac.reduce((sum, f) => sum + f.soTien, 0);
+
+                alert('Thông tin phí đã được cập nhật!');
                 closeBillEditPopup();
                 renderTableBillDetail(maCanHo, thoiGianThu);
             }
@@ -623,14 +690,7 @@
 
                 const newPayment = {
                     maCanHo: maCanHo,
-                    chiPhi: {
-                        tienQuanLy: 0,
-                        tienDichVu: 0,
-                        tienDien: 0,
-                        tienNuoc: 0,
-                        tienInternet: 0,
-                        tongTien: 0
-                    },
+                    tongTien: 0,
                     thoiGianThu: thoiGianThu,
                     thoiGianDong: thoiGianDong || "Chưa có",
                     trangThai: thoiGianDong ? 'Đã thanh toán' : 'Chưa thanh toán'
@@ -657,7 +717,59 @@
                 }
             }
 
+                        // Mở popup thêm phí khác
+            function openAddFeePopup() {
+                document.getElementById('addOtherFeePopup').style.display = 'block';
+            }
 
+            // Đóng popup thêm phí khác
+            function closeAddOtherFeePopup() {
+                document.getElementById('addOtherFeePopup').style.display = 'none';
+                clearNewFeeInputs();
+            }
+
+            // Xóa các giá trị trong popup
+            function clearNewFeeInputs() {
+                document.getElementById('newFeeName').value = '';
+                document.getElementById('newFeeAmount').value = '';
+                document.getElementById('newFeeDescription').value = '';
+            }
+
+        // Lưu phí khác mới
+            function saveNewOtherFee() {
+                const feeName = document.getElementById('newFeeName').value.trim();
+                const feeAmount = parseFloat(document.getElementById('newFeeAmount').value) || 0;
+                const feeDescription = document.getElementById('newFeeDescription').value.trim();
+
+                if (!feeName || feeAmount <= 0) {
+                    alert('Vui lòng nhập tên phí và số tiền hợp lệ!');
+                    return;
+                }
+
+                // Tìm bản ghi hiện tại để thêm phí khác
+                const maCanHo = document.getElementById('roomIdDetailTableBody').textContent.trim();
+                const thoiGianThu = document.getElementById('timeDetailTableBody').textContent.trim();
+
+                const payment = payments.find(p => p.maCanHo === maCanHo && p.thoiGianThu === thoiGianThu);
+
+                if (!payment) {
+                    alert('Không tìm thấy thông tin thanh toán!');
+                    return;
+                }
+
+                // Thêm phí khác mới
+                payment.chiPhiKhac.push({
+                    tenPhi: feeName,
+                    soTien: feeAmount,
+                    moTa: feeDescription,
+                });
+
+                alert('Đã thêm phí khác!');
+                closeAddOtherFeePopup();
+
+                // Cập nhật giao diện
+                renderTableBillDetail(maCanHo, thoiGianThu);
+            }
             function filterData() {
                 const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
                 const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
