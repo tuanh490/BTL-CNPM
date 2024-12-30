@@ -5,7 +5,7 @@ export async function renderResidency(req, res) {
         SELECT *
         FROM bien_dong_nhan_khau
         `)
-
+    console.log(residency)
     res.render('residents/declare', { residency })
 }
 

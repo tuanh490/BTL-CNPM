@@ -182,20 +182,81 @@
 
 <body>
   <%- include('../partials/header') %>
-    <div class="container">
-      <h2 class="text-center">Danh sách cư dân</h2>
-      <div class="filter-group">
-        <label for="filter-name">Họ tên:</label>
-        <input type="text" id="filter-name" placeholder="Nhập họ tên" class="form-control">
+  <div class="container">
+    <h2 class="text-center">Lịch sử biến động nhân khẩu</h2>
+    <%- include('../partials/flash') %>
+    <div class="filter-group">
+      <label for="filter-name">Họ tên:</label>
+      <input type="text" id="filter-name" placeholder="Nhập họ tên" class="form-control">
+    </div>
+    <div class="filter-group">
+      <label for="filter-cccd">Mã CCCD:</label>
+      <input type="text" id="filter-cccd" placeholder="Nhập mã CCCD" class="form-control">
+    </div>
+    <div class="filter-group">
+      <label for="filter-tt">Trạng thái:</label>
+      <select id="filter-tt" class="form-control">
+        <option value="">Tất cả</option>
+        <option value="Đang ở">Đang ở</option>
+        <option value="Đã rời đi">Đã rời đi</option>
+        <option value="Tạm vắng">Tạm vắng</option>
+        <option value="Tạm trú">Tạm trú</option>
+        <option value="Thường trú">Thường trú</option>
+      </select>
+    </div>
+    <!-- Filters -->
+    <div class="filter-group-btn my-4">
+      <button class="btn btn-primary " onclick="filterResidents()">Tìm kiếm</button>
+      <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
+      <button class="btn btn-success  mx-auto" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
+      &emsp;&emsp;&emsp;&emsp;
+      <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
+    </div>
+
+    <!-- Residents Table -->
+    <table class="table table-striped mt-3">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Họ tên</th>
+          <th>Mã CCCD</th>
+          <th>Thời gian</th>
+          <th>Mô tả</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody id="residentTableBody">
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button onclick="previousPage()">Previous</button>
+      <span id="pageNumbers"></span>
+      <button onclick="nextPage()">Next</button>
+    </div>
+  </div>
+
+  <!-- Add Resident Popup -->
+  <div class="form-popup" id="addResidentPopup" style="display:none;">
+    <h2>Thêm cư dân mới</h2>
+    <form action="residency" method="POST">
+      <div class="form-group">
+        <label for="add-name">Họ tên:</label>
+        <input type="text" id="add-name" class="form-control" name="residency[ho_ten]">
       </div>
-      <div class="filter-group">
-        <label for="filter-cccd">Mã CCCD:</label>
-        <input type="text" id="filter-cccd" placeholder="Nhập mã CCCD" class="form-control">
+      <div class="form-group">
+        <label for="add-cccd">Mã CCCD:</label>
+        <input type="text" id="add-cccd" class="form-control" name="residency[can_cuoc_cong_dan]">
       </div>
-      <div class="filter-group">
-        <label for="filter-tt">Trạng thái:</label>
-        <select id="filter-tt" class="form-control">
-          <option value="">Tất cả</option>
+      <div class="form-group">
+        <label for="add-arrival">Thời gian:</label>
+        <input type="date" id="add-arrival" class="form-control" name="residency[thoi_gian]">
+      </div>
+      <div class="form-group">
+        <label for="add-status">Trạng thái:</label>
+        <select id="add-status" class="form-control" name="residency[trang_thai]">
           <option value="Đang ở">Đang ở</option>
           <option value="Đã rời đi">Đã rời đi</option>
           <option value="Tạm vắng">Tạm vắng</option>
@@ -203,301 +264,203 @@
           <option value="Thường trú">Thường trú</option>
         </select>
       </div>
-      <!-- Filters -->
-      <div class="filter-group-btn my-4">
-        <button class="btn btn-primary " onclick="filterResidents()">Tìm kiếm</button>
-        <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
-        <button class="btn btn-success  mx-auto" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
-        &emsp;&emsp;&emsp;&emsp;
-        <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
+      <div class="form-group">
+        <label for="add-description">Mô tả:</label>
+        <textarea id="add-description" name="residency[mo_ta]" class="form-control"></textarea>
       </div>
+      <button type="submit" class="btn btn-success">Thêm</button>
+      <button type="button" class="btn btn-secondary" onclick="closeAddResidentPopup()">Đóng</button>
+    </form>
+  </div>
 
-      <!-- Residents Table -->
-      <table class="table table-striped mt-3">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Họ tên</th>
-            <th>Mã CCCD</th>
-            <th>Thời gian</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody id="residentTableBody">
-          <!-- Rows will be rendered dynamically -->
-        </tbody>
-      </table>
-
-      <!-- Pagination -->
-      <div class="pagination">
-        <button onclick="previousPage()">Previous</button>
-        <span id="pageNumbers"></span>
-        <button onclick="nextPage()">Next</button>
+  <!-- Edit Resident Popup -->
+  <div class="form-popup" id="editPopup" style="display:none;">
+    <h2>Sửa thông tin cư dân</h2>
+    <form id="updateForm" method="POST">
+      <input type="hidden" id="edit-id">
+      <div class="form-group">
+        <label for="edit-name">Họ tên:</label>
+        <input type="text" id="edit-name" class="form-control" name="residency[ho_ten]">
       </div>
-    </div>
+      <div class="form-group">
+        <label for="edit-cccd">Mã CCCD:</label>
+        <input type="text" id="edit-cccd" class="form-control" name="residency[can_cuoc_cong_dan]">
+      </div>
+      <div class="form-group">
+        <label for="edit-arrival">Thời gian:</label>
+        <input type="date" id="edit-arrival" class="form-control" name="residency[thoi_gian]">
+      </div>
+      <div class="form-group">
+        <label for="edit-status">Trạng thái:</label>
+        <select id="edit-status" class="form-control" name="residency[trang_thai]">
+          <option value="Đang ở">Đang ở</option>
+          <option value="Đã rời đi">Đã rời đi</option>
+          <option value="Tạm vắng">Tạm vắng</option>
+          <option value="Tạm trú">Tạm trú</option>
+          <option value="Thường trú">Thường trú</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="edit-description">Mô tả:</label>
+        <textarea id="edit-description" name="residency[mo_ta]" class="form-control"></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Lưu</button>
+      <button type="button" class="btn btn-secondary" onclick="closeEditPopup()">Đóng</button>
+    </form>
+  </div>
 
-    <!-- Add Resident Popup -->
-    <div class="form-popup" id="addResidentPopup" style="display:none;">
-      <h2>Thêm cư dân mới</h2>
-      <form>
-        <div class="form-group">
-          <label for="add-name">Họ tên:</label>
-          <input type="text" id="add-name" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="add-cccd">Mã CCCD:</label>
-          <input type="text" id="add-cccd" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="add-arrival">Thời gian:</label>
-          <input type="date" id="add-arrival" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="add-status">Trạng thái:</label>
-          <select id="add-status" class="form-control">
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" style="display:none;"></div>
+  <div id="mydiv" data-test='<%= JSON.stringify(residency) %>'></div>
 
-            <option value="Đang ở">Đang ở</option>
-            <option value="Đã rời đi">Đã rời đi</option>
-            <option value="Tạm vắng">Tạm vắng</option>
-            <option value="Tạm trú">Tạm trú</option>
-            <option value="Thường trú">Thường trú</option>
-          </select>
-        </div>
+  <script>
+    var test = document.getElementById('mydiv').dataset.test;
+    var residency = JSON.parse(test);
+    let residents = residency;
+    let originalResident = [...residents];
+    let currentPage = 1;
+    const pageSize = 5;
 
-        <button type="button" class="btn btn-success" onclick="saveNewResident()">Thêm</button>
-        <button type="button" class="btn btn-secondary" onclick="closeAddResidentPopup()">Đóng</button>
-      </form>
-    </div>
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+      const day = String(date.getDate()).padStart(2, '0');
 
-    <!-- Edit Resident Popup -->
-    <div class="form-popup" id="editPopup" style="display:none;">
-      <h2>Sửa thông tin cư dân</h2>
-      <form>
-        <input type="hidden" id="edit-id">
-        <div class="form-group">
-          <label for="edit-name">Họ tên:</label>
-          <input type="text" id="edit-name" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="edit-cccd">Mã CCCD:</label>
-          <input type="text" id="edit-cccd" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="edit-arrival">Thời gian:</label>
-          <input type="date" id="edit-arrival" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="edit-status">Trạng thái:</label>
-          <select id="edit-status" class="form-control">
+      return `${year}-${month}-${day}`;
+    }
 
-            <option value="Đang ở">Đang ở</option>
-            <option value="Đã rời đi">Đã rời đi</option>
-            <option value="Tạm vắng">Tạm vắng</option>
-            <option value="Tạm trú">Tạm trú</option>
-            <option value="Thường trú">Thường trú</option>
-          </select>
-        </div>
-        <button type="button" class="btn btn-success" onclick="saveEdit()">Lưu</button>
-        <button type="button" class="btn btn-secondary" onclick="closeEditPopup()">Đóng</button>
-      </form>
-    </div>
+    function renderTable() {
+      const tableBody = document.getElementById('residentTableBody');
+      tableBody.innerHTML = '';
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const currentResidents = residents.slice(startIndex, endIndex);
 
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" style="display:none;"></div>
-
-    <script>
-      let residents = [
-        // Resident data
-        { id: 1, name: 'Nguyen Van An', cccd: '123456789012', arrival: '2023-01-10', status: 'Đang ở' },
-        { id: 2, name: 'Tran Thi Bich', cccd: '987654321098', arrival: '2022-08-01', status: 'Đã rời đi' },
-        { id: 3, name: 'Pham Van Cuong', cccd: '456123789045', arrival: '2023-03-12', status: 'Đang ở' },
-        { id: 4, name: 'Le Thi Dung', cccd: '789456123078', arrival: '2022-12-25', status: 'Đã rời đi' },
-        // Add more residents here...
-      ];
-      let originalResident = [...residents];
-      let nextId = Math.max(...residents.map(r => r.id)) + 1;
-      let editingId = null;
-      let currentPage = 1;
-      const pageSize = 5;
-
-      function renderTable() {
-        const tableBody = document.getElementById('residentTableBody');
-        tableBody.innerHTML = '';
-        const startIndex = (currentPage - 1) * pageSize;
-        const currentResidents = residents.slice(startIndex, startIndex + pageSize);
-
-        currentResidents.forEach(resident => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-        <td>${resident.id}</td>
-      <td>${resident.name}</td>
-      <td>${resident.cccd}</td>
-      <td>${resident.arrival}</td>
-      <td>${resident.status}</td>
-      <td>
-        <button class="btn btn-primary" onclick="openEditPopup(${resident.id})">Edit</button>
-        <button class="btn btn-danger" onclick="deleteResident(${resident.id},'${resident.name}','${resident.cccd}')">Delete</button>
-      </td>
-    `;
-          tableBody.appendChild(row);
-        });
-        document.getElementById('recordCount').textContent = residents.length;
-        renderPagination();
-      }
+      currentResidents.forEach((resident, index) => {
+        const row = document.createElement('tr');
+        let thoi_gian = Date.parse(resident.thoi_gian)
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${resident.ho_ten}</td>
+          <td>${resident.can_cuoc_cong_dan}</td>
+          <td>${new Date(thoi_gian).toLocaleDateString()}</td>
+          <td>${resident.trang_thai}</td>
+          <td>${resident.mo_ta}</td>
+          <td>
+            <button 
+              class="btn btn-primary" 
+              onclick="openEditPopup('${resident.id}', '${resident.ho_ten}', '${resident.can_cuoc_cong_dan}', '${formatDate(new Date(thoi_gian))}', '${resident.trang_thai}', '${resident.mo_ta}')"
+            >
+              Edit
+            </button>
+            <form action="/residency/${resident.id}?_method=DELETE" method="POST"
+            style="display: inline;">
+                <button class="btn btn-danger">Delete</button>
+            </form>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      document.getElementById('recordCount').textContent = residents.length;
+      renderPagination();
+    }
 
 
-      function renderPagination() {
-        const pageNumbers = document.getElementById('pageNumbers');
-        pageNumbers.innerHTML = '';
-        const totalPages = Math.ceil(residents.length / pageSize);
+    function renderPagination() {
+      const pageNumbers = document.getElementById('pageNumbers');
+      pageNumbers.innerHTML = '';
+      const totalPages = Math.ceil(residents.length / pageSize);
 
-        for (let i = 1; i <= totalPages; i++) {
-          const button = document.createElement('button');
-          button.textContent = i;
-          button.className = i === currentPage ? 'current-page' : '';
-          button.onclick = () => {
-            currentPage = i;
-            renderTable();
-          };
-          pageNumbers.appendChild(button);
-        }
-      }
-
-      
-
-      function filterResidents() {
-        const name = document.getElementById('filter-name').value;
-        const cccd = document.getElementById('filter-cccd').value;
-        const tt = document.getElementById('filter-tt').value;
-        residents = residents.filter(resident => {
-          return (name ? resident.name.includes(name) : true) && (cccd ? resident.cccd.includes(cccd) : true)
-            && (tt === '' || resident.status === tt);
-        });
-
-        currentPage = 1;
-        renderTable();
-      }
-
-      function resetFilters() {
-        residents = [...originalResident];
-        currentPage = 1;
-        document.getElementById('filter-name').value = '';
-        document.getElementById('filter-cccd').value = '';
-        document.getElementById('filter-tt').value = '';
-        renderTable();
-      }
-
-      function previousPage() {
-        if (currentPage > 1) {
-          currentPage--;
+      for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.className = i === currentPage ? 'current-page' : '';
+        button.onclick = () => {
+          currentPage = i;
           renderTable();
-        }
-      }
-
-      function nextPage() {
-        const totalPages = Math.ceil(residents.length / pageSize);
-        if (currentPage < totalPages) {
-          currentPage++;
-          renderTable();
-        }
-      }
-
-      function openAddResidentPopup() {
-        document.getElementById('addResidentPopup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-      }
-
-      function closeAddResidentPopup() {
-        document.getElementById('addResidentPopup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-      }
-
-      function saveNewResident() {
-        const name = document.getElementById('add-name').value;
-        const cccd = document.getElementById('add-cccd').value;
-        const arrival = document.getElementById('add-arrival').value;
-        const status = document.getElementById('add-status').value;
-
-        if (!name || !arrival) {
-          alert('Tên và thời gian là bắt buộc!');
-          return;
-        }
-        const newResident = {
-          id: nextId++,
-          name: name,
-          cccd: cccd || null,
-          arrival: arrival || null,
-          status: status || 'Đang ở'
         };
+        pageNumbers.appendChild(button);
+      }
+    }
 
-        residents.push(newResident);
-        originalResident = [...residents];
-        alert('Cư dân mới đã được thêm!');
-        closeAddResidentPopup();
+
+
+    function filterResidents() {
+      const name = document.getElementById('filter-name').value;
+      const cccd = document.getElementById('filter-cccd').value;
+      const tt = document.getElementById('filter-tt').value;
+      residents = residents.filter(resident => {
+        return (name ? resident.name.includes(name) : true) && (cccd ? resident.cccd.includes(cccd) : true)
+          && (tt === '' || resident.status === tt);
+      });
+
+      currentPage = 1;
+      renderTable();
+    }
+
+    function resetFilters() {
+      residents = [...originalResident];
+      currentPage = 1;
+      document.getElementById('filter-name').value = '';
+      document.getElementById('filter-cccd').value = '';
+      document.getElementById('filter-tt').value = '';
+      renderTable();
+    }
+
+    function previousPage() {
+      if (currentPage > 1) {
+        currentPage--;
         renderTable();
       }
+    }
 
-      function openEditPopup(id) {
-  const resident = residents.find(r => r.id === id);
-  if (resident) {
-    document.getElementById('edit-name').value = resident.name;
-    document.getElementById('edit-cccd').value = resident.cccd;
-    document.getElementById('edit-arrival').value = resident.arrival;
-    document.getElementById('edit-status').value = resident.status;
-
-    editingId = id; // Lưu ID của bản ghi đang chỉnh sửa
-    document.getElementById('editPopup').style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-  }
-}
-
-      function closeEditPopup() {
-        document.getElementById('editPopup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
+    function nextPage() {
+      const totalPages = Math.ceil(residents.length / pageSize);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
       }
+    }
 
-      function saveEdit() {
-  if (editingId === null) return;
+    function openAddResidentPopup() {
+      document.getElementById('addResidentPopup').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
 
-  const resident = residents.find(r => r.id === editingId);
-  if (resident) {
-    resident.name = document.getElementById('edit-name').value;
-    resident.cccd = document.getElementById('edit-cccd').value || null;
-    resident.arrival = document.getElementById('edit-arrival').value || null;
-    resident.status = document.getElementById('edit-status').value || 'Đang ở';
+    function closeAddResidentPopup() {
+      document.getElementById('addResidentPopup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
 
-    alert('Thông tin cư dân đã được sửa!');
-    closeEditPopup();
+    function openEditPopup(id, ho_ten, can_cuoc_cong_dan, thoi_gian, trang_thai, mo_ta) {
+      document.getElementById('updateForm').action = `/residency/${id}?_method=PUT`
+      document.getElementById('edit-name').value = ho_ten;
+      document.getElementById('edit-cccd').value = can_cuoc_cong_dan;
+      document.getElementById('edit-arrival').value = thoi_gian;
+      document.getElementById('edit-status').value = trang_thai;
+      document.getElementById('edit-description').value = mo_ta;
+
+      document.getElementById('editPopup').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeEditPopup() {
+      document.getElementById('editPopup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+
     renderTable();
-  }
-}
+  </script>
 
 
-      function deleteResident(id,name, cccd) {
-        const index = residents.findIndex(r => r.id===id);
-        if (index !== -1) {
-          const confirmation = confirm(`Bạn có chắc muốn xóa cư dân ${name}, mã căn cước ${cccd}?`);
-          if (confirmation) {
-            residents.splice(index, 1);
-            alert(`Cư dân ${name}, mã căn cước ${cccd} đã được xóa!`);
-            renderTable();
-          }
-        }
-      }
-
-      renderTable();
-    </script>
+  <%-include('../partials/footer_infosection') %>
 
 
-    <%-include('../partials/footer_infosection') %>
-
-
-      <script src="javascripts/jquery-3.4.1.min.js"></script>
-      <script src="javascripts/bootstrap.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-      </script>
-      <script src="javascripts/custom.js"></script>
+  <script src="javascripts/jquery-3.4.1.min.js"></script>
+  <script src="javascripts/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <script src="javascripts/custom.js"></script>
 
 
 

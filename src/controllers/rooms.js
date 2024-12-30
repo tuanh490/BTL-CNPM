@@ -22,14 +22,18 @@ export async function createRoom(req, res, next) {
         return res.redirect(303, '/rooms')
     }
 
-    if (can_cuoc_cong_dan.toUpperCase() == 'NULL' || !can_cuoc_cong_dan)
+    if (can_cuoc_cong_dan.toUpperCase() == 'NULL' || !can_cuoc_cong_dan) {
         can_cuoc_cong_dan = null;
+        trang_thai = 0;
+    }
     else {
         const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
         if (!checkResident) {
             req.flash('error', 'Không tìm thấy căn cước công dân!')
             return res.redirect(303, '/rooms')
         }
+
+        trang_thai = 1;
     }
 
     const [result] = await pool.query(`CALL Them_phong(?, ?, ?, ?);`,
@@ -43,14 +47,18 @@ export async function updateRoom(req, res) {
     const { id } = req.params
     let { trang_thai, dien_tich, can_cuoc_cong_dan } = req.body.room
 
-    if (can_cuoc_cong_dan.toUpperCase() == 'NULL')
+    if (can_cuoc_cong_dan.toUpperCase() == 'NULL') {
         can_cuoc_cong_dan = null;
+        trang_thai = 0;
+    }
     else {
         const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
         if (!checkResident) {
             req.flash('error', 'Không tìm thấy căn cước công dân!')
             return res.redirect(303, '/rooms')
         }
+
+        trang_thai = 1;
     }
 
 

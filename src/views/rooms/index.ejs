@@ -310,7 +310,7 @@
                     <td>${apartment.ho_ten || 'NULL'}</td>
                     <td>${apartment.can_cuoc_cong_dan || 'NULL'}</td>
                     <td>${apartment.dien_tich}</td>
-                    <td>${apartment.trang_thai}</td>
+                    <td>${!apartment.trang_thai ? "Trống" : "Đang sử dụng"}</td>
                     <td>
                         <div class="btn-container">
                             <button class="btn btn-edit" onclick="openEditPopup('${apartment.ma_phong}', '${apartment.ho_ten}', '${apartment.can_cuoc_cong_dan}', '${apartment.dien_tich}')">Edit</button>
