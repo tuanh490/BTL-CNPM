@@ -185,6 +185,10 @@
     <div class="container">
       <h2 class="text-center">Danh sách cư dân</h2>
       <div class="filter-group">
+        <label for="filter-room">Mã căn hộ:</label>
+        <input type="text" id="filter-room" placeholder="Nhập mã căn hộ" class="form-control">
+      </div>
+      <div class="filter-group">
         <label for="filter-name">Họ tên:</label>
         <input type="text" id="filter-name" placeholder="Nhập họ tên" class="form-control">
       </div>
@@ -199,18 +203,18 @@
       <div class="filter-group">
         <label for="filter-trang-thai">Trạng thái:</label>
         <select id="filter-trang-thai" class="form-control">
-            <option value="">Tất cả</option>
-            <option value="Đang ở"> Đang ở</option>
-            <option value="Đã rời đi"> Đã rời đi</option>
+          <option value="">Tất cả</option>
+          <option value="Đang ở"> Đang ở</option>
+          <option value="Đã rời đi"> Đã rời đi</option>
         </select>
-    </div>
+      </div>
       <!-- Filters -->
       <div class="filter-group-btn my-4">
         <button class="btn btn-primary " onclick="filterResidents()">Tìm kiếm</button>
         <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
         <button class="btn btn-success  mx-auto" onclick="openAddResidentPopup()">Thêm cư dân mới</button>
         &emsp;&emsp;&emsp;&emsp;
-                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
+        <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
       </div>
 
 
@@ -223,6 +227,7 @@
       <table class="table table-striped mt-3">
         <thead>
           <tr>
+            <th>Mã căn hộ</th>
             <th>Họ tên</th>
             <th>Ngày sinh</th>
             <th>Giới tính</th>
@@ -250,6 +255,10 @@
     <div class="form-popup" id="addResidentPopup" style="display:none;">
       <h2>Thêm cư dân mới</h2>
       <form>
+        <div class="form-group">
+          <label for="add-room">Mã căn hộ:</label>
+          <input type="text" id="add-room" class="form-control">
+        </div>
         <div class="form-group">
           <label for="add-name">Họ tên:</label>
           <input type="text" id="add-name" class="form-control">
@@ -287,6 +296,10 @@
     <div class="form-popup" id="editPopup">
       <h2>Sửa thông tin cư dân</h2>
       <form>
+        <div class="form-group">
+          <label for="edit-room">Mã căn hộ:</label>
+          <input type="text" id="edit-room" class="form-control">
+        </div>
         <div class="form-group">
           <label for="edit-name">Họ tên:</label>
           <input type="text" id="edit-name" class="form-control">
@@ -328,6 +341,7 @@
     <script>
       let residents = [
         {
+          room: 'A1',
           name: 'Nguyen Van An',
           dob: '1990-05-20',
           gender: 'Nam',
@@ -337,6 +351,7 @@
           status: 'Đang ở',
         },
         {
+          room: 'A2',
           name: 'Tran Thi Bich',
           dob: '1985-07-15',
           gender: 'Nữ',
@@ -346,6 +361,7 @@
           status: 'Đã rời đi',
         },
         {
+          room: 'A3',
           name: 'Pham Van Cuong',
           dob: '2000-11-25',
           gender: 'Nam',
@@ -355,6 +371,7 @@
           status: 'Đang ở',
         },
         {
+          room: 'A4',
           name: 'Le Thi Dung',
           dob: '1995-02-14',
           gender: 'Nữ',
@@ -364,6 +381,7 @@
           status: 'Đã rời đi',
         },
         {
+          room: 'A5',
           name: 'Hoang Quoc Dat',
           dob: '1992-03-18',
           gender: 'Nam',
@@ -373,6 +391,7 @@
           status: 'Đang ở',
         },
         {
+          room: 'A6',
           name: 'Dang Thi Thu',
           dob: '1988-09-10',
           gender: 'Nữ',
@@ -382,6 +401,7 @@
           status: 'Đang ở',
         },
         {
+          room: 'A7',
           name: 'Bui Minh Hai',
           dob: '1998-12-12',
           gender: 'Nam',
@@ -391,6 +411,7 @@
           status: 'Đang ở',
         },
         {
+          room: 'A8',
           name: 'Nguyen Thu Hang',
           dob: '1993-06-22',
           gender: 'Nữ',
@@ -400,6 +421,7 @@
           status: 'Đã rời đi',
         },
         {
+          room: 'A9',
           name: 'Pham Quoc Anh',
           dob: '1990-10-05',
           gender: 'Nam',
@@ -409,6 +431,7 @@
           status: 'Đang ở',
         },
         {
+          room: 'A10',
           name: 'Vu Hai Yen',
           dob: '1999-01-30',
           gender: 'Nữ',
@@ -433,6 +456,7 @@
         currentResidents.forEach(resident => {
           const row = document.createElement('tr');
           row.innerHTML = `
+          <td>${resident.room}</td>
           <td>${resident.name}</td>
           <td>${resident.dob}</td>
           <td>${resident.gender}</td>
@@ -441,7 +465,7 @@
           <td>${resident.departure}</td>
           <td>${resident.status}</td>
           <td>
-            <button class="btn btn-primary" onclick="openEditPopup('${resident.name}', '${resident.dob}', '${resident.gender}',
+            <button class="btn btn-primary" onclick="openEditPopup('${resident.room}','${resident.name}', '${resident.dob}', '${resident.gender}',
                     '${resident.cccd}', '${resident.arrival}', '${resident.departure}')">Edit</button>
             <button class="btn btn-danger" onclick="deleteResident('${resident.name}','${resident.cccd}')">Delete</button>
           </td>
@@ -489,20 +513,22 @@
       }
       let originalResident = [...residents];
       function filterResidents() {
+
+        const room = document.getElementById('filter-room').value.trim();
         const name = document.getElementById('filter-name').value.trim();
         const cccd = document.getElementById('filter-cccd').value.trim();
         const status = document.getElementById('filter-trang-thai').value.trim();
         const dob = document.getElementById('filter-ngay-sinh').value.trim();
-        
-        const filteredResidents = originalResident.filter(resident => {
-                    
-                    const matchesName = name ? resident.name === name : true;
-                    const matchesCCCD = cccd ? resident.cccd === cccd : true;
-                    const matchesStatus = status ? resident.status === status : true;
-                    const matchesDOB = dob ? resident.dob === dob : true;
 
-                    return matchesName && matchesCCCD && matchesStatus && matchesDOB;
-                });
+        const filteredResidents = originalResident.filter(resident => {
+          const matchesRoom = room ? resident.room === room : true;
+          const matchesName = name ? resident.name === name : true;
+          const matchesCCCD = cccd ? resident.cccd === cccd : true;
+          const matchesStatus = status ? resident.status === status : true;
+          const matchesDOB = dob ? resident.dob === dob : true;
+
+          return matchesName && matchesCCCD && matchesStatus && matchesDOB && matchesRoom;
+        });
         residents = filteredResidents;
         currentPage = 1;
         renderTable();
@@ -513,6 +539,7 @@
         currentPage = 1; // Đặt lại trang hiện tại
 
         // Xóa nội dung của các bộ lọc
+        document.getElementById('filter-room').value = '';
         document.getElementById('filter-name').value = '';
         document.getElementById('filter-cccd').value = '';
 
@@ -545,6 +572,7 @@
       }
 
       function saveNewResident() {
+        const room = document.getElementById('add-room').value;
         const name = document.getElementById('add-name').value;
         const dob = document.getElementById('add-dob').value;
         const gender = document.getElementById('add-gender').value;
@@ -558,6 +586,7 @@
         }
 
         const newResident = {
+          room: room,
           name: name,
           dob: dob, // Default or dynamic value
           gender: gender,
@@ -580,12 +609,14 @@
       //           <td>${resident.arrival}</td>
       //           <td>${resident.departure}</td>
       //           <td>${resident.status}</td>
-      function openEditPopup(name, dob, gender, cccd, arrival, departure) {
+      function openEditPopup(room, name, dob, gender, cccd, arrival, departure) {
+        document.getElementById('edit-room').value = room;
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-dob').value = dob;
         document.getElementById('edit-gender').value = gender;
         document.getElementById('edit-cccd').value = cccd || '';
         document.getElementById('edit-arrival').value = arrival || '';
+
         document.getElementById('edit-departure').value = departure || '';
 
         document.getElementById('editPopup').style.display = 'block';
@@ -598,6 +629,7 @@
       }
 
       function saveEdit() {
+        const room = document.getElementById('edit-room').value;
         const name = document.getElementById('edit-name').value;
         const dob = document.getElementById('edit-dob').value;
         const gender = document.getElementById('edit-gender').value;
@@ -609,7 +641,7 @@
           alert('Ten va ngay sinh là bắt buộc!');
           return;
         }
-        const resident = residents.find(resident => resident.name === name);
+        const resident = residents.find(resident => resident.name === name && resident.cccd === cccd);
         if (resident) {
           resident.name = name;
           resident.dob = dob;
@@ -627,7 +659,7 @@
       }
 
       function deleteResident(name, cccd) {
-        const index = residents.findIndex(r => r.name === name && r.cccd===cccd);
+        const index = residents.findIndex(r => r.name === name && r.cccd === cccd);
         if (index !== -1) {
           const confirmation = confirm(`Bạn có chắc muốn xóa cư dân ${name}, mã căn cước ${cccd}?`);
           if (confirmation) {

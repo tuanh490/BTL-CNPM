@@ -300,98 +300,71 @@
             </form>
         </div>
         <div class="form-popup" id="billPopup">
-            <table class="table mt-4">
-                <h2>Thông tin thanh toán</h2>
-                <thead>
-                    <tr>
-                        <th rowspan="2">Mã căn hộ</th>
-                        <th rowspan="2">Thời gian</th>
-                        <th colspan="5">Chi phí</th>
-                        <th rowspan="2">Tổng tiền</th>
-                    </tr>
-                    <tr>
-                        <th>Tiền quản lý</th>
-                        <th>Tiền dịch vụ</th>
-                        <th>Tiền điện</th>
-                        <th>Tiền nước</th>
-                        <th>Tiền internet</th>
-                    </tr>
-                </thead>
-
-                <tbody id="billDetailTableBody">
-
-                </tbody>
-            </table>
-            <button class="btn btn-delete" type="button" onclick="closeBillDetail()">Đóng</button>
-        </div>
-        
-        <div class="form-popup" id="billEditPopup" style="display: none;">
-            <h2>Chỉnh sửa thông tin thanh toán</h2>
-            <form>
-                <div class="form-container">
-                <div class="form-group">
-                    <label for="editMaCanHo">Mã căn hộ:</label>
-                    <input type="text" id="editMaCanHo" class="form-control" readonly disabled>
-                </div>
-                <div class="form-group">
-                    <label for="editThoiGianThu">Thời gian:</label>
-                    <input type="text" id="editThoiGianThu" class="form-control" readonly disabled>
-                </div>
-                <div class="form-group">
-                    <label for="editTienQuanLy">Tiền quản lý:</label>
-                    <input type="number" id="editTienQuanLy" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTienDichVu">Tiền dịch vụ:</label>
-                    <input type="number" id="editTienDichVu" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTienDien">Tiền điện:</label>
-                    <input type="number" id="editTienDien" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTienNuoc">Tiền nước:</label>
-                    <input type="number" id="editTienNuoc" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTienInternet">Tiền internet:</label>
-                    <input type="number" id="editTienInternet" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editTongTien">Tổng tiền:</label>
-                    <input type="text" id="editTongTien" class="form-control" readonly>
-                </div>
+            <h2>Thông tin thanh toán</h2>
+            <div class="form-group">
+                <label for="edit-ma-can-ho">Mã căn hộ:</label>
+                <input type="text" id="edit-ma-can-ho" disabled class="form-control">
             </div>
-                <button type="button" class="btn btn-primary" onclick="saveBillEditChanges()">Lưu</button>
-                <button type="button" class="btn btn-danger" onclick="closeBillEditPopup()">Hủy</button>
-            </form>
-        
+
+            <div class="form-group">
+                <label for="edit-tong-tien">Tổng tiền:</label>
+                <input type="text" id="edit-tong-tien" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="edit-thoi-gian-thu">Thời gian thu:</label>
+                <input type="date" id="edit-thoi-gian-thu" class="form-control" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
+                <input type="date" id="edit-thoi-gian-dong" class="form-control">
+            </div>
+            <button class="btn btn-delete" type="button" onclick="closeBillDetail()">Đóng</button>
+
         </div>
 
 
         <div class="overlay" id="overlay"></div>
         <script>
+            let billDetail = [
+                {
+                    maCanHo: 'A101',
+                    thoiGian: '2024-01-01',
+                    tienQuanLy: '1,000,000 VND',
+                    tienDichVu: '1,000,000 VND',
+                    tienDien: '1,000,000 VND',
+                    tienNuoc: '1,000,000 VND',
+                    tienInternet: '1,000,000 VND',
+                    tongTien: '5,000,000 VND'
+                },
+
+            ]
+
+            function renderTableBillDetail(maCanHo, thoiGianThu) {
+                const tableBody = document.getElementById('billDetailTableBody');
+                tableBody.innerHTML = '';
+                const billDetail = payments.find(payments => payments.maCanHo === maCanHo && payments.thoiGianThu === thoiGianThu);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${billDetail.maCanHo}</td>
+                    <td>${billDetail.thoiGianThu}</td>
+                    <td>${billDetail.chiPhi.tienQuanLy}</td>
+                    <td>${billDetail.chiPhi.tienDichVu}</td>
+                    <td>${billDetail.chiPhi.tienDien}</td>
+                    <td>${billDetail.chiPhi.tienNuoc}</td>
+                    <td>${billDetail.chiPhi.tienInternet}</td>
+                    <td>${billDetail.chiPhi.tongTien}</td>
+                `;
+                tableBody.appendChild(row);
+
+
+                document.getElementById('recordCount').textContent = payments.length;
+            }
+
             let payments = [
-                {
-                    maCanHo: 'A101', chiPhi: {
-                        tienQuanLy: 1000000,
-                        tienDichVu: 1000000,
-                        tienDien: 1000000,
-                        tienNuoc: 1000000,
-                        tienInternet: 1000000,
-                        tongTien: 5000000
-                    }, thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán'
-                },
-                {
-                    maCanHo: 'B202', chiPhi: {
-                        tienQuanLy: 1000000,
-                        tienDichVu: 1000000,
-                        tienDien: 1000000,
-                        tienNuoc: 0,
-                        tienInternet: 0,
-                        tongTien: 3000000
-                    }, thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán'
-                },
+                { maCanHo: 'A101', tongTien: '5,000,000 VND', thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán' },
+                { maCanHo: 'B202', tongTien: '3,000,000 VND', thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán' },
                 // Add more dummy data
             ];
             let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
@@ -640,18 +613,17 @@
             }
             function DeletePayment(maCanHo, thoiGianThu) {
                 const index = payments.findIndex(
-                    payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
-                );
-                if (index !== -1) {
-                    const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
-                    if (confirmation) {
-                        payments.splice(index, 1); // Remove the record from the array
-                        originalPayments = [...payments];
-                        alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
-                        renderTable();
-                    }
-                }
-            }
+        payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
+    );
+        if (index !== -1 ) {
+          const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
+          if (confirmation) {
+            payments.splice(index, 1); // Remove the record from the array
+            alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
+            renderTable();
+          }
+        }
+      }
 
 
             function filterData() {
