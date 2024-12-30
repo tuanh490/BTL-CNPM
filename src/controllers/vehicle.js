@@ -13,9 +13,11 @@ export async function renderVehicle(req, res) {
 export async function createVehicle(req, res, next) {
     let { ma_phong, loai_xe, bien_xe } = req.body.vehicle
 
+    console.log(req.body.vehicle)
+
     const vehicleExist = await checkObject("xe", "bien_xe", bien_xe)
     if (vehicleExist) {
-        req.flash('error', 'License plate is already in use')
+        req.flash('error', 'Biển số xe đã được sử dụng!')
         return res.redirect(303, `/vehicle`)
     }
 
@@ -25,10 +27,14 @@ export async function createVehicle(req, res, next) {
         return res.redirect(303, '/rooms')
     }
 
-    const [result] = await pool.query(`CALL Them_xe(?, ?, ?);`,
+    const result = await pool.query(`
+        INSERT INTO xe
+        (ma_phong, loai_xe, bien_xe)
+        VALUES
+        (?, ?, ?);`,
         [ma_phong, loai_xe, bien_xe])
 
-    req.flash('success', 'Successfully create vehicle')
+    req.flash('success', 'Tạo xe thành công!')
     res.redirect(303, `/vehicle`)
 }
 
@@ -39,7 +45,7 @@ export async function updateVehicle(req, res) {
     if (id != bien_xe) {
         const vehicleExist = await checkObject("xe", "bien_xe", bien_xe)
         if (vehicleExist) {
-            req.flash('error', 'License plate is already in use')
+            req.flash('error', 'Biển số xe đã được sử dụng!')
             return res.redirect(303, `/vehicle`)
         }
     }
@@ -59,13 +65,13 @@ export async function updateVehicle(req, res) {
         WHERE bien_xe = ?;
         `, [ma_phong, loai_xe, bien_xe, id])
 
-    req.flash('success', 'Successfully update vehicle')
+    req.flash('success', 'Cập nhật xe thành công!')
     res.redirect(303, `/vehicle`)
 }
 
 export async function deleteVehicle(req, res) {
     const { id } = req.params
     const [rows] = await pool.query(`CALL Xoa_xe(?)`, [id])
-    req.flash('success', 'Successfully delete vehicle')
+    req.flash('success', 'Xóa xe thành công!')
     res.redirect(303, '/vehicle')
 }

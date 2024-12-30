@@ -67,52 +67,8 @@ app.use('/quy_dinh', (req, res) => {
     res.render('quy_dinh')
 })
 
-app.get('/phi_co_so', (req, res) => {
-    res.render('bills/base_bills/index')
-})
-
-app.use('/bill', (req, res) => {
-    res.render('bills/bill')
-})
-
-app.get('/resident', (req, res) => {
-    res.render('residents/index')
-})
-app.get('/declare', (req, res) => {
-    res.render('residents/declare')
-})
-app.get('/room', (req, res) => {
-    res.render('rooms/index')
-})
-
-app.get('/change-password', (req, res) => {
-    res.render('users/change-password')
-})
-app.get('/register', (req, res) => {
-    res.render('users/register')
-})
-app.get('/user-info', (req, res) => {
-    res.render('users/user-info')
-})
-
-app.get('/vehicles', (req, res) => {
-    res.render('vehicle/index')
-})
-
 app.get('/', (req, res) => {
     res.render('index');
-})
-
-app.get('/monthly_bill', (req, res) => {
-    res.render('bills/monthly_bills/index');
-})
-
-app.get('/user_typed_bills', (req, res) => {
-    res.render('bills/user_typed_bills/index');
-})
-
-app.get('/ung_ho', (req, res) => {
-    res.render('donations/index.ejs');
 })
 
 app.all('*', (req, res, next) => {
