@@ -16,7 +16,8 @@ export async function validateResident(req, res, next) {
     const { error } = residentSchema.validate(req.body.resident)
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
-        next(new ExpressError(msg, 400))
+        req.flash('error', msg)
+        return res.redirect(303, '/residents')
     } else {
         next()
     }

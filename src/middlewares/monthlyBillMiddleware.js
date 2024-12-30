@@ -7,7 +7,6 @@ export async function doesMonthlyBillExist(req, res, next) {
 
     if (!(await checkObject("thanh_toan_hang_thang", "id_thanh_toan", id))) {
         req.flash('error', 'Bill not found')
-        console.log('Running from monthly bill')
         return res.redirect(303, '/monthly_bills')
     }
     next();
@@ -18,7 +17,8 @@ export async function validateMonthlyBill(req, res, next) {
     const { error } = monthlyBillSchema.validate(req.body.monthly_bill)
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
-        next(new ExpressError(msg, 400))
+        req.flash('error', msg)
+        return res.redirect(303, '/monthly_bills')
     } else {
         next()
     }

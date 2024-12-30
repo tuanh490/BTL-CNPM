@@ -16,7 +16,8 @@ export async function validateRoom(req, res, next) {
     const { error } = roomSchema.validate(req.body.room)
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
-        next(new ExpressError(msg, 400))
+        req.flash('error', msg)
+        return res.redirect(303, '/rooms')
     } else {
         next()
     }

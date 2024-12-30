@@ -16,7 +16,8 @@ export async function validateVehicle(req, res, next) {
     const { error } = vehicleSchema.validate(req.body.vehicle)
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
-        next(new ExpressError(msg, 400))
+        req.flash('error', msg)
+        return res.redirect(303, '/vehicle')
     } else {
         next()
     }
