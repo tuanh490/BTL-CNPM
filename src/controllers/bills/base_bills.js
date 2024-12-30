@@ -17,7 +17,7 @@ export async function createBaseBill(req, res) {
 
 
 
-    req.flash('success', 'Successfully create base bill')
+    req.flash('success', 'Tạo phí thành công!')
     res.redirect(303, '/base_bills')
 }
 
@@ -34,7 +34,9 @@ export async function updateBaseBill(req, res) {
         WHERE id_phi_co_so = ?;
         `, [loai_phi, gia_co_so, mo_ta, id])
 
-    req.flash('success', 'Successfully update base bill')
+    console.log("Hello from updating base_bill")
+
+    req.flash('success', 'Cập nhật phí thành công!')
     res.redirect(303, '/base_bills')
 }
 
@@ -44,6 +46,6 @@ export async function deleteBaseBill(req, res) {
         DELETE FROM phi_co_so
         WHERE id_phi_co_so = ?;
         `, [id])
-    req.flash('success', 'Successfully delete base bill')
+    req.flash('success', 'Xóa phí thành công!')
     res.redirect(303, '/base_bills')
 }

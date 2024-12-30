@@ -127,44 +127,45 @@
 
 <body>
   <%- include('../partials/header')%>
-    <!-- login section -->
-    <section class="contact_section layout_padding">
-      <div class="login-section">
-        <div class="heading_container">
-          <h2>Đăng nhập</h2>
-        </div>
-        <div>
-          <form method="POST" action="/login">
-            <div>
-              <label for="username">
-                <h3>Tên đăng nhập</h3>
-              </label>
-              <input id="username" type="text" placeholder="Tên đăng nhập" name="username" required />
-            </div>
-
-            <div>
-              <label for="password">
-                <h3>Mật khẩu</h3>
-              </label>
-              <input id="password" type="password" placeholder="Mật khẩu" name="password" required />
-            </div>
-
-            <button type="submit">Đăng nhập</button>
-
-            
-          </form>
-        </div>
+  <!-- login section -->
+  <%- include('../partials/flash') %>
+  <section class="contact_section layout_padding">
+    <div class="login-section">
+      <div class="heading_container">
+        <h2>Đăng nhập</h2>
       </div>
-    </section>
-    <!-- end login section -->
+      <div>
+        <form method="POST" action="/login">
+          <div>
+            <label for="username">
+              <h3>Tên đăng nhập</h3>
+            </label>
+            <input id="username" type="text" placeholder="Tên đăng nhập" name="username" required />
+          </div>
 
-    <%-include('../partials/footer_infosection') %>
+          <div>
+            <label for="password">
+              <h3>Mật khẩu</h3>
+            </label>
+            <input id="password" type="password" placeholder="Mật khẩu" name="password" required />
+          </div>
 
-      <script src="javascripts/jquery-3.4.1.min.js"></script>
-      <script src="javascripts/bootstrap.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-      <script src="javascripts/custom.js"></script>
-      <script src="javascripts/index.js"></script>
+          <button type="submit">Đăng nhập</button>
+
+
+        </form>
+      </div>
+    </div>
+  </section>
+  <!-- end login section -->
+
+  <%-include('../partials/footer_infosection') %>
+
+  <script src="javascripts/jquery-3.4.1.min.js"></script>
+  <script src="javascripts/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="javascripts/custom.js"></script>
+  <script src="javascripts/index.js"></script>
 </body>
 
 </html>

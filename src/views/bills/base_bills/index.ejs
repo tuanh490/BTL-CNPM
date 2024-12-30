@@ -27,8 +27,8 @@
   <!-- responsive style -->
   <link href="stylesheets/responsive.css" rel="stylesheet" />
 
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
   <style>
     table {
       width: 100%;
@@ -105,165 +105,102 @@
 </head>
 
 <body>
-  <%-include('../../partials/header') %>
-    <div class="container">
-      <h2 class="text-center">Quản lý Phí Cơ Sở</h2>
+  <%- include('../../partials/header') %>
+  <div class="container">
+    <h2 class="text-center">Quản lý Phí Cơ Sở</h2>
+    <%- include('../../partials/flash') %>
 
-      <!-- Button to Add New Fee -->
-      <button class="btn btn-primary" onclick="openAddPopup()">Thêm Phí Cơ Sở</button>
+    <!-- Button to Add New Fee -->
+    <button class="btn btn-primary" onclick="openAddPopup()">Thêm Phí Cơ Sở</button>
 
-      <!-- Table displaying the fee data -->
-      <table class="table table-bordered mt-3">
-        <thead>
-          <tr>
-            <th>Mã Phí</th>
-            <th>Loại Phí</th>
-            <th>Giá Cơ Sở</th>
-            <th>Mô Tả</th>
-            <th>Ngày Tạo</th>
-            <th>Hành Động</th>
-          </tr>
-        </thead>
-        <tbody id="feeTableBody">
-          <!-- Data will be dynamically loaded here -->
-        </tbody>
-      </table>
-    </div>
+    <!-- Table displaying the fee data -->
+    <table class="table table-bordered mt-3">
+      <thead>
+        <tr>
+          <th>Mã Phí</th>
+          <th>Loại Phí</th>
+          <th>Giá Cơ Sở</th>
+          <th>Mô Tả</th>
+          <th>Hành Động</th>
+        </tr>
+      </thead>
+      <tbody id="feeTableBody">
+        <% base_bills.forEach((base_bill, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><%= base_bill.loai_phi %></td>
+          <td><%= base_bill.gia_co_so %></td>
+          <td><%= base_bill.mo_ta %></td>
+          <td>
+            <!-- Edit and Delete buttons for each fee item -->
+            <button class="btn btn-edit"
+              onclick='openEditPopup("<%= base_bill.id_phi_co_so %>", "<%= base_bill.loai_phi %>", "<%= base_bill.gia_co_so %>", "<%= base_bill.mo_ta %>")'>Edit</button>
+            <form action="/base_bills/<%= base_bill.id_phi_co_so %>?_method=DELETE" method="POST"
+              style="display: inline;">
+              <button class="btn btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- Add/Edit Fee Popup -->
-    <div class="form-popup" id="feeFormPopup">
-      <h3 id="formTitle">Thêm Phí Cơ Sở</h3>
-     
-      <form id="feeForm">
-        <div class="form-group">
-          <label for="feeType">Loại Phí</label>
-          <input type="text" id="feeType" class="form-control" required>
-        </div>
+  <!-- Form Popup -->
+  <div class="form-popup" id="feeFormPopup">
+    <h3 id="formTitle">Thêm Phí Cơ Sở</h3>
 
-        <div class="form-group">
-          <label for="basePrice">Giá Cơ Sở</label>
-          <input type="number" id="basePrice" class="form-control" step="0.01" required>
-        </div>
+    <form id="feeForm" action="" method="POST">
+      <div class="form-group">
+        <label for="feeType">Loại Phí</label>
+        <input type="text" id="feeType" class="form-control" name="base_bill[loai_phi]" required>
+      </div>
 
-        <div class="form-group">
-          <label for="description">Mô Tả</label>
-          <textarea id="description" class="form-control"></textarea>
-        </div>
+      <div class="form-group">
+        <label for="basePrice">Giá Cơ Sở</label>
+        <input type="number" id="basePrice" class="form-control" step="0.01" name="base_bill[gia_co_so]" required>
+      </div>
 
-        <button type="button" class="btn btn-success" onclick="saveFee()">Lưu</button>
-        <button type="button" class="btn btn-danger" onclick="closePopup()">Đóng</button>
-      </form>
-    </div>
+      <div class="form-group">
+        <label for="description">Mô Tả</label>
+        <textarea id="description" class="form-control" name="base_bill[mo_ta]"></textarea>
+      </div>
 
-    <div class="overlay" id="overlay"></div>
+      <button type="submit" class="btn btn-success">Lưu</button>
+      <button type="button" class="btn btn-danger" onclick="closePopup()">Đóng</button>
+    </form>
+  </div>
 
-    <script>
-      // Sample data for fees (you can replace this with data fetched from the database)
-      let fees = [
-        { id: 1, loaiPhi: 'Phí dịch vụ', giaCoSo: 500000, moTa: 'Phí dịch vụ hàng tháng', createdAt: '2024-12-28' },
-        { id: 2, loaiPhi: 'Phí bảo trì', giaCoSo: 200000, moTa: 'Phí bảo trì định kỳ', createdAt: '2024-12-27' },
-      ];
+  <!-- Overlay for Popup -->
+  <div class="overlay" id="overlay"></div>
+  <%- include('../../partials/footer_infosection') %>
 
-      let editingFeeId = null;
-
-      // Render the table with fee data
-      function renderTable() {
-        const tableBody = document.getElementById('feeTableBody');
-        tableBody.innerHTML = '';
-
-        fees.forEach(fee => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-                    <td>${fee.id}</td>
-                    <td>${fee.loaiPhi}</td>
-                    <td>${fee.giaCoSo}</td>
-                    <td>${fee.moTa}</td>
-                    <td>${fee.createdAt}</td>
-                    <td>
-                        <button class="btn btn-edit" onclick="openEditPopup(${fee.id})">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteFee(${fee.id})">Delete</button>
-                    </td>
-                `;
-          tableBody.appendChild(row);
-        });
-      }
-
-      // Open the popup for adding a new fee
-      function openAddPopup() {
-        document.getElementById('formTitle').innerText = 'Thêm Phí Cơ Sở';
-        document.getElementById('feeType').value = '';
-        document.getElementById('basePrice').value = '';
-        document.getElementById('description').value = '';
-        editingFeeId = null;
-
-        document.getElementById('feeFormPopup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-      }
-
-      // Open the popup for editing an existing fee
-      function openEditPopup(id) {
-        const fee = fees.find(f => f.id === id);
-        if (fee) {
-          document.getElementById('formTitle').innerText = 'Sửa Phí Cơ Sở';
-          document.getElementById('feeType').value = fee.loaiPhi;
-          document.getElementById('basePrice').value = fee.giaCoSo;
-          document.getElementById('description').value = fee.moTa;
-          editingFeeId = id;
-
-          document.getElementById('feeFormPopup').style.display = 'block';
-          document.getElementById('overlay').style.display = 'block';
-        }
-      }
-
-      // Close the popup
-      function closePopup() {
-        document.getElementById('feeFormPopup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-      }
-
-      // Save the fee (either new or edited)
-      function saveFee() {
-        const feeType = document.getElementById('feeType').value;
-        const basePrice = parseFloat(document.getElementById('basePrice').value);
-        const description = document.getElementById('description').value;
-
-        if (feeType && basePrice) {
-          if (editingFeeId === null) {
-            // Adding new fee
-            const newFee = {
-              id: fees.length + 1,
-              loaiPhi: feeType,
-              giaCoSo: basePrice,
-              moTa: description,
-              createdAt: new Date().toISOString().split('T')[0],
-            };
-            fees.push(newFee);
-          } else {
-            // Editing existing fee
-            const fee = fees.find(f => f.id === editingFeeId);
-            if (fee) {
-              fee.loaiPhi = feeType;
-              fee.giaCoSo = basePrice;
-              fee.moTa = description;
-            }
-          }
-
-          renderTable();
-          closePopup();
-        }
-      }
-
-      // Delete a fee
-      function deleteFee(id) {
-        fees = fees.filter(fee => fee.id !== id);
-        renderTable();
-      }
-      function open_2() { }
-      // Initial render of the table
-      renderTable();
-    </script>
-    <%-include('../../partials/footer_infosection') %>
-
+  <!-- Add custom script -->
+  <script>
+    // JavaScript to open and close the popup form
+    function openAddPopup() {
+      document.getElementById('feeType').value = "";
+      document.getElementById('basePrice').value = "";
+      document.getElementById('description').value = "";
+      document.getElementById('feeForm').action = '/base_bills';
+      document.getElementById('feeFormPopup').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+    function closePopup() {
+      document.getElementById('feeFormPopup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+    function openEditPopup(id, loai_phi, gia_co_so, mo_ta) {
+      console.log(id)
+      document.getElementById('formTitle').innerText = 'Sửa Phí Cơ Sở';
+      document.getElementById('feeType').value = loai_phi;
+      document.getElementById('basePrice').value = gia_co_so;
+      document.getElementById('description').value = mo_ta;
+      document.getElementById('feeForm').action = `/base_bills/${id}?_method=PUT`;
+      document.getElementById('feeFormPopup').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+  </script>
 </body>
 
 </html>

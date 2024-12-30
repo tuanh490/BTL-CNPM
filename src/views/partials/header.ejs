@@ -28,24 +28,29 @@
               <li class="nav-item">
                 <a class="nav-link">Dịch vụ<i id="arrow_nav" class="bi bi-caret-down-fill"></i></span></a>
                 <ul class="dropdown">
-                  <li><a href="/monthly_bill">Phí hàng tháng</a></li>
-                  <li><a href="/ung_ho">Phí ủng hộ</a></li>
+                  <li><a href="/monthly_bills">Phí hàng tháng</a></li>
+                  <li><a href="/donations">Phí ủng hộ</a></li>
                   <li><a href="/user_typed_bills">Phí điện nước internet</a></li>
-                  <li><a href="/resident">Nhân khẩu</a></li>
-                  <li><a href="/room">Hộ khẩu</a></li>
-                  <li><a href="/vehicles">Quản lý xe</a></li>
-                  <li><a href="/declare">Khai báo</a></li>
+                  <li><a href="/residents">Nhân khẩu</a></li>
+                  <li><a href="/rooms">Hộ khẩu</a></li>
+                  <li><a href="/vehicle">Quản lý xe</a></li>
+                  <li><a href="/residency">Khai báo</a></li>
+                  <li><a href="/base_bills">Phí cơ sở</a></li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/phi_co_so">Phí cơ sở</a>
-              </li>
-              <li class="nav-item">
-                <a href="/user-info" class="nav-link"><i id="arrow_nav"
-                    class="bi bi-person-circle login-circle"></i></a>
+                <% if (!currentUser) { %>
+                <div class="nav-link"><i id="arrow_nav" class="bi bi-person-circle login-circle"></i></div>
+                <% } else { %>
+                <a href="/profile" class="nav-link"><i id="arrow_nav" class="bi bi-person-circle login-circle"></i></a>
+                <% } %>
                 <ul class="dropdown">
+                  <% if (!currentUser) { %>
                   <li><a href="/login">Đăng nhập</a></li>
-                  <li><a href="javascript:void(0)" onclick="logout()">Đăng xuất</a></li>
+                  <% } %>
+                  <% if (currentUser) { %>
+                  <li><a href="/logout">Đăng xuất</a></li>
+                  <% } %>
                 </ul>
 
               </li>
@@ -56,10 +61,4 @@
     </div>
   </header>
   <!-- end header section -->
-  <script>
-    function logout() {
-      // localStorage.removeItem('authToken'); 
-      window.location.href = '/login';
-    }
-  </script>
 </div>

@@ -14,9 +14,11 @@ router.route('/login')
     .get(users.renderLogin)
     .post(users.login)
 
-router.post('/logout', users.logout)
+router.route('/logout')
+    .get(users.logout)
 
 router.route('/change_password')
+    .get(isAuthenticated, CatchAsync(users.renderChangePasswrod))
     .post(isAuthenticated, CatchAsync(users.changePassword))
 
 router.get('/profile', isAuthenticated, CatchAsync(users.getProfile))

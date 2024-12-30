@@ -414,7 +414,7 @@
 
         <div class="overlay" id="overlay"></div>
         <script>
-            let payments = [
+            let billDetail = [
                 {
                     maCanHo: 'A101', 
                     
@@ -704,18 +704,17 @@
             }
             function DeletePayment(maCanHo, thoiGianThu) {
                 const index = payments.findIndex(
-                    payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
-                );
-                if (index !== -1) {
-                    const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
-                    if (confirmation) {
-                        payments.splice(index, 1); // Remove the record from the array
-                        originalPayments = [...payments];
-                        alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
-                        renderTable();
-                    }
-                }
-            }
+        payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
+    );
+        if (index !== -1 ) {
+          const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
+          if (confirmation) {
+            payments.splice(index, 1); // Remove the record from the array
+            alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
+            renderTable();
+          }
+        }
+      }
 
                         // Mở popup thêm phí khác
             function openAddFeePopup() {
