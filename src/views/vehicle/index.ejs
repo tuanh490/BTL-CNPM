@@ -305,7 +305,7 @@
 
             let currentPage = 1;
             const pageSize = 5;
-
+            let originalVehicle = [...vehicles];
             function renderTable() {
                 const tableBody = document.getElementById('vehicleTableBody');
                 tableBody.innerHTML = '';
@@ -388,7 +388,7 @@
                     renderTable();
                 }
             }
-            let originalVehicle = [...vehicles];
+           
             function filterVehicles() {
                 const maPhongFilter = document.getElementById('filter-ma-phong').value.toLowerCase();
                 const loaiXeFilter = document.getElementById('filter-loai-xe').value;
@@ -436,7 +436,7 @@
                     bien_xe: bienXe
 
                 });
-
+                originalVehicle = [...vehicles];
                 closeAddVehiclePopup();
                 renderTable();
             }
@@ -479,7 +479,8 @@
                     const confirmation = confirm(`Bạn có chắc muốn xóa xe ${bienXe}?`);
                     if (confirmation) {
                         vehicles.splice(vehicleToDelete, 1);
-                        alert(`Cư dân ${bienXe} đã được xóa!`);
+                        originalVehicle = [...vehicles];
+                        alert(`Xe ${bienXe} đã được xóa!`);
                         renderTable();
                     }
                 } else {
