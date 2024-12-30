@@ -67,17 +67,13 @@ app.use('/quy_dinh', (req, res) => {
     res.render('quy_dinh')
 })
 
-app.use('/phi_co_so', (req, res) => {
+app.get('/phi_co_so', (req, res) => {
     res.render('bills/base_bills/index')
 })
 
 app.use('/bill', (req, res) => {
     res.render('bills/bill')
 })
-
-// app.use('/phi_co_so', (req, res) => {
-//     res.render('phi_co_so')
-// })
 
 app.get('/resident', (req, res) => {
     res.render('residents/index')
@@ -118,6 +114,7 @@ app.get('/user_typed_bills', (req, res) => {
 app.get('/ung_ho', (req, res) => {
     res.render('donations/index.ejs');
 })
+
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
@@ -134,8 +131,6 @@ app.use((err, req, res, next) => {
             path: preErrorUrl
         }
     });
-
-    // res.redirect('/')
 });
 
 

@@ -119,52 +119,49 @@
 
 <body>
     <%- include('../partials/header') %>
-        <!-- Register Section -->
-        <section class="contact_section layout_padding">
-            <div class="register-section">
-                <div class="heading_container">
-                    <h2>Đăng ký</h2>
-                </div>
-                <form method="POST" action="/register">
-                    <div>
-                        <label for="username">
-                            <h3>Tên đăng nhập</h3>
-                        </label>
-                        <input id="username" type="text" placeholder="Tên đăng nhập" name="username" required />
-                    </div>
-
-                    <div>
-                        <label for="password">
-                            <h3>Mật khẩu</h3>
-                        </label>
-                        <input id="password" type="password" placeholder="Mật khẩu" name="password" required />
-                    </div>
-
-                    <div>
-                        <label for="confirm-password">
-                            <h3>Xác nhận mật khẩu</h3>
-                        </label>
-                        <input id="confirm-password" type="password" placeholder="Xác nhận mật khẩu"
-                            name="confirm_password" required />
-                    </div>
-
-                    <button type="submit">Đăng ký</button>
-
-                    <div class="center login-prompt">
-                        <p>Đã có tài khoản? <a href="/login" class="text-primary">Đăng nhập ngay</a></p>
-                    </div>
-                </form>
+    <%- include('../partials/flash') %>
+    <!-- Register Section -->
+    <section class="contact_section layout_padding">
+        <div class="register-section">
+            <div class="heading_container">
+                <h2>Tạo tài khoản mới</h2>
             </div>
-        </section>
-        <!-- End Register Section -->
+            <form method="POST" action="/register">
+                <div>
+                    <label for="username">
+                        <h3>Tên đăng nhập</h3>
+                    </label>
+                    <input id="username" type="text" placeholder="Tên đăng nhập" name="username" required />
+                </div>
 
-        <%- include('../partials/footer_infosection') %>
+                <div>
+                    <label for="password">
+                        <h3>Mật khẩu</h3>
+                    </label>
+                    <input id="password" type="password" placeholder="Mật khẩu" name="password" required />
+                </div>
 
-            <script src="javascripts/jquery-3.4.1.min.js"></script>
-            <script src="javascripts/bootstrap.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-            <script src="javascripts/custom.js"></script>
-            <script src="javascripts/index.js"></script>
+                <div>
+                    <label for="confirm-password">
+                        <h3>Xác nhận mật khẩu</h3>
+                    </label>
+                    <input id="confirm-password" type="password" placeholder="Xác nhận mật khẩu"
+                        name="passwordConfirmation" required />
+                </div>
+
+                <button type="submit">Tạo tài khoản</button>
+            </form>
+        </div>
+    </section>
+    <!-- End Register Section -->
+
+    <%- include('../partials/footer_infosection') %>
+
+    <script src="javascripts/jquery-3.4.1.min.js"></script>
+    <script src="javascripts/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="javascripts/custom.js"></script>
+    <script src="javascripts/index.js"></script>
 </body>
 
 </html>
