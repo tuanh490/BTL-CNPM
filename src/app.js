@@ -68,7 +68,7 @@ app.use('/quy_dinh', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index_copy');
 })
 
 app.all('*', (req, res, next) => {
