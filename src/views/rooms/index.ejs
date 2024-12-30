@@ -194,6 +194,10 @@
                 <input type="text" id="filter-ma-can-ho" placeholder="Nhập mã căn hộ" class="form-control">
             </div>
             <div class="filter-group">
+                <label for="filter-dia-diem">Mã căn hộ:</label>
+                <input type="text" id="filter-dia-diem" placeholder="Nhập địa điểm" class="form-control">
+            </div>
+            <div class="filter-group">
                 <label for="filter-trang-thai">Trạng thái:</label>
                 <select id="filter-trang-thai" class="form-control">
                     <option value="">Tất cả</option>
@@ -310,7 +314,7 @@
 
             let currentPage = 1;
             const pageSize = 5;
-
+            let originalApartment = [...apartments];
             function renderTable() {
                 const tableBody = document.getElementById('apartmentTableBody');
                 tableBody.innerHTML = '';
@@ -379,17 +383,19 @@
                     pageNumbers.appendChild(lastButton);
                 }
             }
-            let originalApartment = [...apartments];
+            
             function filterData() {
     const maCanHo = document.getElementById('filter-ma-can-ho').value.trim().toLowerCase();
+    const diaDiem = document.getElementById('filter-dia-diem').value.trim().toLowerCase();
     const trangThai = document.getElementById('filter-trang-thai').value.trim();
 
     // Lọc dữ liệu từ danh sách gốc `originalApartment`
     apartments = originalApartment.filter(apartment => {
         const matchesRoomCode = maCanHo ? apartment.maCanHo.toLowerCase().includes(maCanHo) : true;
+        const matchesFloor = diaDiem ? apartment.diaDiem.toLowerCase().includes(diaDiem) : true;
         const matchesStatus = trangThai ? apartment.trangThai === trangThai : true;
 
-        return matchesRoomCode && matchesStatus;
+        return matchesRoomCode && matchesStatus&&matchesFloor;
     });
 
     // Đặt lại trang hiện tại về trang đầu tiên và hiển thị bảng
@@ -455,7 +461,7 @@
                 };
 
                 apartments.push(newApartment);
-
+                originalApartment = [...apartments];
                 alert('Căn hộ mới đã được thêm!');
                 closeAddPopup();
                 renderTable();
@@ -501,6 +507,7 @@
                     const confirmation = confirm(`Bạn có chắc muốn xóa căn hộ ${maCanHo}?`);
                     if (confirmation) {
                         apartments.splice(index, 1); // Remove the record from the array
+                        originalApartment = [...apartments];
                         alert(`Căn hộ ${maCanHo} đã được xóa!`);
                         renderTable();
                     }

@@ -196,6 +196,16 @@
         <label for="filter-ngay-sinh">Ngày sinh:</label>
         <input type="date" id="filter-ngay-sinh" placeholder="Nhập mã CCCD" class="form-control">
       </div>
+
+      <div class="filter-group">
+        <label for="filter-gioi-tinh">Giới tính:</label>
+        <select id="filter-gioi-tinh" class="form-control">
+            <option value="">Tất cả</option>
+            <option value="Nam"> Nam</option>
+            <option value="Nữ"> Nữ</option>
+        </select>
+    </div>
+
       <div class="filter-group">
         <label for="filter-trang-thai">Trạng thái:</label>
         <select id="filter-trang-thai" class="form-control">
@@ -423,7 +433,7 @@
 
       let currentPage = 1;
       const pageSize = 5;
-
+      let originalResident = [...residents];
       function renderTable() {
         const tableBody = document.getElementById('residentTableBody');
         tableBody.innerHTML = '';
@@ -487,12 +497,13 @@
           pageNumbers.appendChild(lastButton);
         }
       }
-      let originalResident = [...residents];
+  
       function filterResidents() {
         const name = document.getElementById('filter-name').value.trim();
         const cccd = document.getElementById('filter-cccd').value.trim();
         const status = document.getElementById('filter-trang-thai').value.trim();
         const dob = document.getElementById('filter-ngay-sinh').value.trim();
+        const gender = document.getElementById('filter-gioi-tinh').value.trim();
         
         const filteredResidents = originalResident.filter(resident => {
                     
@@ -500,8 +511,9 @@
                     const matchesCCCD = cccd ? resident.cccd === cccd : true;
                     const matchesStatus = status ? resident.status === status : true;
                     const matchesDOB = dob ? resident.dob === dob : true;
+                    const matchesGender = gender ? resident.gender === gender : true;
 
-                    return matchesName && matchesCCCD && matchesStatus && matchesDOB;
+                    return matchesName && matchesCCCD && matchesStatus && matchesDOB&&matchesGender;
                 });
         residents = filteredResidents;
         currentPage = 1;
@@ -568,7 +580,7 @@
         };
 
         residents.push(newResident);
-
+        originalResident = [...residents];
         alert('Nhân khẩu mới đã được thêm!');
         closeAddResidentPopup();
         renderTable();
@@ -632,6 +644,7 @@
           const confirmation = confirm(`Bạn có chắc muốn xóa cư dân ${name}, mã căn cước ${cccd}?`);
           if (confirmation) {
             residents.splice(index, 1);
+            originalResident = [...residents];
             alert(`Cư dân ${name}, mã căn cước ${cccd} đã được xóa!`);
             renderTable();
           }

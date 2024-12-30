@@ -188,6 +188,11 @@
                     <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
                 </div>
 
+                <div class="filter-group">
+                    <label for="filter-loai-phi">Loại phí:</label>
+                    <input type="text" id="filter-loai-phi" placeholder="Nhập loại phí" class="form-control">
+                </div>
+
                 <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
                 <div class="filter-group-btn my-4">
                     <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
@@ -258,10 +263,49 @@
 
         <script>
             let phiData = [
-
+                {
+                    id: 1,
+                    ma_phong: 'A101',
+                    loai_phi: 'Tiền điện',
+                    so_tien: 500000,
+                    mo_ta: 'Thanh toán tiền điện tháng 12',
+                    thoi_gian: '2024-12-01'
+                },
+                {
+                    id: 2,
+                    ma_phong: 'A102',
+                    loai_phi: 'Tiền nước',
+                    so_tien: 200000,
+                    mo_ta: 'Thanh toán tiền nước tháng 12',
+                    thoi_gian: '2024-12-03'
+                },
+                {
+                    id: 3,
+                    ma_phong: 'B201',
+                    loai_phi: 'Tiền vệ sinh',
+                    so_tien: 150000,
+                    mo_ta: 'Thanh toán phí vệ sinh hàng tháng',
+                    thoi_gian: '2024-11-28'
+                },
+                {
+                    id: 4,
+                    ma_phong: 'B202',
+                    loai_phi: 'Tiền thuê phòng',
+                    so_tien: 2500000,
+                    mo_ta: 'Tiền thuê phòng tháng 11',
+                    thoi_gian: '2024-11-30'
+                },
+                {
+                    id: 5,
+                    ma_phong: 'C301',
+                    loai_phi: 'Tiền internet',
+                    so_tien: 300000,
+                    mo_ta: 'Phí sử dụng internet tháng 11',
+                    thoi_gian: '2024-11-25'
+                },
             ];
             let editingId = null;
-
+            let originalPayments = [...phiData]; // Lưu lại dữ liệu gốc
             let currentPage = 1;
             const pageSize = 5;
 
@@ -387,8 +431,8 @@
                         thoi_gian: thoiGian,
                     };
                     phiData.push(newPhi);
+                    originalPayments = [...phiData];
                 }
-
                 renderTable();
                 closePopup();
             }
@@ -400,6 +444,7 @@
                     const confirmation = confirm(`Bạn có chắc muốn xóa phí ${phiToDelete.loai_phi} của phòng ${phiToDelete.ma_phong}?`);
                     if (confirmation) {
                         phiData = phiData.filter(p => p.id !== id);
+                        originalPayments = [...phiData];
                         renderTable();
                     }
                 } else {
@@ -407,12 +452,13 @@
                 }
             }
 
-            let originalPayments = [...phiData]; // Lưu lại dữ liệu gốc
+        
 
             function filterData() {
                 const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
                 const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
                 const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
+                const loaiPhi = document.getElementById('filter-loai-phi').value.trim().toLowerCase();
 
                 // Áp dụng bộ lọc
                 const filteredPayments = originalPayments.filter(payment => {
@@ -423,8 +469,9 @@
                     const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
                     const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
                     const matchesRoomCode = roomCode ? payment.ma_phong.toLowerCase().includes(roomCode) : true;
+                    const matchesFeeType = loaiPhi ? payment.loai_phi.toLowerCase().includes(loaiPhi) : true;
 
-                    return matchesYear && matchesMonth && matchesRoomCode;
+                    return matchesYear && matchesMonth && matchesRoomCode && matchesFeeType;
                 });
 
                 phiData = filteredPayments; // Cập nhật mảng dữ liệu đã lọc

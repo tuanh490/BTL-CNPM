@@ -188,6 +188,11 @@
                     <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
                 </div>
 
+                <div class="filter-group">
+                    <label for="filter-loai-phi">Loại phí:</label>
+                    <input type="text" id="filter-loai-phi" placeholder="Nhập loại phí" class="form-control">
+                </div>
+
                 <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
                 <div class="filter-group-btn my-4">
                     <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
@@ -451,6 +456,8 @@
                 const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
                 const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
                 const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
+                const loaiPhi = document.getElementById('filter-loai-phi').value.trim().toLowerCase();
+                
 
                 // Áp dụng bộ lọc
                 const filteredPayments = originalPayments.filter(payment => {
@@ -461,8 +468,9 @@
                     const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
                     const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
                     const matchesRoomCode = roomCode ? payment.ma_phong.toLowerCase().includes(roomCode) : true;
+                    const matchesFeeType = loaiPhi ? payment.loai_phi.toLowerCase().includes(loaiPhi) : true;
 
-                    return matchesYear && matchesMonth && matchesRoomCode;
+                    return matchesYear && matchesMonth && matchesRoomCode && matchesFeeType;
                 });
 
                 phiData = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
