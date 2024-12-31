@@ -22,7 +22,7 @@ export async function createDonation(req, res) {
     const [result] = await pool.query(`CALL Them_khoan_phi_ung_ho(?, ?, ?, ?);`,
         [ma_phong, so_tien, mo_ta, thoi_gian])
 
-    req.flash('success', 'Successfully create donation')
+    req.flash('success', 'Tạo khoản phí ủng hộ thành công!')
     res.redirect(303, '/donations')
 }
 
@@ -47,13 +47,13 @@ export async function updateDonation(req, res) {
         WHERE id = ?;
         `, [ma_phong, so_tien, mo_ta, thoi_gian, id])
 
-    req.flash('success', 'Successfully update donation')
+    req.flash('success', 'Cập nhật phí ủng hộ thành công!')
     res.redirect(303, '/donations')
 }
 
 export async function deleteDonation(req, res) {
     const { id } = req.params
     const [rows] = await pool.query(`CALL Xoa_khoan_phi_ung_ho(?)`, [id])
-    req.flash('success', 'Successfully delete donation')
+    req.flash('success', 'Xóa phí ủng hộ thành công!')
     res.redirect(303, '/donations')
 }

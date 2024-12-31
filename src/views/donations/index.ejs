@@ -166,336 +166,252 @@
 
 <body>
     <%-include('../partials/header') %>
-        <div class="container">
-            <h2 class="text-center">Phí ủng hộ</h2>
+    <div class="container">
+        <h2 class="text-center">Phí ủng hộ</h2>
+        <%- include('../partials/flash') %>
 
-            <div class="filter mb-4">
-                <div class="filter-group">
-                    <label for="filter-thoi-gian-thu-thang">Tháng:</label>
-                    <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12"
-                        class="form-control">
-                </div>
-
-                <div class="filter-group">
-                    <label for="filter-thoi-gian-thu-nam">Năm:</label>
-                    <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030"
-                        class="form-control">
-                </div>
-
-
-                <div class="filter-group">
-                    <label for="filter-room">Mã phòng:</label>
-                    <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
-                </div>
-
-                <div class="filter-group">
-                    <label for="filter-loai-phi">Loại phí:</label>
-                    <input type="text" id="filter-loai-phi" placeholder="Nhập loại phí" class="form-control">
-                </div>
-
-                <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
-                <div class="filter-group-btn my-4">
-                    <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
-                    <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
-                    <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm khoản thu mới</button>
-                    &emsp;&emsp;&emsp;&emsp;
-                    <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
-                </div>
+        <div class="filter mb-4">
+            <div class="filter-group">
+                <label for="filter-thoi-gian-thu-thang">Tháng:</label>
+                <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12"
+                    class="form-control">
             </div>
 
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Mã Phòng</th>
-                        <th>Loại Phí</th>
-                        <th>Số Tiền</th>
-                        <th>Mô Tả</th>
-                        <th>Thời Gian</th>
-                        <th>Hành Động</th>
-                    </tr>
-                </thead>
-                <tbody id="phiTableBody">
-                    <!-- Dữ liệu sẽ được tải động từ server -->
-                </tbody>
-            </table>
-            <div class="pagination mt-4">
-                <button class="" onclick="previousPage()">Previous</button>
-                <span class="page-numbers" id="pageNumbers"></span>
-                <button class="" onclick="nextPage()">Next</button>
+            <div class="filter-group">
+                <label for="filter-thoi-gian-thu-nam">Năm:</label>
+                <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030"
+                    class="form-control">
+            </div>
+
+
+            <div class="filter-group">
+                <label for="filter-room">Mã phòng:</label>
+                <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
+            </div>
+
+            <div class="filter-group">
+                <label for="filter-mo-ta">Mô tả:</label>
+                <input type="text" id="filter-mo-ta" placeholder="Nhập mô tả" class="form-control">
+            </div>
+
+            <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
+            <div class="filter-group-btn my-4">
+                <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
+                <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
+                <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm khoản thu mới</button>
+                &emsp;&emsp;&emsp;&emsp;
+                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
             </div>
         </div>
 
-        <!-- Form Popup -->
-        <div class="form-popup" id="phiFormPopup">
-            <h4 id="popupTitle">Thêm Phí Ủng Hộ</h4>
-            <form id="phiForm">
-                <div class="mb-3">
-                    <label for="maPhong" class="form-label">Mã Phòng</label>
-                    <input type="text" id="maPhong" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="loaiPhi" class="form-label">Loại Phí</label>
-                    <input type="text" id="loaiPhi" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="soTien" class="form-label">Số Tiền</label>
-                    <input type="number" id="soTien" class="form-control" step="0.01">
-                </div>
-
-                <div class="mb-3">
-                    <label for="moTa" class="form-label">Mô Tả</label>
-                    <textarea id="moTa" class="form-control"></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="thoiGian" class="form-label">Thời Gian</label>
-                    <input type="date" id="thoiGian" class="form-control">
-                </div>
-
-                <button type="button" class="btn btn-success" onclick="savePhi()">Save</button>
-                <button type="button" class="btn btn-danger" onclick="closePopup()">Close</button>
-            </form>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Mã Phòng</th>
+                    <th>Số Tiền</th>
+                    <th>Mô Tả</th>
+                    <th>Thời Gian</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody id="phiTableBody">
+                <!-- Dữ liệu sẽ được tải động từ server -->
+            </tbody>
+        </table>
+        <div class="pagination mt-4">
+            <button class="" onclick="previousPage()">Previous</button>
+            <span class="page-numbers" id="pageNumbers"></span>
+            <button class="" onclick="nextPage()">Next</button>
         </div>
-        <div class="overlay" id="overlay"></div>
+    </div>
 
-        <script>
-            let phiData = [
-                {
-                    id: 1,
-                    ma_phong: 'A101',
-                    loai_phi: 'Tiền điện',
-                    so_tien: 500000,
-                    mo_ta: 'Thanh toán tiền điện tháng 12',
-                    thoi_gian: '2024-12-01'
-                },
-                {
-                    id: 2,
-                    ma_phong: 'A102',
-                    loai_phi: 'Tiền nước',
-                    so_tien: 200000,
-                    mo_ta: 'Thanh toán tiền nước tháng 12',
-                    thoi_gian: '2024-12-03'
-                },
-                {
-                    id: 3,
-                    ma_phong: 'B201',
-                    loai_phi: 'Tiền vệ sinh',
-                    so_tien: 150000,
-                    mo_ta: 'Thanh toán phí vệ sinh hàng tháng',
-                    thoi_gian: '2024-11-28'
-                },
-                {
-                    id: 4,
-                    ma_phong: 'B202',
-                    loai_phi: 'Tiền thuê phòng',
-                    so_tien: 2500000,
-                    mo_ta: 'Tiền thuê phòng tháng 11',
-                    thoi_gian: '2024-11-30'
-                },
-                {
-                    id: 5,
-                    ma_phong: 'C301',
-                    loai_phi: 'Tiền internet',
-                    so_tien: 300000,
-                    mo_ta: 'Phí sử dụng internet tháng 11',
-                    thoi_gian: '2024-11-25'
-                },
-            ];
-            let editingId = null;
-            let originalPayments = [...phiData]; // Lưu lại dữ liệu gốc
-            let currentPage = 1;
-            const pageSize = 5;
+    <!-- Form Popup -->
+    <div class="form-popup" id="phiFormPopup">
+        <h4 id="popupTitle">Thêm Phí Ủng Hộ</h4>
+        <form id="phiForm" method="POST">
+            <div class="mb-3">
+                <label for="maPhong" class="form-label">Mã Phòng</label>
+                <input type="text" id="maPhong" class="form-control" name="donation[ma_phong]" required>
+            </div>
 
-            // Render the table
-            function renderTable() {
-                const tableBody = document.getElementById('phiTableBody');
-                tableBody.innerHTML = '';
+            <div class="mb-3">
+                <label for="soTien" class="form-label">Số Tiền</label>
+                <input type="number" id="soTien" class="form-control" step="1000" name="donation[so_tien]" required>
+            </div>
 
-                const startIndex = (currentPage - 1) * pageSize;
-                const endIndex = startIndex + pageSize;
+            <div class="mb-3">
+                <label for="moTa" class="form-label">Mô Tả</label>
+                <textarea id="moTa" class="form-control" name="donation[mo_ta]"></textarea>
+            </div>
 
-                const currentPageData = phiData.slice(startIndex, endIndex);
+            <div class="mb-3">
+                <label for="thoiGian" class="form-label">Thời Gian</label>
+                <input type="date" id="thoiGian" class="form-control" name="donation[thoi_gian]">
+            </div>
 
-                currentPageData.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-          <td>${item.id}</td>
+            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-danger" onclick="closePopup()">Close</button>
+        </form>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div id="mydiv" data-test='<%= JSON.stringify(donations) %>'></div>
+
+    <script>
+        var test = document.getElementById('mydiv').dataset.test;
+        var phiData = JSON.parse(test);
+        let originalPayments = [...phiData]; // Lưu lại dữ liệu gốc
+        let currentPage = 1;
+        const pageSize = 5;
+
+        function formatDate(date) {
+            date = Date.parse(date)
+            date = new Date(date)
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day = String(date.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        }
+
+        // Render the table
+        function renderTable() {
+            const tableBody = document.getElementById('phiTableBody');
+            tableBody.innerHTML = '';
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+
+            const currentPageData = phiData.slice(startIndex, endIndex);
+
+            currentPageData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+          <td>${index + 1}</td>
           <td>${item.ma_phong}</td>
-          <td>${item.loai_phi}</td>
           <td>${item.so_tien || ''}</td>
           <td>${item.mo_ta || ''}</td>
-          <td>${item.thoi_gian || ''}</td>
+          <td>${item.thoi_gian ? new Date(item.thoi_gian).toLocaleDateString() : ''}</td>
           <td>
-            <button class="btn btn-primary" onclick="editPhi(${item.id})">Edit</button>
-            <button class="btn btn-danger" onclick="deletePhi(${item.id})">Delete</button>
+            <button 
+                class="btn btn-primary" 
+                onclick="editPhi('${item.id}', '${item.ma_phong}', '${item.so_tien}', '${item.mo_ta}', '${formatDate(item.thoi_gian)}')"
+            >
+                Edit
+            </button>
+            <form action="/donations/${item.id}?_method=DELETE" method="POST"
+            style="display: inline;">
+                <button class="btn btn-danger">Delete</button>
+            </form>
           </td>
         `;
-                    tableBody.appendChild(row);
-                });
-                document.getElementById('recordCount').textContent = phiData.length;
-                renderPagination();
-            }
-            function renderPagination() {
-                const pageNumbers = document.getElementById('pageNumbers');
-                pageNumbers.innerHTML = '';
+                tableBody.appendChild(row);
+            });
+            document.getElementById('recordCount').textContent = phiData.length;
+            renderPagination();
+        }
+        function renderPagination() {
+            const pageNumbers = document.getElementById('pageNumbers');
+            pageNumbers.innerHTML = '';
 
-                const totalPages = Math.ceil(phiData.length / pageSize);
+            const totalPages = Math.ceil(phiData.length / pageSize);
 
-                for (let i = 1; i <= totalPages; i++) {
-                    const button = document.createElement('button');
-                    button.textContent = i;
-                    button.className = i === currentPage ? 'current-page' : '';
-                    button.onclick = () => {
-                        currentPage = i;
-                        renderTable();
-                    };
-
-                    pageNumbers.appendChild(button);
-                }
-            }
-
-            function previousPage() {
-                if (currentPage > 1) {
-                    currentPage--;
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.className = i === currentPage ? 'current-page' : '';
+                button.onclick = () => {
+                    currentPage = i;
                     renderTable();
-                }
+                };
+
+                pageNumbers.appendChild(button);
             }
+        }
 
-            function nextPage() {
-                const totalPages = Math.ceil(phiData.length / pageSize);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderTable();
-                }
-            }
-
-            // Open add popup
-            function openAddPopup() {
-                editingId = null;
-                document.getElementById('phiForm').reset();
-                document.getElementById('popupTitle').innerText = 'Thêm Phí Tự Nhập';
-                document.getElementById('phiFormPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            }
-
-            // Open edit popup
-            function editPhi(id) {
-                const phi = phiData.find(p => p.id === id);
-                if (!phi) return;
-
-                editingId = id;
-                document.getElementById('maPhong').value = phi.ma_phong;
-                document.getElementById('loaiPhi').value = phi.loai_phi;
-                document.getElementById('soTien').value = phi.so_tien || '';
-                document.getElementById('moTa').value = phi.mo_ta || '';
-                document.getElementById('thoiGian').value = phi.thoi_gian || '';
-
-                document.getElementById('popupTitle').innerText = 'Sửa Phí Tự Nhập';
-                document.getElementById('phiFormPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            }
-
-            // Close popup
-            function closePopup() {
-                document.getElementById('phiFormPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }
-
-            // Save data
-            function savePhi() {
-                const maPhong = document.getElementById('maPhong').value;
-                const loaiPhi = document.getElementById('loaiPhi').value;
-                const soTien = parseFloat(document.getElementById('soTien').value) || null;
-                const moTa = document.getElementById('moTa').value;
-                const thoiGian = document.getElementById('thoiGian').value || null;
-
-                if (editingId) {
-                    const phi = phiData.find(p => p.id === editingId);
-                    if (phi) {
-                        phi.ma_phong = maPhong;
-                        phi.loai_phi = loaiPhi;
-                        phi.so_tien = soTien;
-                        phi.mo_ta = moTa;
-                        phi.thoi_gian = thoiGian;
-                    }
-                } else {
-                    const newPhi = {
-                        id: phiData.length + 1,
-                        ma_phong: maPhong,
-                        loai_phi: loaiPhi,
-                        so_tien: soTien,
-                        mo_ta: moTa,
-                        thoi_gian: thoiGian,
-                    };
-                    phiData.push(newPhi);
-                    originalPayments = [...phiData];
-                }
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
                 renderTable();
-                closePopup();
             }
+        }
 
-            // Delete data
-            function deletePhi(id) {
-                const phiToDelete = phiData.find(p => p.id === id);
-                if (phiToDelete) {
-                    const confirmation = confirm(`Bạn có chắc muốn xóa phí ${phiToDelete.loai_phi} của phòng ${phiToDelete.ma_phong}?`);
-                    if (confirmation) {
-                        phiData = phiData.filter(p => p.id !== id);
-                        originalPayments = [...phiData];
-                        renderTable();
-                    }
-                } else {
-                    alert(`Không tìm thấy phí với ID: ${id}`);
+        function nextPage() {
+            const totalPages = Math.ceil(phiData.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        // Open add popup
+        function openAddPopup() {
+            document.getElementById('phiForm').action = `/donations`;
+            document.getElementById('popupTitle').innerText = 'Thêm khoản phí ủng hộ';
+            document.getElementById('phiFormPopup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function editPhi(id, ma_phong, so_tien, mo_ta, thoi_gian) {
+            document.getElementById('phiForm').action = `/donations/${id}?_method=PUT`
+            document.getElementById('maPhong').value = ma_phong;
+            document.getElementById('soTien').value = so_tien || '';
+            document.getElementById('moTa').value = mo_ta || '';
+            document.getElementById('thoiGian').value = thoi_gian || '';
+
+            document.getElementById('popupTitle').innerText = 'Sửa khoản phí ủng hộ';
+            document.getElementById('phiFormPopup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Close popup
+        function closePopup() {
+            document.getElementById('phiFormPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function filterData() {
+            const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
+            const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
+            const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
+            const moTa = document.getElementById('filter-mo-ta').value.trim().toLowerCase();
+
+            // Áp dụng bộ lọc
+            const filteredPayments = originalPayments.filter(payment => {
+                if (!payment.thoi_gian || isNaN(new Date(payment.thoi_gian).getTime())) {
+                    return false;
                 }
-            }
+                const thuDate = new Date(payment.thoi_gian);
+                const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
+                const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
+                const matchesRoomCode = roomCode ? payment.ma_phong.toLowerCase().includes(roomCode) : true;
+                const matchesFeeType = moTa ? payment.mo_ta.toLowerCase().includes(moTa) : true;
 
-        
+                return matchesYear && matchesMonth && matchesRoomCode && matchesFeeType;
+            });
 
-            function filterData() {
-                const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
-                const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
-                const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
-                const loaiPhi = document.getElementById('filter-loai-phi').value.trim().toLowerCase();
+            phiData = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
+            currentPage = 1; // Đặt lại trang hiện tại
+            renderTable(); // Hiển thị lại bảng
+        }
 
-                // Áp dụng bộ lọc
-                const filteredPayments = originalPayments.filter(payment => {
-                    if (!payment.thoi_gian || isNaN(new Date(payment.thoi_gian).getTime())) {
-                        return false;
-                    }
-                    const thuDate = new Date(payment.thoi_gian);
-                    const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
-                    const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
-                    const matchesRoomCode = roomCode ? payment.ma_phong.toLowerCase().includes(roomCode) : true;
-                    const matchesFeeType = loaiPhi ? payment.loai_phi.toLowerCase().includes(loaiPhi) : true;
+        function resetFilters() {
+            // Khôi phục lại mảng dữ liệu ban đầu
+            phiData = [...originalPayments];
+            currentPage = 1; // Đặt lại trang hiện tại
 
-                    return matchesYear && matchesMonth && matchesRoomCode && matchesFeeType;
-                });
+            // Xóa nội dung của các bộ lọc
+            document.getElementById('filter-thoi-gian-thu-thang').value = '';
+            document.getElementById('filter-thoi-gian-thu-nam').value = '';
+            document.getElementById('filter-room').value = '';
 
-                phiData = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
-                currentPage = 1; // Đặt lại trang hiện tại
-                renderTable(); // Hiển thị lại bảng
-            }
+            renderTable(); // Hiển thị lại bảng với dữ liệu gốc
+        }
 
-            function resetFilters() {
-                // Khôi phục lại mảng dữ liệu ban đầu
-                phiData = [...originalPayments];
-                currentPage = 1; // Đặt lại trang hiện tại
-
-                // Xóa nội dung của các bộ lọc
-                document.getElementById('filter-thoi-gian-thu-thang').value = '';
-                document.getElementById('filter-thoi-gian-thu-nam').value = '';
-                document.getElementById('filter-room').value = '';
-
-                renderTable(); // Hiển thị lại bảng với dữ liệu gốc
-            }
-
-            // Initial render
-            renderTable();
-        </script>
-        <%-include('../partials/footer_infosection') %>
+        // Initial render
+        renderTable();
+    </script>
+    <%-include('../partials/footer_infosection') %>
 </body>
 
 </html>
