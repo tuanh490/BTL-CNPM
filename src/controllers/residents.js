@@ -23,17 +23,16 @@ function fixDate(date) {
 export async function createResident(req, res) {
     let { can_cuoc_cong_dan, ma_phong, ho_ten, gioi_tinh, ngay_sinh, timeIn, timeOut, dang_o } = req.body.resident
 
-
     const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
     if (checkResident) {
-        req.flash('error', 'Identification number already exists')
+        req.flash('error', 'Căn cước công dân đã tồn tại!')
         return res.redirect(303, '/residents')
     }
 
     const roomExist = await checkObject("phong", "ma_phong", ma_phong)
     if (!roomExist) {
-        req.flash('error', 'Room does not exist')
-        return res.redirect(303, '/rooms')
+        req.flash('error', 'Mã phòn không tồn tại!')
+        return res.redirect(303, '/residents')
     }
 
     ngay_sinh = fixDate(ngay_sinh)
@@ -41,10 +40,10 @@ export async function createResident(req, res) {
     timeOut = fixDate(timeOut)
 
     const result = await pool.query(`
-        CALL Them_nhan_khau(?, ?, ?, ?, ?, ?, ?, ?)
+        CALL Them_nhan_khau(?, ?, ?, ?, ?, ?, ?, ?);
         `, [can_cuoc_cong_dan, ma_phong, ho_ten, gioi_tinh, ngay_sinh, timeIn, timeOut, dang_o])
 
-    req.flash('success', 'Successfully add resident')
+    req.flash('success', 'Thêm nhân khẩu thành công!')
     res.redirect(303, '/residents')
 }
 
@@ -54,7 +53,7 @@ export async function updateResident(req, res) {
 
     const roomExist = await checkObject("phong", "ma_phong", ma_phong)
     if (!roomExist) {
-        req.flash('error', 'Room does not exist')
+        req.flash('error', 'Mã phòng không tồn tại!')
         return res.redirect(303, '/rooms')
     }
 
@@ -76,13 +75,15 @@ export async function updateResident(req, res) {
         WHERE id_nhan_khau = ?;
         `, [can_cuoc_cong_dan, ma_phong, ho_ten, gioi_tinh, ngay_sinh, timeIn, timeOut, dang_o, id])
 
-    req.flash('success', 'Successfully update resident')
+    console.log('Hello from updating resident')
+
+    req.flash('success', 'Cập nhật nhân khẩu thành công!')
     res.redirect(303, '/residents')
 }
 
 export async function deleteResident(req, res) {
     const { id } = req.params
     const [rows] = await pool.query(`CALL Xoa_nhan_khau(?)`, [id])
-    req.flash('success', 'Successfully delete resident')
+    req.flash('success', 'Xóa nhân khẩu thành công!')
     res.redirect(303, '/residents')
 }

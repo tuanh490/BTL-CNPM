@@ -14,6 +14,7 @@ export async function doesResidentExist(req, res, next) {
 
 export async function validateResident(req, res, next) {
     const { error } = residentSchema.validate(req.body.resident)
+    console.log("validating resident")
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
         req.flash('error', msg)

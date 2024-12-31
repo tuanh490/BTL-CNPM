@@ -52,7 +52,7 @@ export async function updateVehicle(req, res) {
 
     const roomExist = await checkObject("phong", "ma_phong", ma_phong)
     if (!roomExist) {
-        req.flash('error', 'Room does not exist')
+        req.flash('error', 'Phòng không tồn tại!')
         return res.redirect(303, '/rooms')
     }
 

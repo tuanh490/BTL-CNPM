@@ -26,7 +26,7 @@ export async function createResidency(req, res) {
         (?, ?, ?, ?, ?);
         `, [ho_ten, trang_thai, thoi_gian, mo_ta, can_cuoc_cong_dan])
 
-    req.flash('success', 'Successfully update residency history')
+    req.flash('success', 'Cập nhật biến động nhân khẩu thành công!')
     res.redirect(303, '/residency')
 }
 
@@ -52,7 +52,7 @@ export async function updateResidency(req, res) {
         WHERE id = ?;
         `, [ho_ten, trang_thai, thoi_gian, mo_ta, can_cuoc_cong_dan, id])
 
-    req.flash('success', 'Successfully update residency history')
+    req.flash('success', 'Cập nhật biến động nhân khẩu thành công!')
     res.redirect(303, '/residency')
 }
 
@@ -63,6 +63,6 @@ export async function deleteResidency(req, res) {
         WHERE id = ?;
         `, [id])
 
-    req.flash('success', 'Successfully update residency history')
+    req.flash('success', 'Cập nhật biến động nhân khẩu thành công!')
     res.redirect(303, '/residency')
 }
