@@ -23,6 +23,8 @@ function fixDate(date) {
 export async function createResident(req, res) {
     let { can_cuoc_cong_dan, ma_phong, ho_ten, gioi_tinh, ngay_sinh, timeIn, timeOut, dang_o } = req.body.resident
 
+    console.log(req.body.resident)
+
     const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
     if (checkResident) {
         req.flash('error', 'Căn cước công dân đã tồn tại!')
@@ -31,7 +33,7 @@ export async function createResident(req, res) {
 
     const roomExist = await checkObject("phong", "ma_phong", ma_phong)
     if (!roomExist) {
-        req.flash('error', 'Mã phòn không tồn tại!')
+        req.flash('error', 'Mã phòng không tồn tại!')
         return res.redirect(303, '/residents')
     }
 
