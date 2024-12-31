@@ -131,11 +131,16 @@
             display: inline-block;
             margin-top: 10px;
         }
+
         .form-container {
-            max-height: 250px; /* Giới hạn chiều cao bảng */
-    overflow-y: auto; /* Thêm thanh cuộn dọc nếu bảng vượt quá chiều cao */
-    margin-top: 10px; /* Thêm khoảng cách từ trên */
+            max-height: 250px;
+            /* Giới hạn chiều cao bảng */
+            overflow-y: auto;
+            /* Thêm thanh cuộn dọc nếu bảng vượt quá chiều cao */
+            margin-top: 10px;
+            /* Thêm khoảng cách từ trên */
         }
+
         .overlay {
             display: none;
             position: fixed;
@@ -166,27 +171,79 @@
         .pagination .current-page {
             font-weight: bold;
         }
+
         .phi-khac-header {
-    display: flex;
-    justify-content: space-between; /* Đảm bảo nút và tiêu đề có khoảng cách hợp lý */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    width: 100%; /* Đảm bảo phần tử cha có chiều rộng 100% */
-}
+            display: flex;
+            justify-content: space-between;
+            /* Đảm bảo nút và tiêu đề có khoảng cách hợp lý */
+            align-items: center;
+            /* Căn giữa theo chiều dọc */
+            width: 100%;
+            /* Đảm bảo phần tử cha có chiều rộng 100% */
+        }
 
-.phi-khac-header h5 {
-    margin: 0; /* Xóa margin mặc định */
-    text-align: center; /* Căn giữa nội dung của h5 */
-    flex-grow: 1; /* Cho phép h5 chiếm toàn bộ không gian bên trái */
-}
+        .phi-khac-header h5 {
+            margin: 0;
+            /* Xóa margin mặc định */
+            text-align: center;
+            /* Căn giữa nội dung của h5 */
+            flex-grow: 1;
+            /* Cho phép h5 chiếm toàn bộ không gian bên trái */
+        }
 
-.phi-khac-header button {
-    font-size: 14px; /* Đặt kích thước chữ nút */
-    padding: 5px 10px; /* Tạo khoảng cách trong nút */
-    cursor: pointer; /* Thêm hiệu ứng con trỏ */
-}
-.table {
-    width: 100%; /* Đảm bảo bảng chiếm toàn bộ chiều rộng */
-}
+        .phi-khac-header button {
+            font-size: 14px;
+            /* Đặt kích thước chữ nút */
+            padding: 5px 10px;
+            /* Tạo khoảng cách trong nút */
+            cursor: pointer;
+            /* Thêm hiệu ứng con trỏ */
+        }
+
+        .flex-container {
+            display: flex;
+            gap: 20px;
+            /* Space between the sections */
+            margin-top: 20px;
+            /* Adds space between this section and the above content */
+        }
+
+        .section {
+            flex: 1;
+            /* Ensures equal width for both sections */
+            border: 1px solid #ddd;
+            /* Optional: adds a border for better visibility */
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            /* Optional: background color */
+        }
+
+        .table {
+            width: 100%;
+            /* Ensures tables take up full width within each section */
+        }
+
+        #billPopup {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 90%;
+            /* Adjust the width to make it wider */
+            max-height: 80%;
+            /* Ensure the height fits the screen */
+            overflow-y: auto;
+            /* Add scrolling if the content overflows */
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            /* Optional: Adds rounded corners */
+        }
     </style>
 
 </head>
@@ -195,655 +252,485 @@
 
     <%-include('../../partials/header') %>
 
-        <div class="container">
-            <h2 class="text-center">Danh sách thanh toán</h2>
+    <div class="container">
+        <h2 class="text-center">Danh sách thanh toán</h2>
+        <%- include('../../partials/flash') %>
 
-            <!-- Filter Buttons -->
-
-
-            <div class="filter mb-4">
-                <div class="filter-group">
-                    <label for="filter-thoi-gian-thu-thang">Tháng:</label>
-                    <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12"
-                        class="form-control">
-                </div>
-
-                <div class="filter-group">
-                    <label for="filter-thoi-gian-thu-nam">Năm:</label>
-                    <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030"
-                        class="form-control">
-                </div>
-
-                <div class="filter-group">
-                    <label for="filter-status">Trạng thái:</label>
-                    <select id="filter-status" class="form-control">
-                        <option value="">Chọn trạng thái</option>
-                        <option value="Đã thanh toán"> Đã thanh toán</option>
-                        <option value="Chưa thanh toán"> Chưa thanh toán</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="filter-room">Mã phòng:</label>
-                    <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
-                </div>
-
-                <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
-                <div class="filter-group-btn my-4">
-                    <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
-                    <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
-                    <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm khoản thu mới</button>
-                    &emsp;&emsp;&emsp;&emsp;
-                    <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
-                </div>
+        <div class="filter mb-4">
+            <div class="filter-group">
+                <label for="filter-thoi-gian-thu-thang">Tháng:</label>
+                <input type="number" id="filter-thoi-gian-thu-thang" placeholder="Tháng (1-12)" min="1" max="12"
+                    class="form-control">
             </div>
 
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th>Mã căn hộ</th>
-                        <th>Tổng tiền</th>
-                        <th>Thời gian thu</th>
-                        <th>Thời gian đóng</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody id="paymentTableBody">
-                    <!-- Data will be dynamically loaded here -->
-                </tbody>
-            </table>
+            <div class="filter-group">
+                <label for="filter-thoi-gian-thu-nam">Năm:</label>
+                <input type="number" id="filter-thoi-gian-thu-nam" placeholder="Năm" min="2020" max="2030"
+                    class="form-control">
+            </div>
 
-            <div class="pagination ">
-                <button onclick="previousPage()">Previous</button>
-                <span class="page-numbers" id="pageNumbers"></span>
-                <button class="" onclick="nextPage()">Next</button>
+            <div class="filter-group">
+                <label for="filter-status">Trạng thái:</label>
+                <select id="filter-status" class="form-control">
+                    <option value="">Chọn trạng thái</option>
+                    <option value="Đã thanh toán"> Đã thanh toán</option>
+                    <option value="Chưa thanh toán"> Chưa thanh toán</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="filter-room">Mã phòng:</label>
+                <input type="text" id="filter-room" placeholder="Nhập mã phòng" class="form-control">
+            </div>
+
+            <!-- <button class="btn btn-primary" onclick="filterData()">Tìm kiếm</button> -->
+            <div class="filter-group-btn my-4">
+                <button class="btn btn-primary " onclick="filterData()">Tìm kiếm</button>
+                <button class="btn btn-danger bg-danger " onclick="resetFilters()">Đặt lại bộ lọc</button>
+                <!-- <button class="btn bg-success mx-auto" onclick="openAddPopup()">Thêm khoản thu mới</button> -->
+                &emsp;&emsp;&emsp;&emsp;
+                <button class="btn btn-secondary">Số lượng bản ghi: <span id="recordCount">0</span></button>
             </div>
         </div>
 
-        <!-- Add Payment Popup -->
-        <div class="form-popup" id="addPopup">
-            <h2>Thêm khoản thu mới</h2>
-            <form>
-                <div class="form-group">
-                    <label for="add-ma-can-ho">Mã căn hộ:</label>
-                    <input type="text" id="add-ma-can-ho" class="form-control">
-                </div>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Mã căn hộ</th>
+                    <th>Tổng tiền</th>
+                    <th>Thời gian thu</th>
+                    <th>Thời gian đóng</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="paymentTableBody">
+                <!-- Data will be dynamically loaded here -->
+            </tbody>
+        </table>
 
-                <div class="form-group">
-                    <label for="add-tong-tien">Tổng tiền:</label>
-                    <input type="text" id="add-tong-tien" class="form-control" disabled>
-                </div>
-
-                <div class="form-group">
-                    <label for="add-thoi-gian-thu">Thời gian thu:</label>
-                    <input type="date" id="add-thoi-gian-thu" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="add-thoi-gian-dong">Thời gian đóng:</label>
-                    <input type="date" id="add-thoi-gian-dong" class="form-control">
-                </div>
-
-                <button class="btn btn-success" type="button" onclick="saveNewPayment()">Thêm</button>
-                <button class="btn btn-delete" type="button" onclick="closeAddPopup()">Đóng</button>
-            </form>
+        <div class="pagination ">
+            <button onclick="previousPage()">Previous</button>
+            <span class="page-numbers" id="pageNumbers"></span>
+            <button class="" onclick="nextPage()">Next</button>
         </div>
-        <!-- <div>
+    </div>
+
+    <!-- Add Payment Popup -->
+    <!-- <div class="form-popup" id="addPopup">
+        <h2>Thêm khoản thu mới</h2>
+        <form>
+            <div class="form-group">
+                <label for="add-ma-can-ho">Mã căn hộ:</label>
+                <input type="text" id="add-ma-can-ho" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="add-tong-tien">Tổng tiền:</label>
+                <input type="text" id="add-tong-tien" class="form-control" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="add-thoi-gian-thu">Thời gian thu:</label>
+                <input type="date" id="add-thoi-gian-thu" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="add-thoi-gian-dong">Thời gian đóng:</label>
+                <input type="date" id="add-thoi-gian-dong" class="form-control">
+            </div>
+
+            <button class="btn btn-success" type="submit">Thêm</button>
+            <button class="btn btn-delete" type="button" onclick="closeAddPopup()">Đóng</button>
+        </form>
+    </div> -->
+    <!-- <div>
             Khong co gi o day ca
         </div> -->
-        <!-- Edit Payment Popup -->
-        <div class="form-popup" id="editPopup">
-            <h2>Sửa thông tin khoản thu</h2>
-            <form>
-                <div class="form-group">
-                    <label for="edit-ma-can-ho">Mã căn hộ:</label>
-                    <input type="text" id="edit-ma-can-ho" disabled class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-tong-tien">Tổng tiền:</label>
-                    <input type="text" id="edit-tong-tien" class="form-control" disabled>
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-thoi-gian-thu">Thời gian thu:</label>
-                    <input type="date" id="edit-thoi-gian-thu" class="form-control" disabled>
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
-                    <input type="date" id="edit-thoi-gian-dong" class="form-control">
-                </div>             
-                <button class="btn btn-success" type="button" onclick="saveEdit()">Lưu</button>
-                <button class="btn btn-delete" type="button" onclick="closeEditPopup()">Đóng</button>            
-            </form>
-        </div>
-        <div class="form-popup" id="billPopup">
-            <h2 class="center">Thông tin thanh toán</h2>
-                <table class="table mt-4">
-                        <tr>
-                            <th>Mã căn hộ</th>
-                            <td id="roomIdDetailTableBody">
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Thời gian</th>
-                            <td id="timeDetailTableBody">
-
-                            </td>
-                        </tr>
-                </table>
-            <table class="table mt-4">
-                <h5 class="center">Phí hàng tháng</h3>
-                <thead>
-                    <tr>
-                        <th>Tên phí</th>
-                        <th>Số tiền</th>
-                        <th>Mô tả</th>
-                    </tr>
-                </thead>
-
-                <tbody id="phiHangThangDetailTableBody">
-
-                </tbody>
-            </table>
-            <div class="phi-khac-header">
-                <h5 class="center">Phí khác</h5>
-                <button class="btn btn-success" onclick="openAddFeePopup()">Thêm phí</button>
+    <!-- Edit Payment Popup -->
+    <div class="form-popup" id="editPopup">
+        <h2>Sửa thông tin khoản thu</h2>
+        <form id="updateMonthlyBill" method="POST">
+            <div class="form-group">
+                <label for="edit-ma-can-ho">Mã căn hộ:</label>
+                <input type="text" id="edit-ma-can-ho" disabled class="form-control">
             </div>
-            <div class="form-container">
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th>Tên phí</th>
-                        <th>Số tiền</th>
-                        <th>Mô tả</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody id="phiKhacDetailTableBody">
 
-                </tbody>
-            
-            </table>
+            <div class="form-group">
+                <label for="edit-tong-tien">Tổng tiền:</label>
+                <input type="text" id="edit-tong-tien" class="form-control" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-thoi-gian-thu">Thời gian thu:</label>
+                <input type="date" id="edit-thoi-gian-thu" class="form-control" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-thoi-gian-dong">Thời gian đóng:</label>
+                <input type="date" id="edit-thoi-gian-dong" class="form-control" name="monthly_bill[thoi_gian_dong]">
+            </div>
+            <button class="btn btn-success" type="submit">Lưu</button>
+            <button class="btn btn-delete" type="button" onclick="closeEditPopup()">Đóng</button>
+        </form>
+    </div>
+    <div class="form-popup" id="billPopup">
+        <h2 class="center">Thông tin thanh toán</h2>
+        <table class="table mt-4">
+            <tr>
+                <th>Mã căn hộ</th>
+                <td id="roomIdDetailTableBody"></td>
+            </tr>
+            <tr>
+                <th>Thời gian</th>
+                <td id="timeDetailTableBody"></td>
+            </tr>
+        </table>
+
+        <!-- Flex container for the two sections -->
+        <div class="flex-container">
+            <!-- Phí hàng tháng Section -->
+            <div class="section">
+                <h5 class="center">Phí hàng tháng</h5>
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th>Tên phí</th>
+                            <th>Số tiền</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                    <tbody id="phiHangThangDetailTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Phí khác Section -->
+            <div class="section">
+                <div class="phi-khac-header">
+                    <h5 class="center">Phí khác</h5>
+                    <button class="btn btn-success" onclick="openAddFeePopup()">Thêm phí</button>
+                </div>
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th>Tên phí</th>
+                            <th>Số tiền</th>
+                            <th>Mô tả</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="phiKhacDetailTableBody"></tbody>
+                </table>
+            </div>
         </div>
-            <button class="btn btn-delete" type="button" onclick="closeBillDetail()">Đóng</button>
-        </div>
-        
-        <div class="form-popup" id="billEditPopup" style="display: none;">
-            <h2>Chỉnh sửa thông tin thanh toán</h2>
-            <form>
-                <div class="form-group">
-                    <label for="editFeeName">Tên phí:</label>
-                    <input type="text" id="editFeeName" class="form-control" disabled>
-                </div>
-                <div class="form-group">
-                    <label for="editFeeAmount">Số tiền:</label>
-                    <input type="number" id="editFeeAmount" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="editFeeDescription">Mô tả:</label>
-                    <input type="text" id="editFeeDescription" class="form-control">
-                </div>
-                <button type="button" class="btn btn-primary" onclick="saveBillEditChanges()">Lưu</button>
-                <button type="button" class="btn btn-danger" onclick="closeBillEditPopup()">Hủy</button>
-            </form>
-        
-        </div>
-        <div class="form-popup" id="addOtherFeePopup" style="display: none;">
-            <h2>Thêm phí khác</h2>
-            <form>
-                <div class="form-group">
-                    <label for="newFeeName">Tên phí:</label>
-                    <input type="text" id="newFeeName" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="newFeeAmount">Số tiền:</label>
-                    <input type="number" id="newFeeAmount" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="newFeeDescription">Mô tả:</label>
-                    <input type="text" id="newFeeDescription" class="form-control">
-                </div>
-                <button type="button" class="btn btn-primary" onclick="saveNewOtherFee()">Lưu</button>
-                <button type="button" class="btn btn-danger" onclick="closeAddOtherFeePopup()">Hủy</button>
-            </form>
-        </div>
+        <button class="btn btn-delete" type="button" onclick="closeBillDetail()">Đóng</button>
 
-        <div class="overlay" id="overlay"></div>
-        <script>
-            let payments = [
-                {
-                    maCanHo: 'A101', 
-                    
-                    chiPhiHangThang: [
-                        {
-                            tenPhi: "phí xe",
-                            soTien: "1000000",
-                            moTa: "koco"
-                        }
-                    ],
-                    chiPhiKhac: [
-                        {
-                            tenPhi: "phí internet",
-                            soTien: "2000000",
-                            moTa: "koco"
-                        }
-                    ],
-                    tongTien: 0,   
-                    thoiGianThu: '2024-01-01', thoiGianDong: '2024-01-10', trangThai: 'Đã thanh toán'
-                },
-                {
-                    maCanHo: 'B202', 
-                    chiPhiHangThang: [
-                        {
-                            tenPhi: "phí xe",
-                            soTien: "1000000",
-                            moTa: "koco"
-                        }
-                    ],
-                    chiPhiKhac: [
-                        {
-                            tenPhi: "phí internet",
-                            soTien: "2000000",
-                            moTa: "koco"
-                        }
-                    ],
-                    tongTien: 0, 
-                    
-                    thoiGianThu: '2024-02-01', thoiGianDong: '', trangThai: 'Chưa thanh toán'
-                },
-                // Add more dummy data
-            ];
-            let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
-            let currentPage = 1;
-            const pageSize = 5;
+    </div>
 
-            function renderTable() {
-                const tableBody = document.getElementById('paymentTableBody');
-                tableBody.innerHTML = '';
+    <div class="form-popup" id="billEditPopup" style="display: none;">
+        <h2>Chỉnh sửa thông tin thanh toán</h2>
+        <form id="billUpdateForm" method="POST">
+            <div class="form-group">
+                <label for="editFeeName">Tên phí:</label>
+                <input type="text" id="editFeeName" class="form-control" name="user_typed_bill[loai_phi]" readonly>
+            </div>
+            <div class="form-group">
+                <label for="editFeeAmount">Số tiền:</label>
+                <input type="number" id="editFeeAmount" class="form-control" name="user_typed_bill[so_tien]">
+            </div>
+            <div class="form-group">
+                <label for="editFeeDescription">Mô tả:</label>
+                <input type="text" id="editFeeDescription" class="form-control" name="user_typed_bill[mo_ta]">
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <button type="button" class="btn btn-danger" onclick="closeBillEditPopup()">Hủy</button>
+        </form>
 
-                const startIndex = (currentPage - 1) * pageSize;
-                const endIndex = startIndex + pageSize;
+    </div>
+    <div class="form-popup" id="addOtherFeePopup" style="display: none;">
+        <h2>Thêm phí khác</h2>
+        <form id="addOtherBillForm" method="POST">
+            <div class="form-group">
+                <label for="newFeeName">Tên phí:</label>
+                <input type="text" id="newFeeName" class="form-control" name="user_typed_bill[loai_phi]">
+            </div>
+            <div class="form-group">
+                <label for="newFeeAmount">Số tiền:</label>
+                <input type="number" id="newFeeAmount" class="form-control" name="user_typed_bill[so_tien]">
+            </div>
+            <div class="form-group">
+                <label for="newFeeDescription">Mô tả:</label>
+                <input type="text" id="newFeeDescription" class="form-control" name="user_typed_bill[mo_ta]">
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <button type="button" class="btn btn-danger" onclick="closeAddOtherFeePopup()">Hủy</button>
+        </form>
+    </div>
 
-                const currentPageData = payments.slice(startIndex, endIndex);
+    <div class="overlay" id="overlay"></div>
+    <div id="mydiv" data-test='<%= JSON.stringify(monthly_bills) %>'></div>
 
-                currentPageData.forEach(payment => {
-                    const row = document.createElement('tr');
+    <script>
+        var test = document.getElementById('mydiv').dataset.test;
+        var payments = JSON.parse(test);
 
-                    row.innerHTML = `
+        let originalPayments = [...payments]; // Lưu lại dữ liệu gốc
+        let currentPage = 1;
+        const pageSize = 5;
+
+        function formatDate(date) {
+            date = Date.parse(date)
+            date = new Date(date)
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day = String(date.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        }
+
+        function renderTable() {
+            const tableBody = document.getElementById('paymentTableBody');
+            tableBody.innerHTML = '';
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+
+            const currentPageData = payments.slice(startIndex, endIndex);
+
+            currentPageData.forEach(payment => {
+                const row = document.createElement('tr');
+
+
+                row.innerHTML = `
                     <td>${payment.maCanHo}</td>
-                    <td><button class="btn btn-primary" onclick="openBillDetail('${payment.maCanHo}', '${payment.thoiGianThu}')">${payment.tongTien}</button></td>
-                    <td>${payment.thoiGianThu}</td>
-                    <td>${payment.thoiGianDong}</td>
+                    <td><button class="btn btn-primary" onclick="openBillDetail('${payment.id_thanh_toan}', '${payment.maCanHo}', '${payment.thoiGianThu}')">${payment.tongTien}</button></td>
+                    <td>${payment.thoiGianThu ? new Date(payment.thoiGianThu).toLocaleDateString() : payment.thoiGianThu}</td>
+                    <td>${payment.thoiGianDong ? new Date(payment.thoiGianDong).toLocaleDateString() : payment.thoiGianDong}</td>
                     <td>${payment.trangThai}</td>
                     <td>
                         <div class="btn-container">
-                            <button class="btn btn-primary" onclick="openEditPopup('${payment.maCanHo}', '${payment.tongTien}', 
-                                        '${payment.thoiGianThu}', '${payment.thoiGianDong}', '${payment.trangThai}')">Edit</button>
-                            <button class="btn btn-delete" onclick="DeletePayment('${payment.maCanHo}','${payment.thoiGianThu}')">Delete</button>
+                            <button 
+                                class="btn btn-primary" 
+                                onclick="openEditPopup('${payment.id_thanh_toan}', '${payment.maCanHo}', '${payment.tongTien}', 
+                                        '${formatDate(payment.thoiGianThu)}', '${formatDate(payment.thoiGianDong)}', '${payment.trangThai}')"
+                            >
+                                Edit
+                            </button>
                         </div>
                     </td>
                 `;
 
-                    tableBody.appendChild(row);
-                });
-                document.getElementById('recordCount').textContent = payments.length;
-                renderPagination();
-            }
+                tableBody.appendChild(row);
+            });
+            document.getElementById('recordCount').textContent = payments.length;
+            renderPagination();
+        }
 
-            function renderPagination() {
-                const pageNumbers = document.getElementById('pageNumbers');
-                pageNumbers.innerHTML = '';
+        function renderPagination() {
+            const pageNumbers = document.getElementById('pageNumbers');
+            pageNumbers.innerHTML = '';
 
-                const totalPages = Math.ceil(payments.length / pageSize);
+            const totalPages = Math.ceil(payments.length / pageSize);
 
-                for (let i = 1; i <= totalPages; i++) {
-                    const button = document.createElement('button');
-                    button.textContent = i;
-                    button.className = i === currentPage ? 'current-page' : '';
-                    button.onclick = () => {
-                        currentPage = i;
-                        renderTable();
-                    };
-
-                    pageNumbers.appendChild(button);
-                }
-            }
-
-            function previousPage() {
-                if (currentPage > 1) {
-                    currentPage--;
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.className = i === currentPage ? 'current-page' : '';
+                button.onclick = () => {
+                    currentPage = i;
                     renderTable();
-                }
-            }
+                };
 
-            function nextPage() {
-                const totalPages = Math.ceil(payments.length / pageSize);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderTable();
-                }
+                pageNumbers.appendChild(button);
             }
+        }
 
-            function renderTableBillDetail(maCanHo, thoiGianThu) {
-                const billDetail = payments.find(payments => payments.maCanHo === maCanHo && payments.thoiGianThu === thoiGianThu);
-                const roomIdTableBody = document.getElementById('roomIdDetailTableBody');
-                roomIdTableBody.innerHTML = billDetail.maCanHo;
-                const timeTableBody = document.getElementById('timeDetailTableBody');
-                timeTableBody.innerHTML = billDetail.thoiGianThu;
-                const phiHangThangTableBody = document.getElementById('phiHangThangDetailTableBody');
-                phiHangThangTableBody.innerHTML = '';
-                const phiHangThangData = billDetail.chiPhiHangThang;
-                phiHangThangData.forEach(fee => {
-                    const row_phiHangThang = document.createElement('tr');
-                    row_phiHangThang.innerHTML = `
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(payments.length / pageSize);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function renderTableBillDetail(id_thanh_toan, maCanHo, thoiGianThu) {
+            const billDetail = payments.find(payments => payments.maCanHo === maCanHo && payments.thoiGianThu === thoiGianThu);
+            const roomIdTableBody = document.getElementById('roomIdDetailTableBody');
+            roomIdTableBody.innerHTML = billDetail.maCanHo;
+            const timeTableBody = document.getElementById('timeDetailTableBody');
+            timeTableBody.innerHTML = new Date(billDetail.thoiGianThu).toLocaleDateString();
+            const phiHangThangTableBody = document.getElementById('phiHangThangDetailTableBody');
+            phiHangThangTableBody.innerHTML = '';
+            const phiHangThangData = billDetail.chiPhiHangThang;
+            phiHangThangData.forEach(fee => {
+                const row_phiHangThang = document.createElement('tr');
+                row_phiHangThang.innerHTML = `
                     <td>${fee.tenPhi}</td>
                     <td>${fee.soTien}</td>
                     <td>${fee.moTa}</td>
                 `;
                 phiHangThangTableBody.appendChild(row_phiHangThang);
-                })
+            })
 
-                const phiKhacTableBody = document.getElementById('phiKhacDetailTableBody');
-                phiKhacTableBody.innerHTML = '';
-                const phiKhacData = billDetail.chiPhiKhac;
-                phiKhacData.forEach(fee => {
-                    const row_phiKhac = document.createElement('tr');
+            const phiKhacTableBody = document.getElementById('phiKhacDetailTableBody');
+            phiKhacTableBody.innerHTML = '';
+            const phiKhacData = billDetail.chiPhiKhac;
+            phiKhacData.forEach(fee => {
+                const row_phiKhac = document.createElement('tr');
+                if (fee.tenPhi == "Internet" || fee.tenPhi == "Phí nước" || fee.tenPhi == "Phí điện") {
                     row_phiKhac.innerHTML = `
                     <td>${fee.tenPhi}</td>
                     <td>${fee.soTien}</td>
                     <td>${fee.moTa}</td>
                     <td>
-                        <button class="btn btn-primary" onclick="openBillEditPopup('${billDetail.maCanHo}', '${billDetail.thoiGianThu}',
-                                    '${fee.tenPhi}')"
+                        <button class="btn btn-primary" onclick="openBillEditPopup('${id_thanh_toan}', '${fee.id}', '${fee.tenPhi}', '${fee.soTien}',
+                                    '${fee.moTa}')"
                                     >Edit</button>
-                        <button class="btn btn-danger" onclick="deleteBill('${billDetail.maCanHo}', '${billDetail.thoiGianThu}',
-                                    '${fee.tenPhi}')"
-                                    >Delete</button>
+                        <form action="/monthly_bills/${id_thanh_toan}/user_typed_bills/${fee.id}?_method=DELETE" method="POST"
                     </td>
-                    
-                `;
+                    `;
+                } else {
+                    row_phiKhac.innerHTML = `
+                    <td>${fee.tenPhi}</td>
+                    <td>${fee.soTien}</td>
+                    <td>${fee.moTa}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="openBillEditPopup('${id_thanh_toan}', '${fee.id}', '${fee.tenPhi}', '${fee.soTien}',
+                                    '${fee.moTa}')"
+                                    >Edit</button>
+                        <form action="/monthly_bills/${id_thanh_toan}/user_typed_bills/${fee.id}?_method=DELETE" method="POST"
+                        style="display: inline;">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                    `;
+                }
                 phiKhacTableBody.appendChild(row_phiKhac);
-                })
-            }
+            })
+        }
 
-            function openBillEditPopup(maCanHo, thoiGianThu, tenPhi) {
-                // Tìm thông tin thanh toán dựa trên mã căn hộ và thời gian thu
-                const payment = payments.find(p => p.maCanHo === maCanHo && p.thoiGianThu === thoiGianThu);
-                if (!payment) return alert('Không tìm thấy thông tin thanh toán!');
+        function openBillEditPopup(id_thanh_toan, id, tenPhi, soTien, moTa) {
+            document.getElementById('billUpdateForm').action = `/monthly_bills/${id_thanh_toan}/user_typed_bills/${id}?_method=PUT`
+            document.getElementById('editFeeName').value = tenPhi;
+            document.getElementById('editFeeAmount').value = soTien;
+            document.getElementById('editFeeDescription').value = moTa;
 
-                // Tìm phí trong danh sách "chiPhiKhac"
-                const fee = payment.chiPhiKhac.find(f => f.tenPhi === tenPhi);
-                if (!fee) return alert('Không tìm thấy phí này!');
+            // Hiển thị popup
+            document.getElementById('billEditPopup').style.display = 'block';
+        }
 
-                // Gán giá trị vào các trường trong popup
-                document.getElementById('editFeeName').value = fee.tenPhi;
-                document.getElementById('editFeeAmount').value = fee.soTien;
-                document.getElementById('editFeeDescription').value = fee.moTa;
+        // Hàm đóng popup chỉnh sửa
+        function closeBillEditPopup() {
+            document.getElementById('billEditPopup').style.display = 'none';
+        }
+        function openEditPopup(id_thanh_toan, maCanHo, tongTien, thoiGianThu, thoiGianDong) {
+            document.getElementById('updateMonthlyBill').action = `/monthly_bills/${id_thanh_toan}?_method=PUT`
+            document.getElementById('edit-ma-can-ho').value = maCanHo;
+            document.getElementById('edit-tong-tien').value = tongTien || '';
+            document.getElementById('edit-thoi-gian-thu').value = thoiGianThu;
+            document.getElementById('edit-thoi-gian-dong').value = thoiGianDong || '';
 
-                // Hiển thị popup
-                document.getElementById('billEditPopup').style.display = 'block';
-            }
-            function deleteBill(maCanHo, thoiGianThu, tenPhi) {
-    // Find the payment object using maCanHo and thoiGianThu
-    const payment = payments.find(p => p.maCanHo === maCanHo && p.thoiGianThu === thoiGianThu);
-    
-    if (!payment) {
-        alert('Không tìm thấy thông tin thanh toán!');
-        return;
-    }
+            document.getElementById('editPopup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
 
-                // Find the fee in chiPhiKhac array
-                const index = payment.chiPhiKhac.findIndex(fee => fee.tenPhi === tenPhi);
-                
-                if (index === -1) {
-                    alert('Không tìm thấy phí này!');
-                    return;
-                }
+        function openBillDetail(id_thanh_toan, maCanHo, thoiGianThu) {
+            document.getElementById('addOtherBillForm').action = `/monthly_bills/${id_thanh_toan}/user_typed_bills`
+            document.getElementById('billPopup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            renderTableBillDetail(id_thanh_toan, maCanHo, thoiGianThu)
+        }
 
-                // Confirm deletion
-                const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu ${tenPhi} căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
-                if (confirmation) {
-                    // Remove the fee from the array
-                    payment.chiPhiKhac.splice(index, 1);
+        function closeEditPopup() {
+            document.getElementById('editPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
 
-                    // Alert user that the fee has been deleted
-                    alert(`Khoản thu ${tenPhi}, căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
-                    
-                    // Re-render the table details for the specific bill
-                    renderTableBillDetail(maCanHo, thoiGianThu);
-                }
-            }
-
-
-            // Hàm lưu thay đổi sau khi chỉnh sửa
-            function saveBillEditChanges() {
-                const maCanHo = document.getElementById('roomIdDetailTableBody').innerHTML;
-                const thoiGianThu = document.getElementById('timeDetailTableBody').innerHTML;
-                const feeName = document.getElementById('editFeeName').value;
-                const newAmount = parseFloat(document.getElementById('editFeeAmount').value) || 0;
-                const newDescription = document.getElementById('editFeeDescription').value;
-
-                const payment = payments.find(p => p.maCanHo === maCanHo && p.thoiGianThu === thoiGianThu);
-                if (!payment) return alert('Không tìm thấy thông tin thanh toán!');
-
-                // Find and update the specific fee
-                const fee = payment.chiPhiKhac.find(f => f.tenPhi === feeName);
-                if (!fee) return alert('Không tìm thấy phí này!');
-
-                fee.soTien = newAmount;
-                fee.moTa = newDescription;
-
-                // Update total
-                payment.tongTien = payment.chiPhiHangThang.reduce((sum, f) => sum + f.soTien, 0) +
-                    payment.chiPhiKhac.reduce((sum, f) => sum + f.soTien, 0);
-
-                alert('Thông tin phí đã được cập nhật!');
-                closeBillEditPopup();
-                renderTableBillDetail(maCanHo, thoiGianThu);
-            }
-
-            // Hàm đóng popup chỉnh sửa
-            function closeBillEditPopup() {
-                document.getElementById('billEditPopup').style.display = 'none';
-            }
-            function openEditPopup(maCanHo, tongTien, thoiGianThu, thoiGianDong) {
-                document.getElementById('edit-ma-can-ho').value = maCanHo;
-                document.getElementById('edit-tong-tien').value = tongTien || '';
-                document.getElementById('edit-thoi-gian-thu').value = thoiGianThu;
-                document.getElementById('edit-thoi-gian-dong').value = thoiGianDong || '';
-
-                document.getElementById('editPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            }
-
-            function openBillDetail(maCanHo, thoiGianThu) {
-
-                document.getElementById('billPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-                renderTableBillDetail(maCanHo, thoiGianThu)
-            }
-
-            function closeEditPopup() {
-                document.getElementById('editPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }
-
-            function closeBillDetail() {
-                document.getElementById('billPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                renderTable();
-            }
-
-            function saveEdit() {
-                const maCanHo = document.getElementById('edit-ma-can-ho').value;
-                const tongTien = document.getElementById('edit-tong-tien').value.trim();
-                const thoiGianThu = document.getElementById('edit-thoi-gian-thu').value.trim();
-                const thoiGianDong = document.getElementById('edit-thoi-gian-dong').value.trim();
-
-                const payment = payments.find(payment => payment.maCanHo === maCanHo);
-                if (payment) {
-                    payment.tongTien = tongTien || null;
-                    payment.thoiGianThu = thoiGianThu;
-                    payment.thoiGianDong = thoiGianDong || null;
-                    payment.trangThai = thoiGianDong ? 'Đã thanh toán' : 'Chưa thanh toán';
-                }
-
-                alert('Thông tin khoản thu đã được cập nhật!');
-                closeEditPopup();
-                renderTable();
-            }
-
-            function openAddPopup() {
-                document.getElementById('addPopup').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-            }
-
-            function closeAddPopup() {
-                document.getElementById('add-ma-can-ho').value="";
-                document.getElementById('add-tong-tien').value="";
-                document.getElementById('add-thoi-gian-thu').value="";
-                document.getElementById('add-thoi-gian-dong').value="";
-                document.getElementById('addPopup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }
-
-            function saveNewPayment() {
-                const maCanHo = document.getElementById('add-ma-can-ho').value;
-                const tongTien = document.getElementById('add-tong-tien').value.trim();
-                const thoiGianThu = document.getElementById('add-thoi-gian-thu').value.trim();
-                const thoiGianDong = document.getElementById('add-thoi-gian-dong').value.trim();
-
-                if (!maCanHo || !thoiGianThu) {
-                    alert('Mã căn hộ và thoi gian thu là bắt buộc!');
-                    return;
-                }
-
-                const newPayment = {
-                    maCanHo: maCanHo,
-                    tongTien: 0,
-                    thoiGianThu: thoiGianThu,
-                    thoiGianDong: thoiGianDong || "Chưa có",
-                    trangThai: thoiGianDong ? 'Đã thanh toán' : 'Chưa thanh toán'
-                };
-
-                payments.push(newPayment);
-                originalPayments = [...payments];   
-                alert('Khoản thu mới đã được thêm!');
-                closeAddPopup();
-                renderTable();
-            }
-            function DeletePayment(maCanHo, thoiGianThu) {
-                const index = payments.findIndex(
-                    payment => payment.maCanHo === maCanHo && payment.thoiGianThu === thoiGianThu
-                );
-                if (index !== -1) {
-                    const confirmation = confirm(`Bạn có chắc muốn xóa khoản thu căn hộ ${maCanHo} , thu từ ${thoiGianThu}?`);
-                    if (confirmation) {
-                        payments.splice(index, 1); // Remove the record from the array
-                        originalPayments = [...payments];
-                        alert(`Khoản thu căn hộ ${maCanHo} thu từ ${thoiGianThu} đã được xóa!`);
-                        renderTable();
-                    }
-                }
-            }
-
-                        // Mở popup thêm phí khác
-            function openAddFeePopup() {
-                document.getElementById('addOtherFeePopup').style.display = 'block';
-            }
-
-            // Đóng popup thêm phí khác
-            function closeAddOtherFeePopup() {
-                document.getElementById('addOtherFeePopup').style.display = 'none';
-                clearNewFeeInputs();
-            }
-
-            // Xóa các giá trị trong popup
-            function clearNewFeeInputs() {
-                document.getElementById('newFeeName').value = '';
-                document.getElementById('newFeeAmount').value = '';
-                document.getElementById('newFeeDescription').value = '';
-            }
-
-        // Lưu phí khác mới
-            function saveNewOtherFee() {
-                const feeName = document.getElementById('newFeeName').value.trim();
-                const feeAmount = parseFloat(document.getElementById('newFeeAmount').value) || 0;
-                const feeDescription = document.getElementById('newFeeDescription').value.trim();
-
-                if (!feeName || feeAmount <= 0) {
-                    alert('Vui lòng nhập tên phí và số tiền hợp lệ!');
-                    return;
-                }
-
-                // Tìm bản ghi hiện tại để thêm phí khác
-                const maCanHo = document.getElementById('roomIdDetailTableBody').textContent.trim();
-                const thoiGianThu = document.getElementById('timeDetailTableBody').textContent.trim();
-
-                const payment = payments.find(p => p.maCanHo === maCanHo && p.thoiGianThu === thoiGianThu);
-
-                if (!payment) {
-                    alert('Không tìm thấy thông tin thanh toán!');
-                    return;
-                }
-
-                // Thêm phí khác mới
-                payment.chiPhiKhac.push({
-                    tenPhi: feeName,
-                    soTien: feeAmount,
-                    moTa: feeDescription,
-                });
-
-                alert('Đã thêm phí khác!');
-                closeAddOtherFeePopup();
-
-                // Cập nhật giao diện
-                renderTableBillDetail(maCanHo, thoiGianThu);
-            }
-            function filterData() {
-                const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
-                const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
-                const status = document.getElementById('filter-status').value;
-                const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
-
-                // Áp dụng bộ lọc
-                const filteredPayments = originalPayments.filter(payment => {
-                    const thuDate = new Date(payment.thoiGianThu);
-                    const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
-                    const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
-                    const matchesStatus = status ? payment.trangThai === status : true;
-                    const matchesRoomCode = roomCode ? payment.maCanHo.toLowerCase().includes(roomCode) : true;
-
-                    return matchesYear && matchesMonth && matchesStatus && matchesRoomCode;
-                });
-
-                payments = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
-                currentPage = 1; // Đặt lại trang hiện tại
-                renderTable(); // Hiển thị lại bảng
-            }
-
-            function resetFilters() {
-                // Khôi phục lại mảng dữ liệu ban đầu
-                payments = [...originalPayments];
-                currentPage = 1; // Đặt lại trang hiện tại
-
-                // Xóa nội dung của các bộ lọc
-                document.getElementById('filter-thoi-gian-thu-thang').value = '';
-                document.getElementById('filter-thoi-gian-thu-nam').value = '';
-                document.getElementById('filter-status').value = '';
-                document.getElementById('filter-room').value = '';
-
-                renderTable(); // Hiển thị lại bảng với dữ liệu gốc
-            }
-
+        function closeBillDetail() {
+            document.getElementById('billPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
             renderTable();
-        </script>
+        }
 
-        <%-include('../../partials/footer_infosection') %>
+        function openAddPopup() {
+            document.getElementById('addPopup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeAddPopup() {
+            document.getElementById('add-ma-can-ho').value = "";
+            document.getElementById('add-tong-tien').value = "";
+            document.getElementById('add-thoi-gian-thu').value = "";
+            document.getElementById('add-thoi-gian-dong').value = "";
+            document.getElementById('addPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Mở popup thêm phí khác
+        function openAddFeePopup() {
+            document.getElementById('addOtherFeePopup').style.display = 'block';
+        }
+
+        // Đóng popup thêm phí khác
+        function closeAddOtherFeePopup() {
+            document.getElementById('addOtherFeePopup').style.display = 'none';
+            clearNewFeeInputs();
+        }
+
+        // Xóa các giá trị trong popup
+        function clearNewFeeInputs() {
+            document.getElementById('newFeeName').value = '';
+            document.getElementById('newFeeAmount').value = '';
+            document.getElementById('newFeeDescription').value = '';
+        }
+
+        function filterData() {
+            const month = document.getElementById('filter-thoi-gian-thu-thang').value.trim();
+            const year = document.getElementById('filter-thoi-gian-thu-nam').value.trim();
+            const status = document.getElementById('filter-status').value;
+            const roomCode = document.getElementById('filter-room').value.trim().toLowerCase();
+
+            // Áp dụng bộ lọc
+            const filteredPayments = originalPayments.filter(payment => {
+                const thuDate = new Date(payment.thoiGianThu);
+                const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
+                const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
+                const matchesStatus = status ? payment.trangThai === status : true;
+                const matchesRoomCode = roomCode ? payment.maCanHo.toLowerCase().includes(roomCode) : true;
+
+                return matchesYear && matchesMonth && matchesStatus && matchesRoomCode;
+            });
+
+            payments = filteredPayments; // Cập nhật mảng dữ liệu đã lọc
+            currentPage = 1; // Đặt lại trang hiện tại
+            renderTable(); // Hiển thị lại bảng
+        }
+
+        function resetFilters() {
+            // Khôi phục lại mảng dữ liệu ban đầu
+            payments = [...originalPayments];
+            currentPage = 1; // Đặt lại trang hiện tại
+
+            // Xóa nội dung của các bộ lọc
+            document.getElementById('filter-thoi-gian-thu-thang').value = '';
+            document.getElementById('filter-thoi-gian-thu-nam').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-room').value = '';
+
+            renderTable(); // Hiển thị lại bảng với dữ liệu gốc
+        }
+
+        renderTable();
+    </script>
+
+    <%-include('../../partials/footer_infosection') %>
 </body>
 
 </html>

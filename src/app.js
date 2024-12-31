@@ -19,6 +19,7 @@ import ExpressError from './utils/ExpressError.js'
 import passport from './passport.js';
 
 import job from './insertSchedule.js';
+import { isAuthenticated } from './middlewares/userMiddleware.js';
 
 const app = express()
 
@@ -55,21 +56,24 @@ app.use((req, res, next) => {
 
 job.start();
 
+app.use('/', userRoute)
+
+app.get('/', (req, res) => {
+    res.render('index');
+})
+
+app.get('/quy_dinh', (req, res) => {
+    res.render('quy_dinh')
+})
+
+app.use(isAuthenticated)
+
 app.use('/donations', donationRoute)
 app.use('/rooms', roomRoute)
 app.use('/residents', residentRoute)
 app.use('/vehicle', vehicleRoute)
 app.use('/residency', residencyRoute)
 app.use('/', billRoute)
-app.use('/', userRoute)
-
-app.use('/quy_dinh', (req, res) => {
-    res.render('quy_dinh')
-})
-
-app.get('/', (req, res) => {
-    res.render('index');
-})
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
@@ -80,13 +84,15 @@ app.use((err, req, res, next) => {
     if (!err.message) err.message = 'Oh No, Something went wrong!';
     const preErrorUrl = req._parsedOriginalUrl?.pathname || '/';
 
-    res.status(statusCode).json({
-        error: {
-            message: err.message,
-            status: statusCode,
-            path: preErrorUrl
-        }
-    });
+    return res.render('index')
+
+    // res.status(statusCode).json({
+    //     error: {
+    //         message: err.message,
+    //         status: statusCode,
+    //         path: preErrorUrl
+    //     }
+    // });
 });
 
 

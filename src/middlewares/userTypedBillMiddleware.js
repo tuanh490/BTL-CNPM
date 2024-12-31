@@ -7,7 +7,7 @@ export async function doesUserTypedBillExist(req, res, next) {
 
     if (!(await checkObject("phi_tu_nhap", "id", userTypedBillId))) {
         req.flash('error', 'Bill not found')
-        return res.redirect(303, `/monthly_bills/${id}/user_typed_bills`)
+        return res.redirect(303, `/monthly_bills`)
     }
     next();
 }
@@ -18,7 +18,7 @@ export async function validateUserTypedBill(req, res, next) {
     if (error) {
         const msg = error.details.map(el => el.message).join(',');
         req.flash('error', msg)
-        return res.redirect(303, `/monthly_bills/${id}/user_typed_bills`)
+        return res.redirect(303, `/monthly_bills`)
     } else {
         next()
     }

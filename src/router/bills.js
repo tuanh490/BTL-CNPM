@@ -16,7 +16,7 @@ router.route('/monthly_bills')
 
 router.route('/monthly_bills/:id')
     .put(doesMonthlyBillExist, validateMonthlyBill, CatchAsync(monthly_bills.updateMonthlyBill))
-    .get(doesMonthlyBillExist, CatchAsync(monthly_bills.showMonthlyBill))
+// .get(doesMonthlyBillExist, CatchAsync(monthly_bills.showMonthlyBill))
 
 router.route('/monthly_bills/:id/user_typed_bills')
     .get(

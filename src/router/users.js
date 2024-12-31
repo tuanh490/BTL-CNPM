@@ -21,6 +21,10 @@ router.route('/change_password')
     .get(isAuthenticated, CatchAsync(users.renderChangePasswrod))
     .post(isAuthenticated, CatchAsync(users.changePassword))
 
-router.get('/profile', isAuthenticated, CatchAsync(users.getProfile))
+router.route('/profile')
+    .get(isAuthenticated, CatchAsync(users.getProfile))
+
+router.route('/profile/:id')
+    .put(isAuthenticated, CatchAsync(users.updateProfile))
 
 export default router

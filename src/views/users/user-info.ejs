@@ -64,12 +64,12 @@
             color: #333;
         }
 
-        .btn-change-password {
+        .btn-update-info {
             display: block;
             width: 100%;
             padding: 10px;
             font-size: 16px;
-            background-color: #007bff;
+            background-color: #12e34d;
             color: white;
             border: none;
             border-radius: 5px;
@@ -86,28 +86,51 @@
 
 <body>
     <%- include('../partials/header')%>
+    <%- include('../partials/flash') %>
     <div class="user-info-section">
         <h2>Thông Tin Người Dùng</h2>
-        <form>
+        <form action="/profile/<%= currentUser.id %>?_method=PUT" , method="POST">
             <!-- Username -->
             <div class="form-group">
                 <label for="username">Tên đăng nhập:</label>
-                <input id="username" type="text" value="NguyenVanA" readonly />
+                <input id="username" type="text" value="<%= currentUser.username %>" name="user[username]" readonly />
             </div>
-
-            <!-- Password -->
             <div class="form-group">
-                <label for="password">Mật khẩu:</label>
-                <input id="password" type="text" value="datdz" readonly />
+                <label for="sdt">Số điện thoại:</label>
+                <input id="sdt" type="text" value="<%= currentUser.sdt %>" name="user[sdt]" />
             </div>
-
-            <!-- Change Password Button -->
             <div class="form-group">
-                <a href="/change-password" class="btn btn-change-password">Cập nhật thông tin</a>
+                <label for="cccd">Căn cước công dân:</label>
+                <input id="cccd" type="text" value="<%= currentUser.can_cuoc_cong_dan %>"
+                    name="user[can_cuoc_cong_dan]" />
+            </div>
+            <div class="form-group">
+                <label for="edit-gender">Giới tính:</label>
+                <select id="edit-gender" class="form-control" name="user[gioi_tinh]">
+                    <% if (currentUser.gioi_tinh == "Nam") { %>
+                    <option value="Nam" selected="selected">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                    <% } else if (currentUser.gioi_tinh == "Nữ") { %>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ" selected="selected">Nữ</option>
+                    <option value="Khác">Khác</option>
+                    <% } else { %>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác" selected="selected">Khác</option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="address">Địa chỉ:</label>
+                <input id="address" type="text" value="<%= currentUser.dia_chi %>" name="user[dia_chi]" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-update-info">Cập nhật thông tin</a>
             </div>
             <div class="link-container d-flex justify-content-center align-items-center flex-column">
-                <h3><a href="/register" class="text-primary">Tạo tài khoản mới</a></h3>
-                <h3> <a href="/change_password" class="text-primary">Đổi mật khẩu</a></h3>
+                <h3> <a href="/change_password" class="btn btn-info">Đổi mật khẩu</a></h3>
             </div>
         </form>
 

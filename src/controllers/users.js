@@ -134,10 +134,28 @@ export async function getProfile(req, res) {
     const userId = req.user.id;
 
     const [rows] = await pool.query(`
-        SELECT username
+        SELECT username, can_cuoc_cong_dan, sdt, gioi_tinh, dia_chi
         FROM users
         WHERE id = ?;
         `, [userId])
 
     res.render('users/user-info', { rows })
+}
+
+export async function updateProfile(req, res) {
+    const { id } = req.params
+    const { username, sdt, can_cuoc_cong_dan, gioi_tinh, dia_chi } = req.body.user
+
+    const result = await pool.query(`
+        UPDATE users
+        SET
+        sdt = ?, 
+        can_cuoc_cong_dan = ?,
+        gioi_tinh = ?,
+        dia_chi = ?
+        WHERE id = ?;
+        `, [sdt, can_cuoc_cong_dan, gioi_tinh, dia_chi, id])
+
+    req.flash('success', 'Cập nhật thông tin cá nhân thành công')
+    res.redirect(303, '/profile')
 }

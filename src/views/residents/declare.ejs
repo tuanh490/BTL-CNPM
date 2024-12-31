@@ -322,6 +322,8 @@
     const pageSize = 5;
 
     function formatDate(date) {
+      date = Date.parse(date)
+      date = new Date(date)
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
       const day = String(date.getDate()).padStart(2, '0');
@@ -338,18 +340,17 @@
 
       currentResidents.forEach((resident, index) => {
         const row = document.createElement('tr');
-        let thoi_gian = Date.parse(resident.thoi_gian)
         row.innerHTML = `
           <td>${index + 1}</td>
           <td>${resident.ho_ten}</td>
           <td>${resident.can_cuoc_cong_dan}</td>
-          <td>${new Date(thoi_gian).toLocaleDateString()}</td>
+          <td>${resident.thoi_gian ? new Date(resident.thoi_gian).toLocaleDateString() : resident.thoi_gian}</td>
           <td>${resident.trang_thai}</td>
           <td>${resident.mo_ta}</td>
           <td>
             <button 
               class="btn btn-primary" 
-              onclick="openEditPopup('${resident.id}', '${resident.ho_ten}', '${resident.can_cuoc_cong_dan}', '${formatDate(new Date(thoi_gian))}', '${resident.trang_thai}', '${resident.mo_ta}')"
+              onclick="openEditPopup('${resident.id}', '${resident.ho_ten}', '${resident.can_cuoc_cong_dan}', '${formatDate(new Date(resident.thoi_gian))}', '${resident.trang_thai}', '${resident.mo_ta}')"
             >
               Edit
             </button>

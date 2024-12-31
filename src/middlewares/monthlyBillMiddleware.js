@@ -5,6 +5,8 @@ import ExpressError from "../utils/ExpressError.js";
 export async function doesMonthlyBillExist(req, res, next) {
     const { id } = req.params
 
+    console.log(id)
+
     if (!(await checkObject("thanh_toan_hang_thang", "id_thanh_toan", id))) {
         req.flash('error', 'Bill not found')
         return res.redirect(303, '/monthly_bills')
