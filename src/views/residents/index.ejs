@@ -368,7 +368,7 @@
         let timeIn = formatDate(resident.timeIn)
         let timeOut = null;
         if (resident.timeOut != null)
-          timeOut = new Date(Date.parse(resident.timeOut))
+          timeOut = new Date(Date.parse(resident.timeOut)).toLocaleDateString()
 
         row.innerHTML = `
           <td>${resident.ma_phong}</td>

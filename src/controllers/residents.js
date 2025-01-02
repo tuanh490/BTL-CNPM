@@ -22,7 +22,7 @@ function fixDate(date) {
 
 export async function createResident(req, res) {
     let { can_cuoc_cong_dan, ma_phong, ho_ten, gioi_tinh, ngay_sinh, timeIn, timeOut, dang_o } = req.body.resident
-
+    dang_o = 1;
     console.log(req.body.resident)
 
     const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
@@ -85,7 +85,20 @@ export async function updateResident(req, res) {
 
 export async function deleteResident(req, res) {
     const { id } = req.params
-    const [rows] = await pool.query(`CALL Xoa_nhan_khau(?)`, [id])
+
+    const [rows] = await pool.query(`
+        SELECT can_cuoc_cong_dan
+        FROM nhan_khau
+        WHERE id_nhan_khau = ?;
+        `, [id])
+ 
+    const roomExist = await checkObject("phong", "can_cuoc_cong_dan", rows[0].can_cuoc_cong_dan)
+    if (roomExist) {
+        req.flash('error', 'Cư dân vẫn đang còn trong căn hộ! Vui lòng sửa phòng trước khi xóa!')
+        return res.redirect(303, '/rooms')
+    }
+
+    await pool.query(`CALL Xoa_nhan_khau(?)`, [id])
     req.flash('success', 'Xóa nhân khẩu thành công!')
     res.redirect(303, '/residents')
 }

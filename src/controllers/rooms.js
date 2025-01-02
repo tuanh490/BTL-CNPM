@@ -77,7 +77,19 @@ export async function updateRoom(req, res) {
 
 export async function deleteRoom(req, res) {
     const { id } = req.params
-    const [rows] = await pool.query(`CALL Xoa_phong(?)`, [id])
+
+    const [rows] = await pool.query(`
+        SELECT can_cuoc_cong_dan
+        FROM phong
+        WHERE ma_phong = ?;
+        `, [id])
+
+        if (rows[0].can_cuoc_cong_dan) {
+            req.flash('error', 'Vui lòng sửa căn cước công dân trước khi xóa căn hộ!')
+            return res.redirect(303, '/rooms')
+        }
+
+    await pool.query(`CALL Xoa_phong(?)`, [id])
     req.flash('success', 'Xóa phòng thành công')
     res.redirect(303, '/rooms')
 }
