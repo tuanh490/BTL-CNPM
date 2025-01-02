@@ -1,7 +1,6 @@
-import pool from './database.js'
-import { CronJob } from 'cron'
+import pool from '../database.js'
 
-export async function updateMonthlyPaymentAfterInsertion(id_thanh_toan, currentDate) {
+async function updateMonthlyPaymentAfterInsertion(id_thanh_toan, currentDate) {
     const ma_phong = (await pool.query(`
         SELECT ma_phong 
         FROM thanh_toan_hang_thang 
@@ -66,8 +65,18 @@ export async function updateMonthlyPaymentAfterInsertion(id_thanh_toan, currentD
         `, [id_thanh_toan])
 }
 
-async function monthlyInsert() {
-    const currentDate = new Date().toISOString().split('T')[0]
+export async function monthlyBillInsert(ma_phong, date) {
+    date = date.toISOString().split('T')[0]
+    console.log("Inserting bill")
+    // Insert all bills for all occupied rooms
+    const [results] = await pool.query(`CALL insert_phi_hang_thang(?, ?)`, [ma_phong, date])
+    // Insert electricity bills for all monthly_bills of this
+    const id_thanh_toan = results[0][0]["LAST_INSERT_ID()"]
+    await updateMonthlyPaymentAfterInsertion(id_thanh_toan, date)
+}
+
+export async function monthlyInsert() {
+    const currentDate = new Date()
 
     const [rows] = await pool.query(`
         SELECT ma_phong
@@ -76,32 +85,8 @@ async function monthlyInsert() {
         `)
 
     for (let row of rows) {
-    // Insert all bills for all occupied rooms
+        // Insert all bills for all occupied rooms
         const ma_phong = row.ma_phong;
-        const [results] = await pool.query(`CALL insert_phi_hang_thang(?, ?)`, [ma_phong, currentDate])
-        console.log(results)
-        // Insert electricity bills for all monthly_bills of this
-        const id_thanh_toan = results[0][0]["LAST_INSERT_ID()"]
-        console.log(id_thanh_toan)
-        await updateMonthlyPaymentAfterInsertion(id_thanh_toan, currentDate)
+        monthlyBillInsert(ma_phong, new Date())
     }
 }
-
-const job = new CronJob(
-    '0 0 0 1 * *',
-    async function () {
-        try {
-            console.log(`Start job at ${new Date()}`)
-            await monthlyInsert();
-            console.log("Successfully Inserted")
-        }
-        catch (err) {
-            console.log(err)
-        }
-    },
-    null,
-    false
-);
-
-export default job;
-

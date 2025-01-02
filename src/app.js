@@ -18,7 +18,7 @@ import residencyRoute from './router/residency.js'
 import ExpressError from './utils/ExpressError.js'
 import passport from './passport.js';
 
-import job from './insertSchedule.js';
+import job from './monthlyInsert/insertSchedule.js';
 import { isAuthenticated } from './middlewares/userMiddleware.js';
 
 const app = express()

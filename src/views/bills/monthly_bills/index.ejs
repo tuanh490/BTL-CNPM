@@ -506,7 +506,7 @@
                     <td><button class="btn btn-primary" onclick="openBillDetail('${payment.id_thanh_toan}', '${payment.maCanHo}', '${payment.thoiGianThu}')">${payment.tongTien}</button></td>
                     <td>${payment.thoiGianThu ? new Date(payment.thoiGianThu).toLocaleDateString() : payment.thoiGianThu}</td>
                     <td>${payment.thoiGianDong ? new Date(payment.thoiGianDong).toLocaleDateString() : payment.thoiGianDong}</td>
-                    <td>${payment.trangThai}</td>
+                    <td>${payment.trangThai == 0 ? "Chưa đóng" : "Đã đóng"}</td>
                     <td>
                         <div class="btn-container">
                             <button 
