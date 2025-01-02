@@ -371,11 +371,10 @@
 
             // Lọc dữ liệu từ danh sách gốc `originalApartment`
             apartments = originalApartment.filter(apartment => {
-                const matchesRoomCode = maCanHo ? apartment.maCanHo.toLowerCase().includes(maCanHo) : true;
-                const matchesFloor = diaDiem ? apartment.diaDiem.toLowerCase().includes(diaDiem) : true;
-                const matchesStatus = trangThai ? apartment.trangThai === trangThai : true;
+                const matchesRoomCode = maCanHo ? apartment.ma_phong.toLowerCase().includes(maCanHo) : true;
+                const matchesStatus = trangThai ? apartment.dang_o === trangThai : true;
 
-                return matchesRoomCode && matchesStatus && matchesFloor;
+                return matchesRoomCode && matchesStatus;
             });
 
             // Đặt lại trang hiện tại về trang đầu tiên và hiển thị bảng

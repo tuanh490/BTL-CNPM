@@ -68,12 +68,21 @@ export async function updateMonthlyPaymentAfterInsertion(id_thanh_toan, currentD
 
 async function monthlyInsert() {
     const currentDate = new Date().toISOString().split('T')[0]
-    // Insert all bills for all occupied rooms
-    const [rows] = await pool.query(`CALL insert_phi_hang_thang(?)`, [currentDate])
 
-    for (let row of rows[0]) {
+    const [rows] = await pool.query(`
+        SELECT ma_phong
+        FROM phong
+        WHERE trang_thai = 1;
+        `)
+
+    for (let row of rows) {
+    // Insert all bills for all occupied rooms
+        const ma_phong = row.ma_phong;
+        const [results] = await pool.query(`CALL insert_phi_hang_thang(?, ?)`, [ma_phong, currentDate])
+        console.log(results)
         // Insert electricity bills for all monthly_bills of this
-        const id_thanh_toan = row["LAST_INSERT_ID()"]
+        const id_thanh_toan = results[0][0]["LAST_INSERT_ID()"]
+        console.log(id_thanh_toan)
         await updateMonthlyPaymentAfterInsertion(id_thanh_toan, currentDate)
     }
 }

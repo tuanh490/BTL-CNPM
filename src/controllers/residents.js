@@ -22,7 +22,6 @@ function fixDate(date) {
 
 export async function createResident(req, res) {
     let { can_cuoc_cong_dan, ma_phong, ho_ten, gioi_tinh, ngay_sinh, timeIn, timeOut, dang_o } = req.body.resident
-    dang_o = 1;
     console.log(req.body.resident)
 
     const checkResident = await checkObject("nhan_khau", "can_cuoc_cong_dan", can_cuoc_cong_dan)
@@ -58,6 +57,8 @@ export async function updateResident(req, res) {
         req.flash('error', 'Mã phòng không tồn tại!')
         return res.redirect(303, '/rooms')
     }
+
+    console.log(dang_o)
 
     ngay_sinh = fixDate(ngay_sinh)
     timeIn = fixDate(timeIn)

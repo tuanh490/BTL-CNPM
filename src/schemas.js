@@ -47,6 +47,7 @@ export const residentSchema = Joi.object({
     timeIn: Joi.date().required().allow('', null),
     timeOut: Joi.date().allow('', null),
     dang_o: Joi.number().default(1),
+    trang_thai: Joi.number().default(1)
 })
 
 export const residencySchema = Joi.object({

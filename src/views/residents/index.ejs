@@ -288,6 +288,13 @@
         <label for="add-departure">Ngày đi:</label>
         <input type="date" id="add-departure" class="form-control" name="resident[timeOut]">
       </div>
+      <div class="form-group">
+        <label for="add-status">Trạng thái:</label>
+        <select id="add-status" class="form-control" name="resident[dang_o]">
+          <option value=0>Đã rời đi</option>
+          <option value=1>Đang ở</option>
+        </select>
+      </div>
 
       <button type="submit" class="btn btn-success">Thêm</button>
       <button type="button" class="btn btn-delete" onclick="closeAddResidentPopup()">Đóng</button>
@@ -329,6 +336,13 @@
         <label for="edit-departure">Ngày đi:</label>
         <input type="date" id="edit-departure" class="form-control" name="resident[timeOut]">
       </div>
+      <div class="form-group">
+        <label for="edit-status">Trạng thái:</label>
+        <select id="edit-status" class="form-control" name="resident[dang_o]">
+          <option value=0>Đã rời đi</option>
+          <option value=1>Đang ở</option>
+        </select>
+      </div>
 
       <button type="submit" class="btn btn-success">Lưu</button>
       <button type="button" class="btn btn-delete" onclick="closeEditPopup()">Đóng</button>
@@ -342,6 +356,7 @@
   <script>
     var test = document.getElementById('mydiv').dataset.test;
     var residents = JSON.parse(test);
+    let originalResident = [...residents];
     let currentPage = 1;
     const pageSize = 5;
 
@@ -383,7 +398,7 @@
             <button 
               class="btn btn-primary" 
               onclick="openEditPopup('${resident.id_nhan_khau}', '${resident.ma_phong}','${resident.ho_ten}', '${ngay_sinh}', '${resident.gioi_tinh}',
-                    '${resident.can_cuoc_cong_dan}', '${timeIn}', '${timeOut}')"
+                    '${resident.can_cuoc_cong_dan}', '${timeIn}', '${timeOut}', ${resident.dang_o})"
             >
               Edit
             </button>
@@ -434,7 +449,6 @@
         pageNumbers.appendChild(lastButton);
       }
     }
-    let originalResident = [...residents];
 
 
     function filterResidents() {
@@ -446,11 +460,11 @@
       const dob = document.getElementById('filter-ngay-sinh').value.trim();
 
       const filteredResidents = originalResident.filter(resident => {
-        const matchesRoom = room ? resident.room === room : true;
-        const matchesName = name ? resident.name === name : true;
-        const matchesCCCD = cccd ? resident.cccd === cccd : true;
-        const matchesStatus = status ? resident.status === status : true;
-        const matchesDOB = dob ? resident.dob === dob : true;
+        const matchesRoom = room ? resident.ma_phong === room : true;
+        const matchesName = name ? resident.ho_ten === name : true;
+        const matchesCCCD = cccd ? resident.can_cuoc_cong_dan === cccd : true;
+        const matchesStatus = status ? resident.dang_o === status : true;
+        const matchesDOB = dob ? resident.ngay_sinh === dob : true;
 
         return matchesName && matchesCCCD && matchesStatus && matchesDOB && matchesRoom;
       });
@@ -496,7 +510,7 @@
       document.getElementById('overlay').style.display = 'none';
     }
 
-    function openEditPopup(id_nhan_khau, room, name, dob, gender, cccd, arrival, departure) {
+    function openEditPopup(id_nhan_khau, room, name, dob, gender, cccd, arrival, departure, dang_o) {
       document.getElementById('updateForm').action = `/residents/${id_nhan_khau}?_method=PUT`
       document.getElementById('edit-room').value = room;
       document.getElementById('edit-name').value = name;
@@ -504,6 +518,7 @@
       document.getElementById('edit-gender').value = gender;
       document.getElementById('edit-cccd').value = cccd || '';
       document.getElementById('edit-arrival').value = arrival || '';
+      document.getElementById('edit-status').value = dang_o
 
       document.getElementById('edit-departure').value = departure || '';
 
