@@ -209,8 +209,8 @@
       <label for="filter-trang-thai">Trạng thái:</label>
       <select id="filter-trang-thai" class="form-control">
         <option value="">Tất cả</option>
-        <option value="Đang ở"> Đang ở</option>
-        <option value="Đã rời đi"> Đã rời đi</option>
+        <option value="1"> Đang ở</option>
+        <option value="0"> Đã rời đi</option>
       </select>
     </div>
     <!-- Filters -->
@@ -467,7 +467,7 @@
         const matchesRoom = room ? resident.ma_phong === room : true;
         const matchesName = name ? resident.ho_ten === name : true;
         const matchesCCCD = cccd ? resident.can_cuoc_cong_dan === cccd : true;
-        const matchesStatus = status ? resident.dang_o === status : true;
+        const matchesStatus = status ? resident.dang_o == status : true;
         const matchesDOB = dob ? resident.ngay_sinh === dob : true;
 
         return matchesName && matchesCCCD && matchesStatus && matchesDOB && matchesRoom;

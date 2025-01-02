@@ -194,8 +194,8 @@
             <label for="filter-trang-thai">Trạng thái:</label>
             <select id="filter-trang-thai" class="form-control">
                 <option value="">Tất cả</option>
-                <option value="Đang sử dụng">Đang sử dụng</option>
-                <option value="Trống">Trống</option>
+                <option value="1">Đang sử dụng</option>
+                <option value="0">Trống</option>
             </select>
         </div>
         <div class="filter-group-btn my-4">
@@ -289,10 +289,9 @@
     <script>
         var test = document.getElementById('mydiv').dataset.test;
         var apartments = JSON.parse(test);
-
+        let originalApartment = [...apartments];
         let currentPage = 1;
         const pageSize = 5;
-        let originalApartment = [...apartments];
         function renderTable() {
             const tableBody = document.getElementById('apartmentTableBody');
             tableBody.innerHTML = '';
@@ -365,14 +364,13 @@
         }
 
         function filterData() {
-            const maCanHo = document.getElementById('filter-ma-can-ho').value.trim().toLowerCase();
-            const diaDiem = document.getElementById('filter-dia-diem').value.trim().toLowerCase();
+            const maCanHo = document.getElementById('filter-ma-can-ho').value.trim();
             const trangThai = document.getElementById('filter-trang-thai').value.trim();
 
             // Lọc dữ liệu từ danh sách gốc `originalApartment`
             apartments = originalApartment.filter(apartment => {
-                const matchesRoomCode = maCanHo ? apartment.ma_phong.toLowerCase().includes(maCanHo) : true;
-                const matchesStatus = trangThai ? apartment.dang_o === trangThai : true;
+                const matchesRoomCode = maCanHo ? apartment.ma_phong == maCanHo : true;
+                const matchesStatus = trangThai ? apartment.trang_thai == trangThai : true;
 
                 return matchesRoomCode && matchesStatus;
             });

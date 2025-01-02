@@ -273,8 +273,8 @@
                 <label for="filter-status">Trạng thái:</label>
                 <select id="filter-status" class="form-control">
                     <option value="">Chọn trạng thái</option>
-                    <option value="Đã thanh toán"> Đã thanh toán</option>
-                    <option value="Chưa thanh toán"> Chưa thanh toán</option>
+                    <option value="1"> Đã thanh toán</option>
+                    <option value="0"> Chưa thanh toán</option>
                 </select>
             </div>
 
@@ -506,7 +506,7 @@
                     <td><button class="btn btn-primary" onclick="openBillDetail('${payment.id_thanh_toan}', '${payment.maCanHo}', '${payment.thoiGianThu}')">${payment.tongTien}</button></td>
                     <td>${payment.thoiGianThu ? new Date(payment.thoiGianThu).toLocaleDateString() : payment.thoiGianThu}</td>
                     <td>${payment.thoiGianDong ? new Date(payment.thoiGianDong).toLocaleDateString() : payment.thoiGianDong}</td>
-                    <td>${payment.trangThai == 0 ? "Chưa đóng" : "Đã đóng"}</td>
+                    <td>${payment.trangThai == 0 ? "Chưa thanh toán" : "Đã thanh toán"}</td>
                     <td>
                         <div class="btn-container">
                             <button 
@@ -702,7 +702,7 @@
                 const thuDate = new Date(payment.thoiGianThu);
                 const matchesYear = year ? thuDate.getFullYear().toString() === year : true;
                 const matchesMonth = month ? (thuDate.getMonth() + 1).toString() === month : true;
-                const matchesStatus = status ? payment.trangThai === status : true;
+                const matchesStatus = status ? payment.trangThai == status : true;
                 const matchesRoomCode = roomCode ? payment.maCanHo.toLowerCase().includes(roomCode) : true;
 
                 return matchesYear && matchesMonth && matchesStatus && matchesRoomCode;
